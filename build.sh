@@ -29,6 +29,10 @@ mkdir -p full_build
 cp -pr ./react/frontend/build ./full_build/.
 cp -pr ./target/StrayCatsSG-0.0.1-SNAPSHOT.jar ./full_build/.
 
-# update PEM file to CICD secret
-scp -pr -i /Users/zheng/.ssh/jms.pem ./full_build ec2-user@52.76.130.23:/home/ec2-user/uploaded
-ssh -i /Users/zheng/.ssh/jms.pem ec2-user@52.76.130.23 ./restart.sh
+
+if [[ "$platform" == "aws" ]]; then
+    # update PEM file to CICD secret
+    scp -pr -i /Users/zheng/.ssh/jms.pem ./full_build ec2-user@52.76.130.23:/home/ec2-user/uploaded
+    ssh -i /Users/zheng/.ssh/jms.pem ec2-user@52.76.130.23 ./restart.sh
+fi
+
