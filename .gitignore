@@ -1,4 +1,5 @@
 **/.DS_Store
+full_build/
 
 # Miscellaneous
 *.java.hsp
@@ -90,4 +91,3 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-full_build/
