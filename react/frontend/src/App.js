@@ -7,14 +7,11 @@ function App() {
   const BACKEND_IP = process.env.REACT_APP_BACKEND_IP
     ? process.env.REACT_APP_BACKEND_IP
     : "localhost";
-  const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT
-    ? process.env.REACT_APP_BACKEND_PORT
-    : "80";
 
   const [randInt, SetRandInt] = useState(0);
 
   const onClickRoll = () => {
-    fetch(`${BACKEND_IP}:${BACKEND_PORT}/roll`)
+    fetch(`${BACKEND_IP}/roll`)
       .then((response) => response.text())
       .then((data) => {
         console.log(data);
