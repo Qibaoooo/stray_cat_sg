@@ -34,7 +34,7 @@ jobs:
       - name: Zip artifact for deployment
         run: |
           cd ./build
-          zip release.zip ./* -r
+          zip ../release.zip ./* -r
         working-directory: react/frontend/
 
       - name: Upload artifact for deployment job
