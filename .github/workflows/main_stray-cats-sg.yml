@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - stray-cats-sg-fe
+name: Build and deploy Node.js app to Azure Web App - stray-cats-sg
 
 on:
   push:
@@ -63,3 +63,23 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BE31F0D913DD451087C7E56753305288 }}
           package: .
+
+  build-be:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, '[be]')
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v3
+      with:
+        java-version: 1.8
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+      working-directory: /
+    - name: Azure WebApp
+      uses: Azure/webapps-deploy@v2
+      with:
+        app-name: my-app-name
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: my/target/*.jar
