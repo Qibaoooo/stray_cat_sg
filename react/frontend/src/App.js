@@ -7,9 +7,9 @@ function App() {
   const BACKEND_IP = process.env.REACT_APP_BACKEND_IP
     ? process.env.REACT_APP_BACKEND_IP
     : "localhost";
-    const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT
-      ? process.env.REACT_APP_BACKEND_PORT
-      : "80";
+  const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT
+    ? process.env.REACT_APP_BACKEND_PORT
+    : "80";
 
   const [randInt, SetRandInt] = useState(0);
 
