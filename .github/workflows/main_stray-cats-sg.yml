@@ -32,7 +32,9 @@ jobs:
         working-directory: react/frontend/
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./build/* -r
+        run: |
+          cd ./build
+          zip release.zip ./* -r
         working-directory: react/frontend/
 
       - name: Upload artifact for deployment job
