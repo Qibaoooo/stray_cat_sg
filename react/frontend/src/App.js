@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 function App() {
   const BACKEND_IP = process.env.REACT_APP_BACKEND_IP
     ? process.env.REACT_APP_BACKEND_IP
-    : "localhost";
+    : "http://localhost:8080";
 
   const [randInt, SetRandInt] = useState(0);
 
