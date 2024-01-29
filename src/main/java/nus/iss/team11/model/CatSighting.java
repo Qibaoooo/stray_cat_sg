@@ -1,11 +1,13 @@
 package nus.iss.team11.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +18,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Roll {
-	
+public class CatSighting {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+		
+	// TODO: user
+	// TODO: cat
 	
-	private int result;
-
-	private LocalDate timeOfRoll;
+	private String sightingName;
+	private Float locationLat;
+	private Float locationLong;
+	
+	private LocalDate time;
+	
+	@OneToMany(mappedBy = "catSighting")
+	private List<AzureImage> images;
+	
+	private String suggestedCatName;
+	private String suggestedCatBreed;
+	
+	private boolean isApproved;
 }
