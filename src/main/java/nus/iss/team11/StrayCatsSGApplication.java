@@ -1,13 +1,11 @@
 package nus.iss.team11;
 
-import java.time.LocalDate;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-
+import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.model.Roll;
 import nus.iss.team11.repository.RollRepository;
 
@@ -17,6 +15,9 @@ public class StrayCatsSGApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(StrayCatsSGApplication.class, args);
 	}
+	
+	@Autowired
+	AzureContainerUtil azureContainerUtil;
 	
 	@Bean
 	CommandLineRunner loadData(RollRepository rollRepo) {
@@ -28,6 +29,10 @@ public class StrayCatsSGApplication {
 			r1.setResult(99);
 			r1.setTimeOfRoll(null);
 			rollRepo.save(r1);
+			
+			
+			// test azureContainerUtil
+			azureContainerUtil.listAllImages();
 		};
 	}
 	
