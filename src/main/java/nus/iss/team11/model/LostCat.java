@@ -1,15 +1,12 @@
 package nus.iss.team11.model;
 
-
 import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,22 +17,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Comment {
+public class LostCat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 	
-	private String content;
+	private Float lostLocation;
+	private boolean isFound;
+	
+	/*
 	@ManyToOne
-	@JoinColumn(name="catid")
-	private Cat cat;
-	private Date time;
+	private SCSUser user;
+	*/
+	private LocalDate lostTime;
 	
-	@ManyToOne
-	@JoinColumn(name="SCSUserid")
-	private SCSUser scsuser;
+	//private List<AzureImage> images;
 	
-	private List<String> newlabels;
+	private String ownerName;
+	private String notes;
 	
-
 }
