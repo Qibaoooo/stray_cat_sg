@@ -1,78 +1,161 @@
 package nus.iss.sa57.csc_android;
 
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import androidx.core.view.WindowCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import nus.iss.sa57.csc_android.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
+import nus.iss.sa57.csc_android.model.AzureImage;
+import nus.iss.sa57.csc_android.model.CatSighting;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        fetchCatSightingList();
+    }
 
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+    private void fetchCatSightingList() {
+        new Thread(new Runnable() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+            public void run() {
+                String urlString = "http://10.0.2.2:8080/android/test2";
+                HttpURLConnection urlConnection = null;
+                BufferedReader reader = null;
+                String responseData = null;
+                try {
+                    URL url = new URL(urlString);
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+
+                    int responseCode = urlConnection.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                        StringBuilder stringBuilder = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            stringBuilder.append(line).append("\n");
+                        }
+                        responseData = stringBuilder.toString();
+                    } else {
+                        Log.e("MainActivity", "HTTP error code: " + responseCode);
+                    }
+                } catch (IOException e) {
+                    Log.e("MainActivity", "Error fetching data from server: " + e.getMessage());
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                    if (reader != null) {
+                        try {
+                            reader.close();
+                        } catch (IOException e) {
+                            Log.e("MainActivity", "Error closing reader: " + e.getMessage());
+                        }
+                    }
+                }
+                if (responseData != null) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(responseData);
+                        List<CatSighting> csList = new ArrayList<>();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String sightingName = jsonObject.getString("sightingName");
+                            Log.d("MainActivity", "CatSighting Name: " + sightingName);
+                            CatSighting cs = CatSighting.parseFromJSON(jsonObject);
+                            Log.d("MainActivity", "CatSighting Name: " + cs.getSightingName());
+                            Log.d("MainActivity", "CatSighting Time: " + cs.getTime());
+                            List<AzureImage> imgs = cs.getImages();
+                            for (AzureImage ai : imgs) {
+                                Log.d("MainActivity", "CatSighting Img Id: " + ai.getFileName());
+                            }
+                            csList.add(cs);
+                        }
+                        if(!csList.isEmpty()){
+                            Log.d("MainActivity", "CatSighting Name: " + csList.get(0).getSightingName());
+                        }
+                    } catch (JSONException e) {
+                        Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("MainActivity", "Failed to fetch data from server");
+                }
             }
-        });
+        }).start();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
+//    private void fetchSingleCatSighting() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                String urlString = "http://10.0.2.2:8080/android/test";
+//                HttpURLConnection urlConnection = null;
+//                BufferedReader reader = null;
+//                String responseData = null;
+//                try {
+//                    URL url = new URL(urlString);
+//                    urlConnection = (HttpURLConnection) url.openConnection();
+//                    urlConnection.setRequestMethod("GET");
+//
+//                    int responseCode = urlConnection.getResponseCode();
+//                    if (responseCode == HttpURLConnection.HTTP_OK) {
+//                        reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+//                        StringBuilder stringBuilder = new StringBuilder();
+//                        String line;
+//                        while ((line = reader.readLine()) != null) {
+//                            stringBuilder.append(line).append("\n");
+//                        }
+//                        responseData = stringBuilder.toString();
+//                    } else {
+//                        Log.e("MainActivity", "HTTP error code: " + responseCode);
+//                    }
+//                } catch (IOException e) {
+//                    Log.e("MainActivity", "Error fetching data from server: " + e.getMessage());
+//                } finally {
+//                    if (urlConnection != null) {
+//                        urlConnection.disconnect();
+//                    }
+//                    if (reader != null) {
+//                        try {
+//                            reader.close();
+//                        } catch (IOException e) {
+//                            Log.e("MainActivity", "Error closing reader: " + e.getMessage());
+//                        }
+//                    }
+//                }
+//                if (responseData != null) {
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(responseData);
+//                        String sightingName = jsonObject.getString("sightingName");
+//                        Log.d("MainActivity", "CatSighting Name: " + sightingName);
+//                        CatSighting cs = CatSighting.parseFromJSON(jsonObject);
+//                        Log.d("MainActivity", "CatSighting Name: " + cs.getSightingName());
+//                        Log.d("MainActivity", "CatSighting Time: " + cs.getTime());
+//                        List<AzureImage> imgs = cs.getImages();
+//                        for (AzureImage ai : imgs){
+//                            Log.d("MainActivity", "CatSighting Img Id: " + ai.getFileName());
+//                        }
+//                    } catch (JSONException e) {
+//                        Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
+//                    }
+//                } else {
+//                    Log.e("MainActivity", "Failed to fetch data from server");
+//                }
+//            }
+//        }).start();
+//    }
 }
