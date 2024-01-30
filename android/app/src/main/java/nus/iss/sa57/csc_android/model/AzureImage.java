@@ -1,5 +1,8 @@
 package nus.iss.sa57.csc_android.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AzureImage {
     private int id;
     private String CONTAINER_NAME;
@@ -64,5 +67,15 @@ public class AzureImage {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public static AzureImage parseFromJSON(JSONObject js) throws JSONException {
+        AzureImage azureImage = new AzureImage();
+        azureImage.setId(js.getInt("id"));
+        azureImage.setCONTAINER_NAME(js.getString("container_NAME"));
+        azureImage.setSTORAGE_ACCOUNT_NAME(js.getString("storage_ACCOUNT_NAME"));
+        azureImage.setImageURL(js.getString("imageURL"));
+        azureImage.setFileName(js.getString("fileName"));
+        return azureImage;
     }
 }

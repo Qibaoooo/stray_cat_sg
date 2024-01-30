@@ -8,4 +8,18 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
+    <include layout="@layout/title_bar" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/pink"
+        android:dividerHeight="1dp"
+        android:background="@color/light_yellow"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="56dp"/>
+
+    <include layout="@layout/navigation_bar"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
