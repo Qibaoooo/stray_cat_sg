@@ -21,19 +21,27 @@ import nus.iss.sa57.csc_android.model.AzureImage;
 import nus.iss.sa57.csc_android.model.CatSighting;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String HOST = String.valueOf(R.string.host_local);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fetchCatSightingList();
+        setupList();
     }
 
-    private void fetchCatSightingList() {
+    private void setupList() {
+        List<CatSighting> csList = fetchCatSightingList();
+        //need an adapter to inflate the listView
+        //need onClickListener
+    }
+
+    private List<CatSighting> fetchCatSightingList(){
+        List<CatSighting> csList = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String urlString = "http://10.0.2.2:8080/android/test2";
+                String urlString = HOST + "/android/test2";
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
                 String responseData = null;
@@ -71,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 if (responseData != null) {
                     try {
                         JSONArray jsonArray = new JSONArray(responseData);
-                        List<CatSighting> csList = new ArrayList<>();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             String sightingName = jsonObject.getString("sightingName");
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             csList.add(cs);
                         }
-                        if(!csList.isEmpty()){
+                        if (!csList.isEmpty()) {
                             Log.d("MainActivity", "CatSighting Name: " + csList.get(0).getSightingName());
                         }
                     } catch (JSONException e) {
