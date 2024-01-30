@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import nus.iss.team11.controller.service.RollService;
 import nus.iss.team11.model.Roll;
+import nus.iss.team11.model.CatSighting;
 
 
 @Controller
@@ -33,6 +34,13 @@ public class CommonController {
 		rollService.recordRoll(roll);
 		
 		return new ResponseEntity<>(randInt.toString(), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/android/test")
+	public ResponseEntity<CatSighting> testComm(){
+		CatSighting cs11 = new CatSighting();
+		cs11.setSightingName("android test 111");
+		return new ResponseEntity<CatSighting>(cs11,HttpStatus.OK);
 	}
 
 }
