@@ -11,9 +11,13 @@ import org.springframework.context.annotation.Bean;
 import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.CatSighting;
+import nus.iss.team11.model.Cat;
+import nus.iss.team11.model.LostCat;
 import nus.iss.team11.model.Roll;
 import nus.iss.team11.repository.AzureImageRepository;
 import nus.iss.team11.repository.CatSightingRepository;
+import nus.iss.team11.repository.CatRepository;
+import nus.iss.team11.repository.LostCatRepository;
 import nus.iss.team11.repository.RollRepository;
 
 @SpringBootApplication
@@ -29,12 +33,16 @@ public class StrayCatsSGApplication {
 	@Bean
 	CommandLineRunner loadData(RollRepository rollRepo,
 			AzureImageRepository azureImageRepository,
-			CatSightingRepository catSightingRepository) {
+			CatSightingRepository catSightingRepository,
+			CatRepository catRepository,
+			LostCatRepository lostCatRepository) {
 		return (args) -> {
 			// clean start
 			rollRepo.deleteAll();
 			azureImageRepository.deleteAll();
 			catSightingRepository.deleteAll();
+			catRepository.deleteAll();
+			lostCatRepository.deleteAll();
 			
 			Roll r1 = new Roll();
 			r1.setResult(99);

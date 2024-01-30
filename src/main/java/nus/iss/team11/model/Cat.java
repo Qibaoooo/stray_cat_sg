@@ -7,9 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,29 +18,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CatSighting {
+public class Cat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-		
-	@ManyToOne
-	private SCSUser scsUser;
-	// TODO: cat
 	
-	@ManyToOne
-	private Cat cat;
 	
-	private String sightingName;
-	private Float locationLat;
-	private Float locationLong;
+	@OneToMany(mappedBy = "cat")
+	private List<CatSighting> catSightings;
 	
-	private LocalDate time;
+	private String catName;
+	private String catBreed;
 	
-	@OneToMany(mappedBy = "catSighting")
-	private List<AzureImage> images;
+	private List<String> labels;
 	
-	private String suggestedCatName;
-	private String suggestedCatBreed;
+	/*
+	@OneToMany(mappedBy = "cat")
+	private List<Comment> comments;
+	*/
 	
-	private boolean isApproved;
+	private Float catLocation;
+	
 }
