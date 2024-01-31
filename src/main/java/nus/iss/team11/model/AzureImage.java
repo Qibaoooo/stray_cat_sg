@@ -1,7 +1,5 @@
 package nus.iss.team11.model;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,12 +21,6 @@ public class AzureImage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Value("${azure.container.name}")
-	private String CONTAINER_NAME;
-
-	@Value("${azure.storage.account.name}")
-	private String STORAGE_ACCOUNT_NAME;
-	
 	@ManyToOne
 	@JoinColumn(name="catSighting")
 	private CatSighting catSighting;
@@ -45,6 +37,4 @@ public class AzureImage {
 		String[] arr = fileName.split("_");
 		return arr[0] + "_" + arr[1] + "_" + arr[2];
 	}
-
-
 }
