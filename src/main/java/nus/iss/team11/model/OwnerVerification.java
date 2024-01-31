@@ -26,8 +26,8 @@ public class OwnerVerification {
 	@OneToOne(mappedBy="ownerVerification")
 	private SCSUser applicant;
 	
-	@OneToMany(mappedBy = "ownerVerification")
-	private List<AzureImage> azureImages;
+	@OneToOne(mappedBy = "ownerVerification")
+	private AzureImage azureImage;
 	
 	private String status;
 	

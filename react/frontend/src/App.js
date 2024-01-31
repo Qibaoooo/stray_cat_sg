@@ -1,9 +1,9 @@
-import MapPage from "pages/mapPage";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { useState } from "react";
-import { Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import MapPage from "pages/MapPage";
 
 function App() {
   const BACKEND_IP = process.env.REACT_APP_BACKEND_IP
@@ -24,10 +24,10 @@ function App() {
 
   return (
     <div className="App bg-primary-subtle">
-      <Route>
+      <Routes>
         <Route path="/" element={<MapPage />} />
         <Route path="/map" element={<MapPage />} />
-      </Route>
+      </Routes>
     </div>
   );
 }

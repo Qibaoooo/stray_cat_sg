@@ -18,3 +18,8 @@ export const getJsonHeadersWithJWT = () => {
     "Authorization": "Bearer " + getUserinfoFromLocal().jwt
   };
 };
+
+export const SingaporeGeoCoord = {
+  lat: 1.36500,
+  lng: 103.817,
+}

@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,8 @@ public class AzureImage {
 	@JoinColumn(name="catSighting")
 	private CatSighting catSighting;
 	
-	@ManyToOne
+	@OneToOne
+	@JoinColumn(name="ownerVerification")
 	private OwnerVerification ownerVerification;
 
 	
