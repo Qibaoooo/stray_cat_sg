@@ -22,12 +22,12 @@ import nus.iss.sa57.csc_android.model.CatSighting;
 
 public class MainActivity extends AppCompatActivity {
     //change this host to switch to deployed server
-    private static final String HOST = String.valueOf(R.string.host_local);
+    private static String HOST;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        HOST = getResources().getString(R.string.host_local);
         setupList();
     }
 
