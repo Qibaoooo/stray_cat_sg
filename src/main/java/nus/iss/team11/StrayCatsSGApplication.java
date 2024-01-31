@@ -2,6 +2,7 @@ package nus.iss.team11;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -68,6 +69,8 @@ public class StrayCatsSGApplication {
 					cs.setTime(LocalDate.now());
 					cs.setApproved(false);
 					
+					setLatLongForCatSighting(cs);
+					
 					csMap.put(sightingName, cs);
 					// we must run `save(cs)` before `save(ai)`!
 					catSightingRepository.save(cs);
@@ -83,6 +86,23 @@ public class StrayCatsSGApplication {
 			});;
 			
 		};
+	}
+
+	private void setLatLongForCatSighting(CatSighting cs) {
+		// left of sg
+        //{"lat":1.3289069765802501,"lng":103.65466244818562}
+		// right of sg
+		//{"lat":1.3287119649067418,"lng":103.9591429253922}
+		
+		// top of sg
+		//{"lat":1.4448702372292983,"lng":103.79211437104709}
+		// bottom of sg
+		//{"lat":1.2883596413134546,"lng":103.80069743989475}
+		Random r = new Random();
+		float lng = (float) (103.65 + r.nextFloat() * (103.95 - 103.65));
+		float lat = (float) (1.288 + r.nextFloat() * (1.444 - 1.288));
+		cs.setLocationLat(lat);
+		cs.setLocationLong(lng);
 	}
 	
 
