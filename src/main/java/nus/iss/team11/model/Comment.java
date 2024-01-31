@@ -26,14 +26,14 @@ public class Comment {
 	private int id;
 	
 	private String content;
+	
 	@ManyToOne
-	@JoinColumn(name="catid")
 	private Cat cat;
+	
 	private Date time;
 	
 	@ManyToOne
-	@JoinColumn(name="SCSUserid")
-	private SCSUser scsuser;
+	private SCSUser scsUser;
 	
 	private List<String> newlabels;
 }
