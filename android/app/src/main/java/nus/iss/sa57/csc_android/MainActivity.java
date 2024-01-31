@@ -103,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
+        return csList;
     }
+}
 
 //    private void fetchSingleCatSighting() {
 //        new Thread(new Runnable() {
@@ -165,4 +167,4 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }).start();
 //    }
-}
+
