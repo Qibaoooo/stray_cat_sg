@@ -29,13 +29,15 @@ public class AzureImage {
 	@Value("${azure.storage.account.name}")
 	private String STORAGE_ACCOUNT_NAME;
 	
+	private String imageURL;
+	private String fileName;
+	
 	@ManyToOne
 	@JoinColumn(name="catSighting")
 	private CatSighting catSighting;
-
-	private String imageURL;
-
-	private String fileName;
+	
+	@ManyToOne
+	private OwnerVerification ownerVerification;
 
 	
 	public String deriveSighting() {

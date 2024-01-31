@@ -13,8 +13,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-starter-json/3.2.1/spring-boot-starter-json-3.2.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.15.3/jackson-databind-2.15.3.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.15.3/jackson-annotations-2.15.3.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.15.3/jackson-core-2.15.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.3/jackson-datatype-jdk8-2.15.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.3/jackson-datatype-jsr310-2.15.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.3/jackson-module-parameter-names-2.15.3.jar" enabled="true" runInBatchMode="false"/>
@@ -32,6 +30,9 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/jakarta/xml/bind/jakarta.xml.bind-api/4.0.1/jakarta.xml.bind-api-4.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/jakarta/activation/jakarta.activation-api/2.1.2/jakarta.activation-api-2.1.2.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/net/minidev/json-smart/2.5.0/json-smart-2.5.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/net/minidev/accessors-smart/2.5.0/accessors-smart-2.5.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/ow2/asm/asm/9.3/asm-9.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/net/bytebuddy/byte-buddy/1.14.10/byte-buddy-1.14.10.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-core/6.1.2/spring-core-6.1.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-starter-data-jpa/3.2.1/spring-boot-starter-data-jpa-3.2.1.jar" enabled="true" runInBatchMode="false"/>
@@ -68,4 +69,55 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/json/json/20230618/json-20230618.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/azure/azure-storage-blob/12.25.1/azure-storage-blob-12.25.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/azure/azure-core/1.45.1/azure-core-1.45.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/azure/azure-json/1.1.0/azure-json-1.1.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.15.3/jackson-annotations-2.15.3.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.15.3/jackson-core-2.15.3.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/projectreactor/reactor-core/3.6.1/reactor-core-3.6.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/reactivestreams/reactive-streams/1.0.4/reactive-streams-1.0.4.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/azure/azure-core-http-netty/1.13.11/azure-core-http-netty-1.13.11.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-handler/4.1.104.Final/netty-handler-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-resolver/4.1.104.Final/netty-resolver-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-transport/4.1.104.Final/netty-transport-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-handler-proxy/4.1.104.Final/netty-handler-proxy-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-codec-socks/4.1.104.Final/netty-codec-socks-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-buffer/4.1.104.Final/netty-buffer-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-codec/4.1.104.Final/netty-codec-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-codec-http/4.1.104.Final/netty-codec-http-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-codec-http2/4.1.104.Final/netty-codec-http2-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-transport-native-unix-common/4.1.104.Final/netty-transport-native-unix-common-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-transport-native-epoll/4.1.104.Final/netty-transport-native-epoll-4.1.104.Final-linux-x86_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-transport-classes-epoll/4.1.104.Final/netty-transport-classes-epoll-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-transport-native-kqueue/4.1.104.Final/netty-transport-native-kqueue-4.1.104.Final-osx-x86_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-transport-classes-kqueue/4.1.104.Final/netty-transport-classes-kqueue-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-tcnative-boringssl-static/2.0.61.Final/netty-tcnative-boringssl-static-2.0.61.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-tcnative-classes/2.0.61.Final/netty-tcnative-classes-2.0.61.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-tcnative-boringssl-static/2.0.61.Final/netty-tcnative-boringssl-static-2.0.61.Final-linux-x86_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-tcnative-boringssl-static/2.0.61.Final/netty-tcnative-boringssl-static-2.0.61.Final-linux-aarch_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-tcnative-boringssl-static/2.0.61.Final/netty-tcnative-boringssl-static-2.0.61.Final-osx-x86_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-tcnative-boringssl-static/2.0.61.Final/netty-tcnative-boringssl-static-2.0.61.Final-osx-aarch_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-tcnative-boringssl-static/2.0.61.Final/netty-tcnative-boringssl-static-2.0.61.Final-windows-x86_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/projectreactor/netty/reactor-netty-http/1.1.14/reactor-netty-http-1.1.14.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-resolver-dns/4.1.104.Final/netty-resolver-dns-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-codec-dns/4.1.104.Final/netty-codec-dns-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-resolver-dns-native-macos/4.1.104.Final/netty-resolver-dns-native-macos-4.1.104.Final-osx-x86_64.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-resolver-dns-classes-macos/4.1.104.Final/netty-resolver-dns-classes-macos-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/projectreactor/netty/reactor-netty-core/1.1.14/reactor-netty-core-1.1.14.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/netty/netty-common/4.1.104.Final/netty-common-4.1.104.Final.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/azure/azure-storage-internal-avro/12.10.1/azure-storage-internal-avro-12.10.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/dataformat/jackson-dataformat-xml/2.15.3/jackson-dataformat-xml-2.15.3.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/codehaus/woodstox/stax2-api/4.2.1/stax2-api-4.2.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/woodstox/woodstox-core/6.5.1/woodstox-core-6.5.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/azure/azure-storage-common/12.24.1/azure-storage-common-12.24.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/azure/azure-identity/1.11.1/azure-identity-1.11.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/microsoft/azure/msal4j/1.14.0/msal4j-1.14.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/nimbusds/oauth2-oidc-sdk/10.7.1/oauth2-oidc-sdk-10.7.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/nimbusds/content-type/2.2/content-type-2.2.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/nimbusds/lang-tag/1.7/lang-tag-1.7.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/nimbusds/nimbus-jose-jwt/9.30.2/nimbus-jose-jwt-9.30.2.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/microsoft/azure/msal4j-persistence-extension/1.2.0/msal4j-persistence-extension-1.2.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/net/java/dev/jna/jna-platform/5.6.0/jna-platform-5.6.0.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

@@ -23,7 +23,6 @@ public class Cat {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	
 	@OneToMany(mappedBy = "cat")
 	private List<CatSighting> catSightings;
 	
@@ -32,10 +31,9 @@ public class Cat {
 	
 	private List<String> labels;
 	
-	/*
 	@OneToMany(mappedBy = "cat")
 	private List<Comment> comments;
-	*/
+	
 	
 	private Float catLocation;
 	
