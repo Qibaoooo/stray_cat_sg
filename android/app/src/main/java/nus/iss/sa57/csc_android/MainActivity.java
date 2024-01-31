@@ -2,6 +2,10 @@ package nus.iss.sa57.csc_android;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +24,7 @@ import java.util.List;
 import nus.iss.sa57.csc_android.model.AzureImage;
 import nus.iss.sa57.csc_android.model.CatSighting;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     //change this host to switch to deployed server
     private static String HOST;
     @Override
@@ -34,9 +38,18 @@ public class MainActivity extends AppCompatActivity {
     private void setupList() {
         List<CatSighting> csList = fetchCatSightingList();
         //need an adapter to inflate the listView
+        CatSightingAdapter adapter=new CatSightingAdapter(this,csList);
+        ListView listView=findViewById(R.id.listView);
+        if(listView!=null){
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(this);
+        }
         //need onClickListener
     }
-
+@Override
+public void onItemClick(AdapterView<?>av, View v, int pos, long id){
+        //TO DO: TO BE COMPLETED
+}
     private List<CatSighting> fetchCatSightingList(){
         List<CatSighting> csList = new ArrayList<>();
         new Thread(new Runnable() {
