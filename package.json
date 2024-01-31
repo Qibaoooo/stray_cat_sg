@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "google-maps-react-markers": "^2.0.8"
+  }
+}
