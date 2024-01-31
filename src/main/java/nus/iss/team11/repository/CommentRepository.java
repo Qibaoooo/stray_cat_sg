@@ -13,6 +13,6 @@ import nus.iss.team11.model.SCSUser;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment,Integer>{
 
-	List<Comment> findByScsuser(SCSUser user);
+	List<Comment> findByScsUser(SCSUser user);
 	List<Comment> findByCat(Cat cat);
 }

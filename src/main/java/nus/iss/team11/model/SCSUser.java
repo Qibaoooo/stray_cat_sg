@@ -29,9 +29,12 @@ public class SCSUser {
 	private boolean isOwner;
 	@OneToMany(mappedBy = "scsUser")
 	private List<CatSighting> cat_sightings;
-	//@OneToMany(mappedBy = "scsUser") To DO:lost cat?
-	//private List<AzureImage> cat_owner_photos;
+	@OneToOne
+	private LostCat lostCat;
 	@OneToOne
 	private OwnerVerification ownerVerification;
-//TO DO:avatar_format;
+	@OneToMany(mappedBy = "scsUser")
+	private List<Comment> comments;
+	
+	//TODO: avatar
 }

@@ -27,7 +27,6 @@ public class CatSighting {
 		
 	@ManyToOne
 	private SCSUser scsUser;
-	// TODO: cat
 	
 	@ManyToOne
 	private Cat cat;

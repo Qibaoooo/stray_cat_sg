@@ -20,14 +20,16 @@ public class AzureImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	
+	private String imageURL;
+	private String fileName;
+	
 	@ManyToOne
 	@JoinColumn(name="catSighting")
 	private CatSighting catSighting;
-
-	private String imageURL;
-
-	private String fileName;
+	
+	@ManyToOne
+	private OwnerVerification ownerVerification;
 
 	
 	public String deriveSighting() {
