@@ -68,6 +68,8 @@ public class StrayCatsSGApplication {
 					cs.setSightingName(sightingName);
 					cs.setTime(LocalDate.now());
 					cs.setApproved(false);
+					cs.setSuggestedCatName("test cat 1");
+					cs.setSuggestedCatBreed("test cat breed 1");
 					
 					setLatLongForCatSighting(cs);
 					

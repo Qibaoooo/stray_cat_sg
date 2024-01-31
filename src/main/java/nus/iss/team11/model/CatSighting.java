@@ -55,8 +55,9 @@ public class CatSighting {
 		json.put("isApproved", isApproved);
 		json.put("suggestedCatName", suggestedCatName);
 		json.put("suggestedCatBreed", suggestedCatBreed);
-		json.put("lat", locationLat);
-		json.put("lng", locationLong);
+		json.put("locationLat", locationLat);
+		json.put("locationLong", locationLong);
+		json.put("time",time);
 		json.put("sightingName", sightingName);
 		
 		JSONArray urls = new JSONArray();
