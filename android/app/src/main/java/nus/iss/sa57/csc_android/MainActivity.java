@@ -27,20 +27,21 @@ import nus.iss.sa57.csc_android.model.CatSighting;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     //change this host to switch to deployed server
     private static String HOST;
+    List<CatSighting> csList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HOST = getResources().getString(R.string.host_local);
-        setupList();
+        csList = fetchCatSightingList();
     }
 
     private void setupList() {
-        List<CatSighting> csList = fetchCatSightingList();
         //need an adapter to inflate the listView
         CatSightingAdapter adapter=new CatSightingAdapter(this,csList);
         ListView listView=findViewById(R.id.listView);
         if(listView!=null){
+            Log.e("MainActivity", "ListView not null");
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(this);
         }
@@ -57,7 +58,7 @@ public void onItemClick(AdapterView<?>av, View v, int pos, long id){
             public void run() {
                 //Here HOST is declared at the top of the java file
                 //change that to switch to deployed server
-                String urlString = HOST + "/android/test2";
+                String urlString = HOST + "/api/cat_sightings";
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
                 String responseData = null;
@@ -115,10 +116,6 @@ public void onItemClick(AdapterView<?>av, View v, int pos, long id){
                             Log.d("MainActivity", "CatSighting Name: " + sightingName);
                             Log.d("MainActivity", "CatSighting Name: " + cs.getSightingName());
                             Log.d("MainActivity", "CatSighting Time: " + cs.getTime());
-                            List<AzureImage> imgs = cs.getImages();
-                            for (AzureImage ai : imgs) {
-                                Log.d("MainActivity", "CatSighting Img Id: " + ai.getFileName());
-                            }
 
                             csList.add(cs);
                         }
@@ -128,6 +125,13 @@ public void onItemClick(AdapterView<?>av, View v, int pos, long id){
                 } else {
                     Log.e("MainActivity", "Failed to fetch data from server");
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupList();
+                    }
+                });
+
             }
         }).start();
         return csList;

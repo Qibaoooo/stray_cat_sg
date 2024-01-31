@@ -37,9 +37,10 @@ public class CatSightingAdapter extends ArrayAdapter<Object> {
         }
         TextView uploadby = view.findViewById(R.id.uploadedby);
         uploadby.setText(catSightingList.get(pos).getSightingName());
-        TextView location=view.findViewById(R.id.location);
-        location.setText(catSightingList.get(pos).getLocationLat().toString()+catSightingList.get(pos).getLocationLong().toString());
-        TextView uploadtime=view.findViewById(R.id.uploadtime);
+        TextView location = view.findViewById(R.id.location);
+        location.setText("Latitude: " + catSightingList.get(pos).getLocationLat().toString()
+                + " Longtitude: " + catSightingList.get(pos).getLocationLong().toString());
+        TextView uploadtime = view.findViewById(R.id.uploadtime);
         uploadtime.setText(catSightingList.get(pos).getTime().toString());
         return view;
     }

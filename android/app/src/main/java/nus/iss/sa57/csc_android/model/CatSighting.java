@@ -19,7 +19,8 @@ public class CatSighting {
     private Float locationLat;
     private Float locationLong;
     private LocalDate time;
-    private List<AzureImage> images;
+    //private List<AzureImage> images;
+    private List<String> imagesURLs;
     private String suggestedCatName;
     private String suggestedCatBreed;
     private boolean isApproved;
@@ -67,12 +68,19 @@ public class CatSighting {
         this.time = time;
     }
 
-    public List<AzureImage> getImages() {
-        return images;
+//    public List<AzureImage> getImages() {
+//        return images;
+//    }
+//
+//    public void setImages(List<AzureImage> images) {
+//        this.images = images;
+//    }
+    public List<String> getImagesURLs() {
+        return imagesURLs;
     }
 
-    public void setImages(List<AzureImage> images) {
-        this.images = images;
+    public void setImagesURLs(List<String> imagesURLs) {
+        this.imagesURLs = imagesURLs;
     }
 
     public String getSuggestedCatName() {
@@ -109,19 +117,17 @@ public class CatSighting {
         LocalDate date = LocalDate.parse(timeString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         catSighting.setTime(date);
 
-        JSONArray imagesArray = js.getJSONArray("images");
-        List<AzureImage> imagesList = new ArrayList<>();
-        for (int i = 0; i < imagesArray.length(); i++) {
-            JSONObject imgJs = imagesArray.getJSONObject(i);
-            AzureImage image = AzureImage.parseFromJSON(imgJs);
-            image.setCatSighting(catSighting);
-            imagesList.add(image);
+        JSONArray imagesURLsArray = js.getJSONArray("imagesURLs");
+        List<String> imagesURLsList = new ArrayList<>();
+        for (int i = 0; i < imagesURLsArray.length(); i++) {
+            String url = imagesURLsArray.getString(i);
+            imagesURLsList.add(url);
         }
-        catSighting.setImages(imagesList);
+        catSighting.setImagesURLs(imagesURLsList);
 
         catSighting.setSuggestedCatName(js.getString("suggestedCatName"));
         catSighting.setSuggestedCatBreed(js.getString("suggestedCatBreed"));
-        catSighting.setApproved(js.getBoolean("approved"));
+        catSighting.setApproved(js.getBoolean("isApproved"));
 
         return catSighting;
     }
