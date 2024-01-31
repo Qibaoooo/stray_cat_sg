@@ -1,8 +1,10 @@
 package nus.iss.team11.model;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import jakarta.persistence.Entity;
@@ -56,6 +58,13 @@ public class CatSighting {
 		json.put("lat", locationLat);
 		json.put("lng", locationLong);
 		json.put("sightingName", sightingName);
+		
+		JSONArray urls = new JSONArray();
+		images.stream().forEach(image -> {
+			urls.put(image.getImageURL());
+		});
+		
+		json.put("imagesURLs",urls);
 		
 		// TODO: add this when we have test data for scsUser
 		//json.put("uploadedBy", scsUser.getUsername());
