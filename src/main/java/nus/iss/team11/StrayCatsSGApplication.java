@@ -98,6 +98,7 @@ public class StrayCatsSGApplication {
 				
 				// update relationship
 				cs.setCat(cat);
+				cs.setApproved(true);
 				catSightingRepository.save(cs);
 			});
 

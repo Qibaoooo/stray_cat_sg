@@ -1,8 +1,10 @@
 import React from 'react'
 
-const CatCommentPanel = () => {
+const CatCommentPanel = ({ isApproved }) => {
   return (
-    <div>CatCommentPanel</div>
+    <div style={{ marginTop:"50%"}}>
+      {isApproved ? "Cat Comments Goes Here" : "Comment will be avaiable after admin approval"}
+    </div>
   )
 }
 
