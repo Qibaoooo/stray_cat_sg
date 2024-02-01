@@ -1,7 +1,7 @@
 import React from "react";
 // import GoogleMapReact from "google-map-react";
 import { Col, Row } from "react-bootstrap";
-import SidePanel from "./components/SidePanel";
+import MapSidePanel from "./components/MapSidePanel";
 import CatMap from "./components/CatMap";
 
 const MapPage = () => {
@@ -11,7 +11,7 @@ const MapPage = () => {
         <CatMap />
       </Col>
       <Col>
-        <SidePanel></SidePanel>
+        <MapSidePanel></MapSidePanel>
       </Col>
     </Row>
   );

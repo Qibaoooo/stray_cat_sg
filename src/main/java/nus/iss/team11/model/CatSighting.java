@@ -59,6 +59,9 @@ public class CatSighting {
 		json.put("locationLong", locationLong);
 		json.put("time",time);
 		json.put("sightingName", sightingName);
+		if (cat != null) {			
+			json.put("cat", cat.getId());
+		}
 		
 		JSONArray urls = new JSONArray();
 		images.stream().forEach(image -> {
