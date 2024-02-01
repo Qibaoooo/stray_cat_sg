@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Stack } from "react-bootstrap";
 
 const CatDetailsPanel = ({ cat, displayImgUrl }) => {
-
   const tdStyles = {
     paddingRight: "1rem",
     width: "6rem",
@@ -27,30 +26,32 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
           cellSpacing={0}
           style={{ borderCollapse: "collapse", margin: "auto" }}
         >
-          <tr>
-            <td style={tdStyles}>Name:</td>
-            <td>
-              <span>{cat.catName}</span>
-            </td>
-          </tr>
-          <tr>
-            <td style={tdStyles}>ID:</td>
-            <td>
-              <span>{cat.id}</span>
-            </td>
-          </tr>
-          <tr>
-            <td style={tdStyles}>Labels:</td>
-            <td>
-              <span>{cat.labels}</span>
-            </td>
-          </tr>
-          <tr>
-            <td style={tdStyles}>Location:</td>
-            <td>
-              <span>?</span>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td style={tdStyles}>Name:</td>
+              <td>
+                <span>{cat.catName}</span>
+              </td>
+            </tr>
+            <tr>
+              <td style={tdStyles}>ID:</td>
+              <td>
+                <span>{cat.id}</span>
+              </td>
+            </tr>
+            <tr>
+              <td style={tdStyles}>Labels:</td>
+              <td>
+                <span>{cat.labels}</span>
+              </td>
+            </tr>
+            <tr>
+              <td style={tdStyles}>Location:</td>
+              <td>
+                <span>?</span>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </Stack>

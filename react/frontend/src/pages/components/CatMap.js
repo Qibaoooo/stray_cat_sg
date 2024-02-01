@@ -11,7 +11,6 @@ const CatMap = () => {
     const [catSightings,SetCatSightings] = useState([])
 
     let apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-    console.log(apiKey);
   
     const onGoogleApiLoaded = ({ map, maps }) => {
       mapRef.current = map
