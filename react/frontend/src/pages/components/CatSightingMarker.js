@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Button } from "react-bootstrap";
 import "./CatSightingMarker.css"
 
-const CatSightingMarker = ({text}) => {
+const CatSightingMarker = ({sighting}) => {
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const toggleInfoWindow = () => {
     setShowInfoWindow(!showInfoWindow);
@@ -14,7 +14,7 @@ const CatSightingMarker = ({text}) => {
 
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative'}}>
       <Button
         size="sm"
         style={{ backgroundColor: "transparent", border: "0px" }}
@@ -23,11 +23,13 @@ const CatSightingMarker = ({text}) => {
         <h3>🐱</h3>
       </Button>
 
+
       {showInfoWindow && (
         <div className="info-window">
+          <h4>{sighting.text}</h4>
+          <img src={sighting.imagesURLs[0]} style={{ width: "150px", border:"1px solid #ddd", }}/>
+          <p>{sighting.text || 'Details about the sighting...'}</p>
           <button className="close-button" onClick={closeInfoWindow}>&times;</button>
-          <h4>{text}</h4>
-          <p>{text || 'Details about the sighting...'}</p>
         </div>
       )}
     </div>

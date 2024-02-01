@@ -46,9 +46,12 @@ const CatMap = () => {
         >
             {catSightings.map((catSighting, index, array) => {
               return <CatSightingMarker 
+              key={index}
               lat={catSighting.locationLat}
               lng={catSighting.locationLong}
-              text={catSighting.sightingName}
+              sighting={catSighting}
+              optimizad={false}
+              zIndex={-index} // this is needed so that the marker does not appear on top of infowindow
               />
             })}
         </GoogleMap>
