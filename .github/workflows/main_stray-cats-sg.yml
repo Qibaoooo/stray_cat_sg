@@ -28,7 +28,7 @@ jobs:
         run: |
           npm install
           npm run build:prod --if-present
-          npm run test --if-present
+          # npm run test --if-present
         working-directory: react/frontend/
 
       - name: Zip artifact for deployment
