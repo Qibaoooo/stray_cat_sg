@@ -13,10 +13,10 @@ const CatDetailsPage = () => {
       <h5>CatDetailsPage</h5>
       {id ? (
         <Row>
-          <Col xs={4}>
+          <Col xs={6}>
             <CatDetailsPanel id={id}></CatDetailsPanel>
           </Col>
-          <Col xs={8}>
+          <Col xs={6}>
             <CatCommentPanel></CatCommentPanel>
           </Col>
         </Row>
