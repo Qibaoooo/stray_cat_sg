@@ -15,7 +15,8 @@ export const getJsonHeadersWithJWT = () => {
     "Access-Control-Allow-Origin": "http://localhost:3000",
     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-    Authorization: "Bearer " + getUserinfoFromLocal().jwt,
+    // TODO: enable this after spring security is setup
+    // Authorization: "Bearer " + getUserinfoFromLocal() ? getUserinfoFromLocal().jwt : '',
   };
 };
 
