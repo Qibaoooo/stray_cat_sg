@@ -2,29 +2,18 @@
     position: absolute;
     bottom: 50px;
     left: 50%;
-    transform: translateX(-25%);
+    transform: translateX(-40%);
     background-color: white;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    z-index: 100;
+    z-index: 999;
     /* Other styles */
   }
   
-  .info-window::after {
-    content: "";
-    position: absolute;
-    bottom: -18px; /* Adjust this value if the pointer needs to be larger or smaller */
-    left: 60%;
-    margin-left: -10px; /* This should be half of border-left and border-right */
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 20px solid white; /* This color should match .info-window background-color */
-    transform: translateX(-50%);
-  }
+  
   
   .close-button {
-    position: absolute;
     top: 5px;
     right: 5px;
     cursor: pointer;
