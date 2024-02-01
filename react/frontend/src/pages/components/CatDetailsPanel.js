@@ -2,7 +2,7 @@ import { getCat } from "pages/utils/api/Cat";
 import React, { useEffect, useState } from "react";
 import { Stack } from "react-bootstrap";
 
-const CatDetailsPanel = ({ id }) => {
+const CatDetailsPanel = ({id}) => {
   const [cat, SetCat] = useState({});
   const [imgUrl, SetImgUrl] = useState("");
 
