@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Stack } from "react-bootstrap";
 
 const CatDetailsPanel = ({ cat, displayImgUrl }) => {
-  const [imgUrl, SetImgUrl] = useState("");
 
   const tdStyles = {
     paddingRight: "1rem",
