@@ -1,21 +1,30 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import GoogleMap from 'google-maps-react-markers'
 import { SingaporeGeoCoord } from 'pages/utils/properties';
 import CatSightingMarker from './CatSightingMarker';
 import React from 'react';
+import { getAllCatSightings } from 'pages/utils/api/CatSightings';
 
 const CatMap = () => {
     const mapRef = useRef(null)
     // const [mapReady, setMapReady] = useState(false)
+    const [catSightings,SetCatSightings] = useState([])
 
     let apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     console.log(apiKey);
   
-  
     const onGoogleApiLoaded = ({ map, maps }) => {
       mapRef.current = map
+      console.log((map))
       // setMapReady(true)
     }
+
+    useEffect(()=>{
+      getAllCatSightings().then(resp => {
+        console.log(resp.data);
+        SetCatSightings(resp.data);
+      })
+    }, [])
   
     // const onMarkerClick = (e, { markerId, lat, lng }) => {
     //   console.log('This is ->', markerId)
@@ -33,14 +42,15 @@ const CatMap = () => {
           defaultCenter={SingaporeGeoCoord}
           defaultZoom={12}
           onGoogleApiLoaded={onGoogleApiLoaded}
-          mapMinHeight="100vh"
-          
-          // onChange={(map) => console.log('Map moved', map)}
+          mapMinHeight="100vh"          
         >
-            <CatSightingMarker
-                lat={SingaporeGeoCoord.lat}
-                lng={SingaporeGeoCoord.lng}
-            ></CatSightingMarker>
+            {catSightings.map((catSighting, index, array) => {
+              return <CatSightingMarker 
+              lat={catSighting.locationLat}
+              lng={catSighting.locationLong}
+              text={catSighting.sightingName}
+              />
+            })}
         </GoogleMap>
       </div>
     );

@@ -26,7 +26,7 @@ const CatSightingMarker = ({text}) => {
       {showInfoWindow && (
         <div className="info-window">
           <button className="close-button" onClick={closeInfoWindow}>&times;</button>
-          <h4>Cat Sighting</h4>
+          <h4>{text}</h4>
           <p>{text || 'Details about the sighting...'}</p>
         </div>
       )}
