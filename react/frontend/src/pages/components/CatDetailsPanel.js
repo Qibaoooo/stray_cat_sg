@@ -2,28 +2,19 @@ import { getCat } from "pages/utils/api/Cat";
 import React, { useEffect, useState } from "react";
 import { Stack } from "react-bootstrap";
 
-const CatDetailsPanel = ({id}) => {
-  const [cat, SetCat] = useState({});
-  const [imgUrl, SetImgUrl] = useState("");
-
-  useEffect(() => {
-    getCat(id).then((resp) => {
-      SetCat(resp.data);
-      SetImgUrl(resp.data.catSightings[0].imagesURLs[0]);
-    });
-  }, []);
+const CatDetailsPanel = ({ cat, displayImgUrl }) => {
 
   const tdStyles = {
     paddingRight: "1rem",
     width: "6rem",
     textAlign: "end",
-    backgroundColor: "yellow",
   };
 
   return (
     <Stack style={{ minHeight: "100vh" }}>
-      <img className="m-5" src={imgUrl} alt="cat"></img>
+      <img className="m-3" src={displayImgUrl} alt="cat"></img>
       <div
+        className="mx-3"
         style={{
           border: "1px solid black",
           borderRadius: "2rem",
