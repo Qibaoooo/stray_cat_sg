@@ -1,11 +1,11 @@
 import { getCat } from "pages/utils/api/Cat";
 import React, { useEffect, useState } from "react";
 
-const CatDetailsPanel = ({ id }) => {
+const CatDetailsPanel = ({id}) => {
   const [cat, SetCat] = useState({});
   const [imgUrl, SetImgUrl] = useState("");
 
-  useEffect((id) => {
+  useEffect(() => {
     getCat(id).then((resp) => {
       SetCat(resp.data);
       SetImgUrl(resp.data.catSightings[0].imagesURLs[0]);
@@ -21,7 +21,7 @@ const CatDetailsPanel = ({ id }) => {
         style={{ border: "1px solid black", borderRadius: "2rem" }}
       >
         <h5>Cat Details</h5>
-        {cat.name && <p>cat.name</p>}
+        {cat.catName && <p> {cat.catName} </p>}
       </div>
     </div>
   );
