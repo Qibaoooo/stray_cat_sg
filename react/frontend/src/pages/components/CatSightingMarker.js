@@ -26,6 +26,7 @@ const CatSightingMarker = ({ sighting }) => {
         <div className="info-window">
           <h4>{sighting.text}</h4>
           <img
+            alt="cat"
             src={sighting.imagesURLs[0]}
             style={{ width: "150px", border: "1px solid #ddd" }}
           />
