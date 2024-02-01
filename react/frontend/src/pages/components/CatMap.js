@@ -45,13 +45,17 @@ const CatMap = () => {
           mapMinHeight="100vh"          
         >
             {catSightings.map((catSighting, index, array) => {
+              // this is needed so that the marker does not appear on top of infowindow
+              let z = -1 * parseInt((catSighting.locationLat * 10000 + "").split(".")[0])
+              // console.log(z)
+
               return <CatSightingMarker 
               key={index}
               lat={catSighting.locationLat}
               lng={catSighting.locationLong}
               sighting={catSighting}
               optimizad={false}
-              zIndex={-index} // this is needed so that the marker does not appear on top of infowindow
+              zIndex={z} 
               />
             })}
         </GoogleMap>
