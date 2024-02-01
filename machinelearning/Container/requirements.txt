@@ -1,0 +1,7 @@
+tensorflow==2.10.0
+Flask==3.0.1
+waitress==2.1.2
+numpy==1.24.3
+scikit-learn==1.3.2
+Pillow==9.5.0
+requests==2.31.0

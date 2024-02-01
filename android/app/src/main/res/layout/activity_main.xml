@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/light_yellow"
     tools:context=".MainActivity">
 
     <include layout="@layout/title_bar" />
@@ -18,7 +19,7 @@
         android:dividerHeight="1dp"
         android:background="@color/light_yellow"
         android:layout_marginTop="56dp"
-        android:layout_marginBottom="56dp"/>
+        android:layout_marginBottom="56dp" />
 
     <include layout="@layout/navigation_bar"/>
 

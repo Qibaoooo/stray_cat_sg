@@ -2,6 +2,10 @@ package nus.iss.sa57.csc_android;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,28 +24,41 @@ import java.util.List;
 import nus.iss.sa57.csc_android.model.AzureImage;
 import nus.iss.sa57.csc_android.model.CatSighting;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String HOST = String.valueOf(R.string.host_local);
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+    //change this host to switch to deployed server
+    private static String HOST;
+    List<CatSighting> csList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        setupList();
+        HOST = getResources().getString(R.string.host_local);
+        csList = fetchCatSightingList();
     }
 
     private void setupList() {
-        List<CatSighting> csList = fetchCatSightingList();
         //need an adapter to inflate the listView
+        CatSightingAdapter adapter=new CatSightingAdapter(this,csList);
+        ListView listView=findViewById(R.id.listView);
+        if(listView!=null){
+            Log.e("MainActivity", "ListView not null");
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(this);
+        }
         //need onClickListener
     }
-
+@Override
+public void onItemClick(AdapterView<?>av, View v, int pos, long id){
+        //TO DO: TO BE COMPLETED
+}
     private List<CatSighting> fetchCatSightingList(){
         List<CatSighting> csList = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String urlString = HOST + "/android/test2";
+                //Here HOST is declared at the top of the java file
+                //change that to switch to deployed server
+                String urlString = HOST + "/api/cat_sightings";
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
                 String responseData = null;
@@ -54,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                         StringBuilder stringBuilder = new StringBuilder();
+                        //read response data line by line
                         String line;
                         while ((line = reader.readLine()) != null) {
                             stringBuilder.append(line).append("\n");
@@ -65,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     Log.e("MainActivity", "Error fetching data from server: " + e.getMessage());
                 } finally {
+                    //Close and release used resources
                     if (urlConnection != null) {
                         urlConnection.disconnect();
                     }
@@ -76,24 +95,29 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+                //Deal with response
                 if (responseData != null) {
                     try {
+                        //What we get is a ResponseEntity<List<CatSighting>>
+                        //in the form of a JSONArray
                         JSONArray jsonArray = new JSONArray(responseData);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                            //public static CatSighting parseFromJSON(JSONObject js)
+                            //This is a custom method to convert JSONObject to CatSighting
+                            //it reads every field in the JSONObject and bind the data
+                            //to the CatSighting object
+                            CatSighting cs = CatSighting.parseFromJSON(jsonObject);
+
+                            //Record Test Infomation, only for testing
                             String sightingName = jsonObject.getString("sightingName");
                             Log.d("MainActivity", "CatSighting Name: " + sightingName);
-                            CatSighting cs = CatSighting.parseFromJSON(jsonObject);
                             Log.d("MainActivity", "CatSighting Name: " + cs.getSightingName());
                             Log.d("MainActivity", "CatSighting Time: " + cs.getTime());
-                            List<AzureImage> imgs = cs.getImages();
-                            for (AzureImage ai : imgs) {
-                                Log.d("MainActivity", "CatSighting Img Id: " + ai.getFileName());
-                            }
+
                             csList.add(cs);
-                        }
-                        if (!csList.isEmpty()) {
-                            Log.d("MainActivity", "CatSighting Name: " + csList.get(0).getSightingName());
                         }
                     } catch (JSONException e) {
                         Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
@@ -101,6 +125,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.e("MainActivity", "Failed to fetch data from server");
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupList();
+                    }
+                });
+
             }
         }).start();
         return csList;
