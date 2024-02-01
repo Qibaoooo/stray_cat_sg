@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 // import GoogleMapReact from "google-map-react";
 import { Col, Row } from "react-bootstrap";
 import SidePanel from "./components/SidePanel";

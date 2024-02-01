@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import GoogleMap from 'google-maps-react-markers'
 import { SingaporeGeoCoord } from 'pages/utils/properties';
 import CatSightingMarker from './CatSightingMarker';
@@ -6,7 +6,7 @@ import React from 'react';
 
 const CatMap = () => {
     const mapRef = useRef(null)
-    const [mapReady, setMapReady] = useState(false)
+    // const [mapReady, setMapReady] = useState(false)
 
     let apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     console.log(apiKey);
@@ -14,16 +14,16 @@ const CatMap = () => {
   
     const onGoogleApiLoaded = ({ map, maps }) => {
       mapRef.current = map
-      setMapReady(true)
+      // setMapReady(true)
     }
   
-    const onMarkerClick = (e, { markerId, lat, lng }) => {
-      console.log('This is ->', markerId)
+    // const onMarkerClick = (e, { markerId, lat, lng }) => {
+    //   console.log('This is ->', markerId)
   
-      // inside the map instance you can call any google maps method
-      mapRef.current.setCenter({ lat, lng })
-      // ref. https://developers.google.com/maps/documentation/javascript/reference?hl=it
-    }
+    //   // inside the map instance you can call any google maps method
+    //   mapRef.current.setCenter({ lat, lng })
+    //   // ref. https://developers.google.com/maps/documentation/javascript/reference?hl=it
+    // }
   
     const onDrag = (map) => {
       console.log(JSON.stringify(map.center));
