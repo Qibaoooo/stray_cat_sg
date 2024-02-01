@@ -5,7 +5,7 @@ const CatDetailsPanel = ({ id }) => {
   const [cat, SetCat] = useState({});
   const [imgUrl, SetImgUrl] = useState("");
 
-  useEffect((id) => {
+  useEffect(() => {
     getCat(id).then((resp) => {
       SetCat(resp.data);
       SetImgUrl(resp.data.catSightings[0].imagesURLs[0]);
