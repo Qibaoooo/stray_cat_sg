@@ -25,20 +25,17 @@ const CatMap = () => {
     //   // ref. https://developers.google.com/maps/documentation/javascript/reference?hl=it
     // }
   
-    const onDrag = (map) => {
-      console.log(JSON.stringify(map.center));
-    };
-  
     return (
       <div style={{ height: "100vh", width: "100%" }}>
         <GoogleMap
           apiKey={apiKey}
+          options={{ clickableIcons:false }}
           defaultCenter={SingaporeGeoCoord}
           defaultZoom={12}
-          onDrag={onDrag}
           onGoogleApiLoaded={onGoogleApiLoaded}
           mapMinHeight="100vh"
-          onChange={(map) => console.log('Map moved', map)}å  
+          
+          // onChange={(map) => console.log('Map moved', map)}
         >
             <CatSightingMarker
                 lat={SingaporeGeoCoord.lat}
