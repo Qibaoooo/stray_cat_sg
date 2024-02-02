@@ -7,10 +7,10 @@ import CatMap from "./components/catMap";
 const MapPage = () => {
   return (
     <Row>
-      <Col xs={9}>
+      <Col xs={8}>
         <CatMap />
       </Col>
-      <Col>
+      <Col xs={4}>
         <MapSidePanel></MapSidePanel>
       </Col>
     </Row>
