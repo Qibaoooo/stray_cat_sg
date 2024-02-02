@@ -20,7 +20,7 @@ const CatCommentPanel = ({ id }) => {
             <table>
               <tr>
                 <td>avator</td>
-                <td>{comment.username}</td>
+                <td>{comment.scsUser.username}</td>
                 <td>{comment.time}</td>
               </tr>
               <tr>

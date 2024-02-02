@@ -1,7 +1,9 @@
 package nus.iss.team11;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -17,6 +19,7 @@ import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.dataUtil.CSVUtil;
 import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.CatSighting;
+import nus.iss.team11.model.Comment;
 import nus.iss.team11.model.Cat;
 import nus.iss.team11.model.LostCat;
 import nus.iss.team11.model.Roll;
@@ -27,6 +30,7 @@ import nus.iss.team11.repository.CatRepository;
 import nus.iss.team11.repository.LostCatRepository;
 import nus.iss.team11.repository.RollRepository;
 import nus.iss.team11.repository.SCSUserRepository;
+import nus.iss.team11.repository.CommentRepository;
 
 @SpringBootApplication
 public class StrayCatsSGApplication {
@@ -47,10 +51,12 @@ public class StrayCatsSGApplication {
 			CatSightingRepository catSightingRepository,
 			CatRepository catRepository,
 			SCSUserRepository scsUserRepository, 
-			LostCatRepository lostCatRepository) {
+			LostCatRepository lostCatRepository,
+			CommentRepository commentRepository) {
 		return (args) -> {
 			// clean start
 			azureImageRepository.deleteAll();
+			commentRepository.deleteAll();
 			catSightingRepository.deleteAll();
 			catRepository.deleteAll();
 			lostCatRepository.deleteAll();
@@ -136,6 +142,18 @@ public class StrayCatsSGApplication {
 				catSightingRepository.save(cs);
 			});
 			
+			//dummy comments
+			SCSUser cuser = new SCSUser();
+			cuser.setUsername("commentuser");
+			cuser.setPassword(encoder.encode("commentuser"));
+			scsUserRepository.save(cuser);
+			Comment c1 =new Comment();
+			c1.setContent("comment 1");
+			c1.setCat(csMap.get("cat_sightings_12").getCat());
+			c1.setTime(new Date());
+			c1.setScsUser(cuser);
+			c1.setNewlabels(new ArrayList<String>());
+			commentRepository.save(c1);
 			
 			// load vector for test images
 			HashMap<String, List<Float>> vMap = 
