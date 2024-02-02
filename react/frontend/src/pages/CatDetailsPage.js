@@ -1,31 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import CatDetailsPanel from "./components/CatDetailsPanel";
 import CatCommentPanel from "./components/CatCommentPanel";
+import { getCat } from "./utils/api/apiCat";
 
 const CatDetailsPage = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
 
+  const [cat, SetCat] = useState({});
+  const [imgUrl, SetImgUrl] = useState("");
+
+  useEffect(() => {
+    getCat(id).then((resp) => {
+      SetCat(resp.data);
+      SetImgUrl(resp.data.catSightings[0].imagesURLs[0]);
+    });
+  }, []);
+
   return (
     <div>
       <h5>CatDetailsPage</h5>
-      {id ? (
         <Row>
-          <Col xs={4}>
-            <CatDetailsPanel id={id}></CatDetailsPanel>
+          <Col xs={6}>
+            <CatDetailsPanel cat={cat} displayImgUrl={imgUrl}></CatDetailsPanel>
           </Col>
           <Col xs={8}>
             <CatCommentPanel id={id}></CatCommentPanel>
           </Col>
         </Row>
-      ) : (
-        <div>
-          <Col xs={4}></Col>
-          <Col xs={8}></Col>
-        </div>
-      )}
     </div>
   );
 };
