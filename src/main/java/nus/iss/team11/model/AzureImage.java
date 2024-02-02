@@ -32,7 +32,6 @@ public class AzureImage {
 	@OneToOne
 	@JoinColumn(name="ownerVerification")
 	private OwnerVerification ownerVerification;
-
 	
 	public String deriveSighting() {
 		if (fileName == null) {
