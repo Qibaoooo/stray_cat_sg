@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import GoogleMap from 'google-maps-react-markers'
 import { SingaporeGeoCoord } from 'pages/utils/properties';
-import CatSightingMarker from './catSightingMarker';
+import CatSightingMarker from './CatSightingMarker';
 import React from 'react';
 import { getAllCatSightings } from 'pages/utils/api/apiCatSightings';
 

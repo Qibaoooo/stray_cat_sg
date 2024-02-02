@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import "./catSightingMarker.css";
+import "./CatSightingMarker.css";
 
 const CatSightingMarker = ({ sighting }) => {
   const [showInfoWindow, setShowInfoWindow] = useState(false);
