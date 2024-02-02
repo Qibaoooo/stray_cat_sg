@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getComments } from "pages/utils/api/Comment";
+import { getComments } from "pages/utils/api/apiComment";
 
 const CatCommentPanel = ({ id }) => {
   const [comments, SetComments] = useState([]);
