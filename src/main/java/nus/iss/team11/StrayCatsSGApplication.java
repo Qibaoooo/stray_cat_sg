@@ -40,9 +40,6 @@ public class StrayCatsSGApplication {
 			LostCatRepository lostCatRepository) {
 		return (args) -> {
 
-			HashMap<String, List<Float>> vMap = 
-					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
-
 			// clean start
 			rollRepo.deleteAll();
 			azureImageRepository.deleteAll();
@@ -107,6 +104,12 @@ public class StrayCatsSGApplication {
 				cs.setApproved(true);
 				catSightingRepository.save(cs);
 			});
+			
+			
+
+//			HashMap<String, List<Float>> vMap = 
+//					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+
 
 		};
 	}
