@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-import { Alert, Container, Stack } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { login } from "./utils/api/apiAuth";
 import { getUserinfoFromLocal, setUserinfoLocal } from "./utils/userinfo";
 import MyAlert from "./components/myAlert";
@@ -29,7 +29,7 @@ function LoginPage() {
         if (response.status == 200) {
           console.log(JSON.stringify(response.data.username));
           setUserinfoLocal(response.data);
-          window.location.href = "/home";
+          window.location.href = "/map";
         } else {
           setAlertMsg(JSON.stringify(response));
           setShowAlert(true);

@@ -19,9 +19,14 @@ const CatMap = () => {
     }
 
     useEffect(()=>{
-      getAllCatSightings().then(resp => {
+      getAllCatSightings()
+      .then(resp => {
         console.log(resp.data);
         SetCatSightings(resp.data);
+      })
+      .catch(e=>{
+        alert("please login first.")
+        window.location.href = "/login"
       })
     }, [])
   
