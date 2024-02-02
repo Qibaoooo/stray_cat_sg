@@ -2,8 +2,8 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import MapPage from "pages/MapPage";
-import CatDetailsPage from "pages/CatDetailsPage";
+import MapPage from "pages/mapPage";
+import CatDetailsPage from "pages/catDetailsPage";
 
 function App() {
 
