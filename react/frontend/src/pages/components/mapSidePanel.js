@@ -7,11 +7,16 @@ const ButtonGroups = () => {
   const imgStyles = { width: "30px", marginLeft:"20px"}
   const divStyles = {paddingBottom:"0.5rem"}
   const buttonClass = "mx-3 bg-secondary-subtle"
+
+  const onClickListView = () => {
+    window.location.href = "/list"
+  }
+
   return (
     <div style={{minWidth:"100px", textAlign:"start"}}>
       <div style={divStyles}>
         <img src={paw} style={imgStyles}></img>
-        <Button className={buttonClass}>list view</Button>
+        <Button className={buttonClass} onClick={onClickListView}>list view</Button>
       </div>
       <div style={divStyles}>
         <img src={paw} style={imgStyles}></img>
