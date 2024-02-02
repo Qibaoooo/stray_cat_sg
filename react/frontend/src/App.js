@@ -1,5 +1,4 @@
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useLayoutEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import MapPage from "pages/mapPage";
@@ -9,7 +8,7 @@ import LoginPage from "pages/loginPage";
 function App() {
 
   useLayoutEffect(()=>{
-    document.body.className = document.body.className + " bg-primary-subtle";
+    document.body.className = document.body.className + " bg-primary";
   })
 
   return (
