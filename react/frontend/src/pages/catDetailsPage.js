@@ -21,11 +21,6 @@ const CatDetailsPage = () => {
       SetImgUrl(resp.data.catSightings[0].imagesURLs[0]);
     });
   }, []);
-  
-  // const handleButtonClick = () => {
-    
-  //   console.log("Button Clicked!");
-  // };
 
   return (
     <div style={{backgroundColor: '#FFFAD9' }}>
@@ -38,7 +33,6 @@ const CatDetailsPage = () => {
 
           <Col xs={6}>
             <CatCommentPanel id={id}></CatCommentPanel>
-
           </Col>
         </Row>
     </div>

@@ -1,6 +1,35 @@
 import { getUserinfoFromLocal, setUserinfoLocal } from "pages/utils/userinfo";
 import React, { useEffect, useState } from "react";
-import { Button, Stack } from "react-bootstrap";
+import { Button, Row, Stack } from "react-bootstrap";
+import paw from "../../images/paw.png";
+
+const ButtonGroups = () => {
+  const imgStyles = { width: "30px", marginLeft:"20px"}
+  const divStyles = {paddingBottom:"0.5rem"}
+  const buttonClass = "mx-3 bg-secondary-subtle"
+  return (
+    <div style={{minWidth:"100px", textAlign:"start"}}>
+      <div style={divStyles}>
+        <img src={paw} style={imgStyles}></img>
+        <Button className={buttonClass}>list view</Button>
+      </div>
+      <div style={divStyles}>
+        <img src={paw} style={imgStyles}></img>
+        <Button className={buttonClass}>upload sighting</Button>
+      </div>
+      <div style={divStyles}>
+        <img src={paw} style={imgStyles}></img>
+        <Button className={buttonClass}>lost cat</Button>
+      </div>
+    </div>
+  );
+};
+
+const SocialMediaIcons = ()=>{
+  return (
+    <p>SocialMediaIcons</p>
+  )
+}
 
 const MapSidePanel = () => {
   const [username, SetUsername] = useState("");
@@ -10,8 +39,8 @@ const MapSidePanel = () => {
   }, []);
 
   return (
-    <div>
-      <Stack>
+    <div style={{}}>
+      <Stack style={{ height: "100vh" }}>
         {username !== "" ? (
           <div>
             <p>hi, {username}</p>
@@ -30,6 +59,13 @@ const MapSidePanel = () => {
             <Button>login</Button>
           </div>
         )}
+        {/* spacer */}
+        <div className="my-auto"></div>
+        <div className="p-2">
+          <ButtonGroups />
+        </div>
+        <div className="my-auto"></div>
+        <SocialMediaIcons/>
       </Stack>
     </div>
   );

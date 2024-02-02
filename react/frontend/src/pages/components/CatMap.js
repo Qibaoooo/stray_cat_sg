@@ -39,7 +39,7 @@ const CatMap = () => {
     // }
   
     return (
-      <div style={{ height: "100vh", width: "100%" }}>
+      <div style={{ height: "100vh", minWidth: "60%" }}>
         <GoogleMap
           apiKey={apiKey}
           options={{ clickableIcons:false }}
