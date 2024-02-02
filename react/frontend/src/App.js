@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useLayoutEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import MapPage from "pages/mapPage";
-import CatDetailsPage from "pages/catDetailsPage";
+import CatDetailsPage from "pages/CatDetailsPage";
 import LoginPage from "pages/loginPage";
 
 function App() {

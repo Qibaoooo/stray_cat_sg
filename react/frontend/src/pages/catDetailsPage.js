@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
-import CatDetailsPanel from "./components/catDetailsPanel";
+import CatDetailsPanel from "./components/CatDetailsPanel";
 import CatCommentPanel from "./components/catCommentPanel";
 
 import { getCat } from "./utils/api/apiCat";
