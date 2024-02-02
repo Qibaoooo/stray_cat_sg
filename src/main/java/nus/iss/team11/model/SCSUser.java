@@ -1,6 +1,9 @@
 package nus.iss.team11.model;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.json.JSONObject;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,4 +39,10 @@ public class SCSUser {
 	private List<Comment> comments;
 	
 	//TODO: avatar
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("id", id);
+		json.put("username", username);
+		return json;
+	}
 }

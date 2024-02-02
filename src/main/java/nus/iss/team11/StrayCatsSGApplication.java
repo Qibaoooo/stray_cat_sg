@@ -48,7 +48,7 @@ public class StrayCatsSGApplication {
 			CatRepository catRepository,
 			SCSUserRepository scsUserRepository, 
 			LostCatRepository lostCatRepository) {
-		return (args) -> {			
+		return (args) -> {
 			// clean start
 			azureImageRepository.deleteAll();
 			catSightingRepository.deleteAll();
@@ -148,8 +148,6 @@ public class StrayCatsSGApplication {
 				azureImageRepository.save(ai);
 				
 			});		
-
-
 		};
 	}
 
