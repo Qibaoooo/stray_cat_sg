@@ -17,7 +17,7 @@ const CatDetailsPage = () => {
             <CatDetailsPanel id={id}></CatDetailsPanel>
           </Col>
           <Col xs={8}>
-            <CatCommentPanel></CatCommentPanel>
+            <CatCommentPanel id={id}></CatCommentPanel>
           </Col>
         </Row>
       ) : (
