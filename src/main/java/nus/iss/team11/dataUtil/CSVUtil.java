@@ -1,17 +1,12 @@
 package nus.iss.team11.dataUtil;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import org.json.JSONArray;
-import org.springframework.stereotype.Component;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
@@ -47,6 +42,8 @@ public class CSVUtil {
         	System.out.println(vStrings.size());
         	System.out.println(vStrings.get(5));
         } 
+        
+        csvReader.close();
 		return vMap;
 		
 	}

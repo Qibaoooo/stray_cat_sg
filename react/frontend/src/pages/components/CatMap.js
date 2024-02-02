@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import GoogleMap from 'google-maps-react-markers'
 import { SingaporeGeoCoord } from 'pages/utils/properties';
-import CatSightingMarker from './CatSightingMarker';
+import CatSightingMarker from './catSightingMarker';
 import React from 'react';
 import { getAllCatSightings } from 'pages/utils/api/apiCatSightings';
 
@@ -19,9 +19,14 @@ const CatMap = () => {
     }
 
     useEffect(()=>{
-      getAllCatSightings().then(resp => {
+      getAllCatSightings()
+      .then(resp => {
         console.log(resp.data);
         SetCatSightings(resp.data);
+      })
+      .catch(e=>{
+        alert("please login first.")
+        window.location.href = "/login"
       })
     }, [])
   
