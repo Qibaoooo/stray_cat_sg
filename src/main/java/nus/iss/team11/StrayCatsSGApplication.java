@@ -3,6 +3,7 @@ package nus.iss.team11;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import nus.iss.team11.azureUtil.AzureContainerUtil;
+import nus.iss.team11.dataUtil.CSVUtil;
 import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.CatSighting;
 import nus.iss.team11.model.Cat;
@@ -37,6 +39,7 @@ public class StrayCatsSGApplication {
 			CatSightingRepository catSightingRepository, CatRepository catRepository,
 			LostCatRepository lostCatRepository) {
 		return (args) -> {
+
 			// clean start
 			rollRepo.deleteAll();
 			azureImageRepository.deleteAll();
@@ -93,14 +96,20 @@ public class StrayCatsSGApplication {
 				Cat cat = new Cat();
 				CatSighting cs = csMap.get(csName);
 				cat.setCatName("cat from " + cs.getSightingName());
-				cat.setLabels(Arrays.asList("test0","test1","test2"));
+				cat.setLabels(Arrays.asList("test0", "test1", "test2"));
 				catRepository.save(cat);
-				
+
 				// update relationship
 				cs.setCat(cat);
 				cs.setApproved(true);
 				catSightingRepository.save(cs);
 			});
+			
+			
+
+//			HashMap<String, List<Float>> vMap = 
+//					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+
 
 		};
 	}
