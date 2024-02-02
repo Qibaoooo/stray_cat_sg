@@ -26,8 +26,8 @@ const CatDetailsPage = () => {
           <Col xs={6}>
             <CatDetailsPanel cat={cat} displayImgUrl={imgUrl}></CatDetailsPanel>
           </Col>
-          <Col xs={6}>
-            <CatCommentPanel isApproved={cat.isApproved}></CatCommentPanel>
+          <Col xs={8}>
+            <CatCommentPanel id={id}></CatCommentPanel>
           </Col>
         </Row>
     </div>
