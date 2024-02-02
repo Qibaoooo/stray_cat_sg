@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+
 import CatDetailsPanel from "./components/catDetailsPanel";
 import CatCommentPanel from "./components/catCommentPanel";
 
 import { getCat } from "./utils/api/apiCat";
+
 
 const CatDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -19,16 +21,24 @@ const CatDetailsPage = () => {
       SetImgUrl(resp.data.catSightings[0].imagesURLs[0]);
     });
   }, []);
+  
+  // const handleButtonClick = () => {
+    
+  //   console.log("Button Clicked!");
+  // };
 
   return (
-    <div>
-      <h5>CatDetailsPage</h5>
+    <div style={{backgroundColor: '#FFFAD9' }}>
+      <h5 >CatDetailsPage</h5>
         <Row>
           <Col xs={6}>
             <CatDetailsPanel cat={cat} displayImgUrl={imgUrl}></CatDetailsPanel>
+          {/* <Button onClick={handleButtonClick}>Back to Home</Button> */}
           </Col>
+
           <Col xs={8}>
             <CatCommentPanel id={id}></CatCommentPanel>
+
           </Col>
         </Row>
     </div>
