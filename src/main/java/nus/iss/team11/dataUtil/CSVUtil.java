@@ -22,14 +22,15 @@ public class CSVUtil {
         for (String[] row : data) {
         	String sightingName = row[0];
         	List<Float> floats = new ArrayList<>();
-        	vMap.put(sightingName, floats);
         	
         	// skip headers
         	if (sightingName.equals("fileName")) {
         		continue;
         	}
         	
-        	List<String> vStrings = Arrays.asList(row[1].split("\\s+"));
+        	vMap.put(sightingName, floats);
+        	
+        	List<String> vStrings = Arrays.asList(row[1].split(","));
         	for (String vStr: vStrings) {
         		try {
 					Float vFloat = Float.parseFloat(vStr);
@@ -38,8 +39,7 @@ public class CSVUtil {
 					// skip invalid float number
 				}
         	}
-        	System.out.println(vStrings.size());
-        	System.out.println(vStrings.get(5));
+//        	System.out.println(vStrings.size());
         } 
         
         csvReader.close();

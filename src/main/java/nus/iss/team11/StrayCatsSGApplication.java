@@ -48,7 +48,7 @@ public class StrayCatsSGApplication {
 			CatRepository catRepository,
 			SCSUserRepository scsUserRepository, 
 			LostCatRepository lostCatRepository) {
-		return (args) -> {
+		return (args) -> {			
 			// clean start
 			azureImageRepository.deleteAll();
 			catSightingRepository.deleteAll();
@@ -135,9 +135,20 @@ public class StrayCatsSGApplication {
 				cs.setApproved(true);
 				catSightingRepository.save(cs);
 			});
+			
+			
+			// load vector for test images
+			HashMap<String, List<Float>> vMap = 
+					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+			vMap.keySet().stream().forEach(fileName -> {
+				
+				AzureImage ai = azureImageRepository.findByFileName(fileName);
+				System.out.println("setting for file " + fileName);
+				ai.setVector(vMap.get(fileName));
+				azureImageRepository.save(ai);
+				
+			});		
 
-//			HashMap<String, List<Float>> vMap = 
-//					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
 
 		};
 	}
