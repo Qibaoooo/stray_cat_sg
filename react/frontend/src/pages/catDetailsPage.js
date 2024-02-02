@@ -36,7 +36,7 @@ const CatDetailsPage = () => {
           {/* <Button onClick={handleButtonClick}>Back to Home</Button> */}
           </Col>
 
-          <Col xs={8}>
+          <Col xs={6}>
             <CatCommentPanel id={id}></CatCommentPanel>
 
           </Col>
