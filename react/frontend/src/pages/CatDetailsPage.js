@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
-import CatDetailsPanel from "./components/catDetailsPanel";
-import CatCommentPanel from "./components/catCommentPanel";
+import CatDetailsPanel from "./components/CatDetailsPanel";
+import CatCommentPanel from "./components/CatCommentPanel";
+
 import { getCat } from "./utils/api/apiCat";
 
 const CatDetailsPage = () => {

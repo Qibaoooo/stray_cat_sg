@@ -49,6 +49,7 @@ public class StrayCatsSGApplication {
 			SCSUserRepository scsUserRepository, 
 			LostCatRepository lostCatRepository) {
 		return (args) -> {
+
 			// clean start
 			azureImageRepository.deleteAll();
 			catSightingRepository.deleteAll();
@@ -135,6 +136,12 @@ public class StrayCatsSGApplication {
 				cs.setApproved(true);
 				catSightingRepository.save(cs);
 			});
+			
+			
+
+//			HashMap<String, List<Float>> vMap = 
+//					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+
 
 //			HashMap<String, List<Float>> vMap = 
 //					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
