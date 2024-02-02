@@ -3,6 +3,7 @@ package nus.iss.team11;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +11,22 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import nus.iss.team11.azureUtil.AzureContainerUtil;
+import nus.iss.team11.dataUtil.CSVUtil;
 import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.CatSighting;
 import nus.iss.team11.model.Cat;
 import nus.iss.team11.model.LostCat;
 import nus.iss.team11.model.Roll;
+import nus.iss.team11.model.SCSUser;
 import nus.iss.team11.repository.AzureImageRepository;
 import nus.iss.team11.repository.CatSightingRepository;
 import nus.iss.team11.repository.CatRepository;
 import nus.iss.team11.repository.LostCatRepository;
 import nus.iss.team11.repository.RollRepository;
+import nus.iss.team11.repository.SCSUserRepository;
 
 @SpringBootApplication
 public class StrayCatsSGApplication {
@@ -32,22 +38,50 @@ public class StrayCatsSGApplication {
 	@Autowired
 	AzureContainerUtil azureContainerUtil;
 
+	@Autowired
+	PasswordEncoder encoder;
+
 	@Bean
-	CommandLineRunner loadData(RollRepository rollRepo, AzureImageRepository azureImageRepository,
-			CatSightingRepository catSightingRepository, CatRepository catRepository,
+	CommandLineRunner loadData(
+			AzureImageRepository azureImageRepository,
+			CatSightingRepository catSightingRepository,
+			CatRepository catRepository,
+			SCSUserRepository scsUserRepository, 
 			LostCatRepository lostCatRepository) {
 		return (args) -> {
 			// clean start
-			rollRepo.deleteAll();
 			azureImageRepository.deleteAll();
 			catSightingRepository.deleteAll();
 			catRepository.deleteAll();
 			lostCatRepository.deleteAll();
+			scsUserRepository.deleteAll();
 
-			Roll r1 = new Roll();
-			r1.setResult(99);
-			r1.setTimeOfRoll(null);
-			rollRepo.save(r1);
+			// init some test users
+			String[] public_users = {"public_user1","public_user2","public_user13"};
+			String[] owners = {"owner1","owner2","owner3"};
+			String[] admins = {"admin1","admin2","admin3"};
+
+			for (String u : public_users) {
+				SCSUser user = new SCSUser();
+				user.setUsername(u);
+				user.setPassword(encoder.encode(u));
+				scsUserRepository.save(user);
+			}
+			for (String u : owners) {
+				SCSUser user = new SCSUser();
+				user.setUsername(u);
+				user.setPassword(encoder.encode(u));
+				user.setOwner(true);
+				scsUserRepository.save(user);
+			}
+			for (String u : admins) {
+				SCSUser user = new SCSUser();
+				user.setUsername(u);
+				user.setPassword(encoder.encode(u));
+				user.setAdmin(true);
+				scsUserRepository.save(user);
+			}
+
 
 			// load cat sighting test data
 			HashMap<String, CatSighting> csMap = new HashMap<String, CatSighting>();
@@ -93,15 +127,27 @@ public class StrayCatsSGApplication {
 				Cat cat = new Cat();
 				CatSighting cs = csMap.get(csName);
 				cat.setCatName("cat from " + cs.getSightingName());
-				cat.setLabels(Arrays.asList("test0","test1","test2"));
+				cat.setLabels(Arrays.asList("test0", "test1", "test2"));
 				catRepository.save(cat);
-				
+
 				// update relationship
 				cs.setCat(cat);
 				cs.setApproved(true);
 				catSightingRepository.save(cs);
 			});
-
+			
+			
+			// load vector for test images
+			HashMap<String, List<Float>> vMap = 
+					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+			vMap.keySet().stream().forEach(fileName -> {
+				
+				AzureImage ai = azureImageRepository.findByFileName(fileName);
+				System.out.println("setting for file " + fileName);
+				ai.setVector(vMap.get(fileName));
+				azureImageRepository.save(ai);
+				
+			});		
 		};
 	}
 

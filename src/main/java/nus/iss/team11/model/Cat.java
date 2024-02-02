@@ -1,10 +1,8 @@
 package nus.iss.team11.model;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import jakarta.persistence.Entity;

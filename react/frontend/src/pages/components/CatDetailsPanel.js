@@ -1,4 +1,4 @@
-import { getCat } from "pages/utils/api/Cat";
+import { getCat } from "pages/utils/api/apiCat";
 import React, { useEffect, useState } from "react";
 import { Stack } from "react-bootstrap";
 

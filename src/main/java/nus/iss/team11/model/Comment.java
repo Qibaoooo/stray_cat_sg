@@ -1,12 +1,14 @@
 package nus.iss.team11.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.json.JSONObject;
+
 import nus.iss.team11.model.Cat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,4 +38,14 @@ public class Comment {
 	private SCSUser scsUser;
 	
 	private List<String> newlabels;
+	
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("id", id);
+		json.put("time", time);
+		json.put("content", content);
+		json.put("newlabels", newlabels);
+		json.put("scsUser", scsUser.toJSON());
+		return json;
+	}
 }
