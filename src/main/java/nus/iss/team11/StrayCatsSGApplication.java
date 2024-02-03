@@ -1,5 +1,6 @@
 package nus.iss.team11;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.opencsv.exceptions.CsvException;
 
 import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.dataUtil.CSVUtil;
@@ -138,17 +141,21 @@ public class StrayCatsSGApplication {
 			
 			
 			// load vector for test images
-			HashMap<String, List<Float>> vMap = 
-					CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
-			vMap.keySet().stream().forEach(fileName -> {
-				
-				AzureImage ai = azureImageRepository.findByFileName(fileName);
-				System.out.println("setting for file " + fileName);
-				ai.setVector(vMap.get(fileName));
-				azureImageRepository.save(ai);
-				
-			});		
+//			loadVectors(azureImageRepository);		
 		};
+	}
+
+	private void loadVectors(AzureImageRepository azureImageRepository) throws IOException, CsvException {
+		HashMap<String, List<Float>> vMap = 
+				CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+		vMap.keySet().stream().forEach(fileName -> {
+			
+			AzureImage ai = azureImageRepository.findByFileName(fileName);
+			System.out.println("setting for file " + fileName);
+			ai.setVector(vMap.get(fileName));
+			azureImageRepository.save(ai);
+			
+		});
 	}
 
 	private void setLatLongForCatSighting(CatSighting cs) {
