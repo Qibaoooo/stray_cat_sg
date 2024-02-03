@@ -1,14 +1,12 @@
 package nus.iss.team11.model;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -29,8 +27,9 @@ public class AzureImage {
 	private String imageURL;
 	private String fileName;
 	
-	@ElementCollection
-	private List<Float> vector;
+	@Lob
+	@Column(length = 100000)
+	private String vector;
 	
 	@ManyToOne
 	@JoinColumn(name="catSighting")
