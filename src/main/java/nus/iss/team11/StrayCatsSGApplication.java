@@ -141,12 +141,12 @@ public class StrayCatsSGApplication {
 			
 			
 			// load vector for test images
-//			loadVectors(azureImageRepository);		
+			loadVectors(azureImageRepository);		
 		};
 	}
 
 	private void loadVectors(AzureImageRepository azureImageRepository) throws IOException, CsvException {
-		HashMap<String, List<Float>> vMap = 
+		HashMap<String, String> vMap = 
 				CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
 		vMap.keySet().stream().forEach(fileName -> {
 			
@@ -174,5 +174,7 @@ public class StrayCatsSGApplication {
 		cs.setLocationLat(lat);
 		cs.setLocationLong(lng);
 	}
+	
+	
 
 }
