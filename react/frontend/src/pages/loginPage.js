@@ -6,6 +6,7 @@ import { Stack } from "react-bootstrap";
 import { login } from "./utils/api/apiAuth";
 import { getUserinfoFromLocal, setUserinfoLocal } from "./utils/userinfo";
 import MyAlert from "./components/myAlert";
+import loginBG from "../images/loginBG.png";
 
 function LoginPage() {
   const [username, setUsername] = useState();
@@ -15,9 +16,15 @@ function LoginPage() {
   const onInputUN = ({ target: { value } }) => setUsername(value);
   const onInputPW = ({ target: { value } }) => setPassword(value);
 
+  const testStyle = {
+    fontSize: "1.2rem",
+    fontFamily: "Comic Sans MS, cursive",
+    fontWeight: "bold",
+  };
+
   useEffect(() => {
     if (getUserinfoFromLocal()) {
-      console.log(getUserinfoFromLocal())
+      console.log(getUserinfoFromLocal());
       // alr logged in, redirect
       window.location.href = "/map";
     }
@@ -49,20 +56,34 @@ function LoginPage() {
 
   return (
     <div>
-      <Form className="mx-5">
-        <Stack gap={3} className="col-sm-4 mx-auto mt-5">
-          <Form.Group as={Col} controlId="formGridUsername">
-            <Form.Label>Username</Form.Label>
+      <Form className="mx-5" style={{}}>
+        <Stack
+          style={{
+            maxWidth: "300px",
+            minHeight: "500px",
+            backgroundImage: `url(${loginBG})`,
+            backgroundSize: "100% 100%",
+          }}
+          gap={3}
+          className="col-sm-4 mx-auto mt-5 p-4"
+        >
+          <h5 className="my-4" style={testStyle}>
+            login to ur account
+          </h5>
+          <Form.Group controlId="formGridUsername">
+            <Form.Label style={testStyle}>Username</Form.Label>
             <Form.Control
+              style={{ opacity: "0.5" }}
               type="text"
               onChange={onInputUN}
               placeholder="Enter Username"
             />
           </Form.Group>
 
-          <Form.Group as={Col} controlId="formGridPassword">
-            <Form.Label>Password</Form.Label>
+          <Form.Group controlId="formGridPassword">
+            <Form.Label style={testStyle}>Password</Form.Label>
             <Form.Control
+              style={{ opacity: "0.5" }}
               type="password"
               onChange={onInputPW}
               placeholder="Password"
@@ -73,7 +94,7 @@ function LoginPage() {
               className="opacity-75"
               type="submit"
               onClick={onFormSubmit}
-              style={{ maxWidth: "100px" }}
+              style={testStyle}
             >
               Login
             </Button>

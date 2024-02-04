@@ -10,7 +10,6 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
     fontSize: '1.2rem',
     fontFamily: 'Comic Sans MS, cursive',
     fontWeight: 'bold',
-    
   };
   
   const imgStyle = {
