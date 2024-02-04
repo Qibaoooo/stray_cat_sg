@@ -10,6 +10,10 @@ export const getJsonHeaders = () => {
 };
 
 export const getJsonHeadersWithJWT = () => {
+  if (getUserinfoFromLocal() === null) {
+    console.log("getUserinfoFromLocal() returned null. Please login first.")
+    return
+  }
   return {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "http://localhost:3000",
