@@ -1,20 +1,38 @@
 import { getAllCats } from "pages/utils/api/apiCat";
+import { getAllCatSightings } from "pages/utils/api/apiCatSightings";
 import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 
 const CatListTable = ({ viewType }) => {
-  const tableCols = ["", "Cat Name", "Cat breed", "Labels"];
+  const CatCols = ["", "Cat Name", "Cat breed", "Labels"];
+  const SightingCols = ["", "Sighting Name", "Location", "Time"];
+
+  const [tableCols, SetTableCols] = useState(CatCols);
   const [cats, SetCats] = useState([]);
+  const [sightings, SetSightings] = useState([]);
 
   useEffect(() => {
-    getAllCats().then((resp) => {
-      
-      SetCats(resp.data);
-    })
-    .catch(e =>{
-      console.log(e)
-    })
-  }, []);
+    console.log(viewType);
+    if (viewType === "cat") {
+      getAllCats()
+        .then((resp) => {
+          SetCats(resp.data);
+          SetTableCols(CatCols);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      getAllCatSightings()
+        .then((resp) => {
+          SetSightings(resp.data);
+          SetTableCols(SightingCols);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [viewType]);
 
   return (
     <Table className="my-3" striped bordered={false} hover variant="primary">
@@ -27,18 +45,37 @@ const CatListTable = ({ viewType }) => {
         </tr>
       </thead>
       <tbody>
-        {cats.map((cat, index, array) => {
-          return (
-            <tr>
-              <td>
-                <img src={cat.catSightings[0].imagesURLs[0]} style={{width:"50px"}}></img>
-              </td>
-              <td>{cat.catName}</td>
-              <td>{cat.catBreed}</td>
-              <td>{cat.labels.join(", ")}</td>
-            </tr>
-          );
-        })}
+        {viewType === "cat"
+          ? cats.map((cat, index, array) => {
+              return (
+                <tr>
+                  <td>
+                    <img
+                      src={cat.catSightings[0].imagesURLs[0]}
+                      style={{ width: "50px" }}
+                    ></img>
+                  </td>
+                  <td>{cat.catName}</td>
+                  <td>{cat.catBreed}</td>
+                  <td>{cat.labels.join(", ")}</td>
+                </tr>
+              );
+            })
+          : sightings.map((sighting, index, array) => {
+              return (
+                <tr>
+                  <td>
+                    <img
+                      src={sighting.imagesURLs[0]}
+                      style={{ width: "50px" }}
+                    ></img>
+                  </td>
+                  <td>{sighting.sightingName}</td>
+                  <td>{sighting.locationLat + ", " + sighting.locationLong}</td>
+                  <td>{sighting.time}</td>
+                </tr>
+              );
+            })}
       </tbody>
     </Table>
   );
