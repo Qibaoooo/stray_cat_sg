@@ -1,5 +1,6 @@
 import { getAllCats } from "pages/utils/api/apiCat";
 import { getAllCatSightings } from "pages/utils/api/apiCatSightings";
+import { clearUserInfoAndRedirectToLogin } from "pages/utils/userinfo";
 import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 
@@ -20,7 +21,7 @@ const CatListTable = ({ viewType }) => {
           SetTableCols(CatCols);
         })
         .catch((e) => {
-          console.log(e);
+          clearUserInfoAndRedirectToLogin();
         });
     } else {
       getAllCatSightings()
@@ -29,7 +30,7 @@ const CatListTable = ({ viewType }) => {
           SetTableCols(SightingCols);
         })
         .catch((e) => {
-          console.log(e);
+          clearUserInfoAndRedirectToLogin();
         });
     }
   }, [viewType]);

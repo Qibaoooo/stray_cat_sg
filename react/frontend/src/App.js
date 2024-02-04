@@ -13,7 +13,7 @@ function App() {
   })
 
   return (
-    <div className="App">
+    <div className="App" style={{fontFamily:"Comic Sans MS, cursive"}}>
       <Routes>
         <Route path="/" element={<MapPage />} />
         <Route path="/map" element={<MapPage />} />
