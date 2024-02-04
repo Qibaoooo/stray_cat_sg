@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Row, Stack } from "react-bootstrap";
+import CatListTable from "./catListTable";
 
 const CatList = () => {
   const [currentViewType, SetCurrentViewType] = useState("cat");
@@ -24,6 +25,7 @@ const CatList = () => {
           <span className="mx-3">
             Toggle between views of cats and cat sightings.
           </span>
+          <CatListTable viewType={currentViewType} />
         </div>
       </Row>
     </Stack>

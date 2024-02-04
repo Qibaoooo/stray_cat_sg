@@ -1,5 +1,7 @@
 package nus.iss.team11.controller.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,11 @@ public class CatServiceImpl implements CatService {
 	@Override
 	public Cat findCatById(int id) {
 		return catRepository.getReferenceById(id);
+	}
+
+	@Override
+	public List<Cat> findAllCats() {
+		return catRepository.findAll();
 	}
 
 }

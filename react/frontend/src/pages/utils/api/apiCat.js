@@ -7,4 +7,10 @@ let getCat = (id) => {
     });
 }
 
-export { getCat };
+let getAllCats = () => {
+    return axios.get(`${backendIP}/api/cat`, {
+        headers: getJsonHeadersWithJWT(),
+    })
+}
+
+export { getCat, getAllCats };
