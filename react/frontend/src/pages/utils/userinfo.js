@@ -3,7 +3,11 @@ let setUserinfoLocal = (info) => {
 }
 
 let getUserinfoFromLocal = () => {
-    return JSON.parse(localStorage.getItem('scs_userinfo'))
+    let userinfo = JSON.parse(localStorage.getItem('scs_userinfo'))
+    if (userinfo === null) {
+        clearUserInfoAndRedirectToLogin()
+    }
+    return userinfo
 }
 
 let clearUserInfoAndRedirectToLogin = () => {
