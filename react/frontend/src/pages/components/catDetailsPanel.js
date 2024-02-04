@@ -13,8 +13,8 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
   };
   
   const imgStyle = {
-    width: '380px', 
-    height: '450px', 
+    maxWidth: '550px',
+    height: 'auto',
     borderRadius: '50px',
     
   };
@@ -38,7 +38,7 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
           textAlign: "center",
           backgroundColor:"white",
           overflow: "hidden",
-          width: "350px", 
+          width: "550px", 
           height: "250px",
         }}
       >

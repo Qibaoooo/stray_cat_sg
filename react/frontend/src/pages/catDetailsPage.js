@@ -24,7 +24,7 @@ const CatDetailsPage = () => {
 
   return (
     <div style={{backgroundColor: '#FFFAD9' }}>
-      <h5 >CatDetailsPage</h5>
+      <h3>&nbsp;</h3>
         <Row>
           <Col xs={6}>
             <CatDetailsPanel cat={cat} displayImgUrl={imgUrl}></CatDetailsPanel>
