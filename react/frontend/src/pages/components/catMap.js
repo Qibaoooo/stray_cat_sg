@@ -4,6 +4,7 @@ import { SingaporeGeoCoord } from 'pages/utils/properties';
 import CatSightingMarker from './catSightingMarker';
 import React from 'react';
 import { getAllCatSightings } from 'pages/utils/api/apiCatSightings';
+import { clearUserInfoAndRedirectToLogin } from 'pages/utils/userinfo';
 
 const CatMap = () => {
     const mapRef = useRef(null)
@@ -25,8 +26,7 @@ const CatMap = () => {
         SetCatSightings(resp.data);
       })
       .catch(e=>{
-        alert("please login first.")
-        window.location.href = "/login"
+        clearUserInfoAndRedirectToLogin();
       })
     }, [])
   

@@ -6,4 +6,10 @@ let getUserinfoFromLocal = () => {
     return JSON.parse(localStorage.getItem('scs_userinfo'))
 }
 
-export { setUserinfoLocal, getUserinfoFromLocal }
+let clearUserInfoAndRedirectToLogin = () => {
+    alert("please login first.")
+    setUserinfoLocal("") // clear expired userinfo if any
+    window.location.href = "/login"
+}
+
+export { setUserinfoLocal, getUserinfoFromLocal, clearUserInfoAndRedirectToLogin }
