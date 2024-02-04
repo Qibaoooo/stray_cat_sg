@@ -12,7 +12,7 @@ let getUserinfoFromLocal = () => {
 
 let clearUserInfoAndRedirectToLogin = () => {
     alert("please login first.")
-    setUserinfoLocal("") // clear expired userinfo if any
+    localStorage.removeItem('scs_userinfo')
     window.location.href = "/login"
 }
 
