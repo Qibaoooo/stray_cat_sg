@@ -22,5 +22,10 @@ public class CatSightingServiceImpl implements CatSightingService {
 	public CatSighting getCatSightingById(int id) {
 		return catSightingRepository.getReferenceById(id);
 	}
+	
+	@Override
+	public CatSighting createSighting(CatSighting Sighting){
+		return catSightingRepository.saveAndFlush(Sighting);
+	}
 
 }

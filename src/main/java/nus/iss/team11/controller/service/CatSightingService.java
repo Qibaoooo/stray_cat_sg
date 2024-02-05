@@ -7,4 +7,5 @@ import nus.iss.team11.model.CatSighting;
 public interface CatSightingService {
 	List<CatSighting> getAllCatSightings();
 	public CatSighting getCatSightingById(int id);
+	CatSighting createSighting (CatSighting Sighting);
 }
