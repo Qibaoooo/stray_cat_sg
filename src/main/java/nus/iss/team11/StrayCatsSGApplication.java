@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,17 +45,17 @@ public class StrayCatsSGApplication {
 	AzureContainerUtil azureContainerUtil;
 
 	@Autowired
+	CSVUtil csvUtil;
+
+	@Autowired
 	PasswordEncoder encoder;
 
 	@Bean
-	CommandLineRunner loadData(
-			AzureImageRepository azureImageRepository,
-			CatSightingRepository catSightingRepository,
-			CatRepository catRepository,
-			SCSUserRepository scsUserRepository, 
-			LostCatRepository lostCatRepository,
+	CommandLineRunner loadData(AzureImageRepository azureImageRepository, CatSightingRepository catSightingRepository,
+			CatRepository catRepository, SCSUserRepository scsUserRepository, LostCatRepository lostCatRepository,
 			CommentRepository commentRepository) {
 		return (args) -> {
+
 			// clean start
 			azureImageRepository.deleteAll();
 			commentRepository.deleteAll();
@@ -66,9 +65,9 @@ public class StrayCatsSGApplication {
 			scsUserRepository.deleteAll();
 
 			// init some test users
-			String[] public_users = {"public_user1","public_user2","public_user13"};
-			String[] owners = {"owner1","owner2","owner3"};
-			String[] admins = {"admin1","admin2","admin3"};
+			String[] public_users = { "public_user1", "public_user2", "public_user13" };
+			String[] owners = { "owner1", "owner2", "owner3" };
+			String[] admins = { "admin1", "admin2", "admin3" };
 
 			for (String u : public_users) {
 				SCSUser user = new SCSUser();
@@ -90,7 +89,6 @@ public class StrayCatsSGApplication {
 				user.setAdmin(true);
 				scsUserRepository.save(user);
 			}
-
 
 			// load cat sighting test data
 			HashMap<String, CatSighting> csMap = new HashMap<String, CatSighting>();
@@ -144,35 +142,41 @@ public class StrayCatsSGApplication {
 				cs.setApproved(true);
 				catSightingRepository.save(cs);
 			});
-			
-			//dummy comments
+
+			// dummy comments
 			SCSUser cuser = new SCSUser();
 			cuser.setUsername("commentuser");
 			cuser.setPassword(encoder.encode("commentuser"));
 			scsUserRepository.save(cuser);
-			Comment c1 =new Comment();
+			Comment c1 = new Comment();
 			c1.setContent("comment 1");
 			c1.setCat(csMap.get("cat_sightings_12").getCat());
 			c1.setTime(new Date());
 			c1.setScsUser(cuser);
 			c1.setNewlabels(new ArrayList<String>());
 			commentRepository.save(c1);
-			
+
 			// load vector for test images
-			loadVectors(azureImageRepository);		
+			loadVectors(azureImageRepository);
 		};
 	}
 
 	private void loadVectors(AzureImageRepository azureImageRepository) throws IOException, CsvException {
-		HashMap<String, String> vMap = 
-				CSVUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+		boolean readFromLocal = false;
+		HashMap<String, String> vMap;
+		if (readFromLocal) {
+			vMap = csvUtil.readCSVIntoHashMap("./src/main/resources/vectors.csv");
+		} else {
+			vMap = azureContainerUtil.readCSVIntoHashMap("vectors.csv");
+		}
+		
 		vMap.keySet().stream().forEach(fileName -> {
-			
+
 			AzureImage ai = azureImageRepository.findByFileName(fileName);
 			System.out.println("setting for file " + fileName);
 			ai.setVector(vMap.get(fileName));
 			azureImageRepository.save(ai);
-			
+
 		});
 	}
 
@@ -192,7 +196,5 @@ public class StrayCatsSGApplication {
 		cs.setLocationLat(lat);
 		cs.setLocationLong(lng);
 	}
-	
-	
 
 }
