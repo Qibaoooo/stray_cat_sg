@@ -7,6 +7,7 @@ from json import JSONEncoder
 import requests
 from PIL import Image
 from io import BytesIO
+from collections import defaultdict
 
 #Machine learning dependencies
 import tensorflow as tf
@@ -66,6 +67,8 @@ def get_embedding():
     encodedNumpyData = json.dumps(embedding, cls=NumpyArrayEncoder)
     return encodedNumpyData
 
+
+# Takes in two image url and return cosine similarity
 @app.route('/getsimilarity/', methods = ['GET'])
 def get_cosine():
     img_url_1 = request.args.get('img_url_1')
@@ -80,14 +83,15 @@ def get_cosine():
 
     return jsonify({"cosine_similarity": similarity_score})
 
+
 #comparevectors will take in json in this format
 # {
 #     "vector1": [0.1, 0.2, 0.3, ...],
 #     "vector2": [0.4, 0.5, 0.6, ...]
 # }
-
-@app.route('/comparevectors/', methods=['POST'])
-def compare_vectors():
+# and returns a cosine similarity
+@app.route('/comparesinglevector/', methods=['POST'])
+def compare_single_vectors():
     data = request.get_json()
     
     vector1 = np.array(data['vector1'])
@@ -102,11 +106,69 @@ def compare_vectors():
 
     return jsonify({"cosine_similarity": similarity_score})
 
+@app.route('/comparemultiplevector/', methods=['POST'])
+def compare_multi_vectors():
+    data = request.get_json()
 
-@app.route('/match/', methods = ['GET'])
-def match_cat():
-    #Take in 
-    return
+    query_vector = np.array(data["query_vector"])
+    vectors_dict = data["vectors_dict"]
+
+    vector_matrix = np.array(list(vectors_dict.values()))
+
+    # Normalize the query vector and all vectors in the dictionary
+    query_norm = query_vector / np.linalg.norm(query_vector)
+    vectors_norm = vector_matrix / np.linalg.norm(vector_matrix, axis=1, keepdims=True)
+    
+    # Calculate dot products
+    dot_products = np.dot(vectors_norm, query_norm)
+
+    # Create a dictionary of {filename: cosine_similarity} pairs
+    cosine_similarities = {filename: dot_product for filename, dot_product in zip(vectors_dict.keys(), dot_products)}
+
+    # Sort the dictionary by cosine similarity in descending order
+    sorted_cosine_similarities = dict(sorted(cosine_similarities.items(), key=lambda item: item[1], reverse=True))
+    
+
+    print(sorted_cosine_similarities)
+    return json.dumps({"cosine_similarities": sorted_cosine_similarities})
+
+@app.route('/gettopsimilarcats', methods = ["POST"])
+def get_similar_cats():
+    data = request.get_json()
+
+    query_vector = np.array(data["query_vector"])
+    vectors_dict = data["vectors_dict"]
+
+    vector_matrix = np.array(list(vectors_dict.values()))
+
+    # Normalize the query vector and all vectors in the dictionary
+    query_norm = query_vector / np.linalg.norm(query_vector)
+    vectors_norm = vector_matrix / np.linalg.norm(vector_matrix, axis=1, keepdims=True)
+    
+    # Calculate dot products
+    dot_products = np.dot(vectors_norm, query_norm)
+
+    # Create a dictionary of {filename: cosine_similarity} pairs
+    cosine_similarities = {filename: dot_product for filename, dot_product in zip(vectors_dict.keys(), dot_products)}
+
+    # Group the cosine similarities by the first part of the filename (assuming a naming convention like "cat_sightings_X_photo_Y.jpg")
+    grouped_similarities = defaultdict(list)
+    for filename, similarity in cosine_similarities.items():
+        group_prefix = filename.rsplit('_', 2)[0]  # Extract everything before the last two underscores
+        grouped_similarities[group_prefix].append(similarity)
+
+    # Calculate the average similarity for each group
+    average_group_similarities = {group: np.mean(similarities) for group, similarities in grouped_similarities.items()}
+
+    # Sort the groups by their average cosine similarity in descending order
+    sorted_groups = sorted(average_group_similarities.items(), key=lambda item: item[1], reverse=True)
+
+    # Return the top 5 groups
+    top_5_groups = dict(sorted_groups[:5])
+    
+    return json.dumps({"top_similar_groups": top_5_groups})
+   
+
 
 
 # run the server
