@@ -24,8 +24,13 @@ public class CatSightingServiceImpl implements CatSightingService {
 	}
 	
 	@Override
-	public CatSighting createSighting(CatSighting Sighting){
+	public CatSighting saveSighting(CatSighting Sighting){
 		return catSightingRepository.saveAndFlush(Sighting);
+	}
+
+	@Override
+	public void deleteSighting(int id) {
+		catSightingRepository.deleteById(id);
 	}
 
 }
