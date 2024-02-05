@@ -25,6 +25,7 @@ public class AzureContainerUtil {
 	private BlobServiceClient blobServiceClient;
 	private BlobContainerClient imageContainerClient;
 	private BlobContainerClient csvContainerClient;
+	
 
 	@Value("${azure.container.name}")
 	private String container;
@@ -34,6 +35,21 @@ public class AzureContainerUtil {
 
 	@Value("${azure.storage.account.name}")
 	private String storage;
+
+	private BlobContainerClient getCsvContainerClient() {
+		if (csvContainerClient == null) {
+			csvContainerClient = blobServiceClient.getBlobContainerClient(csvContainer);
+		}
+		return csvContainerClient;
+	}
+
+	private BlobContainerClient getImageContainerClient() {
+		if (imageContainerClient == null) {
+			imageContainerClient = blobServiceClient.getBlobContainerClient(container);
+		}
+		return imageContainerClient;
+	}
+
 	
 	@Autowired
 	CSVUtil csvUtil;
@@ -47,12 +63,11 @@ public class AzureContainerUtil {
 	}
 
 	public List<String> listAllImages() {
-		imageContainerClient = blobServiceClient.getBlobContainerClient(container);
 
 		List<String> names = new ArrayList<String>();
 
 		System.out.println("\nListing blobs...");
-		for (BlobItem blobItem : imageContainerClient.listBlobs()) {
+		for (BlobItem blobItem : getImageContainerClient().listBlobs()) {
 			names.add(blobItem.getName());
 		}
 
@@ -67,13 +82,24 @@ public class AzureContainerUtil {
 	}
 	
 	public HashMap<String, String> readCSVIntoHashMap(String blobName) throws IOException, CsvException {
-		csvContainerClient = blobServiceClient.getBlobContainerClient(csvContainer);
 				
-		BlobClient blobClient = csvContainerClient.getBlobClient(blobName);
+		BlobClient blobClient = getCsvContainerClient().getBlobClient(blobName);
 		
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		blobClient.downloadStream(outputStream);
 		
 		return csvUtil.readCSVIntoHashMap(new ByteArrayInputStream(outputStream.toByteArray()));
+	}
+	
+	public String uploadImageToContainer(byte[] imageFile, String fileName) {
+	    BlobClient blobClient = getImageContainerClient().getBlobClient(fileName);
+	    
+	    try (ByteArrayInputStream dataStream = new ByteArrayInputStream(imageFile)) {
+	    	blobClient.upload(dataStream, imageFile.length);
+	    } catch (IOException ex) {
+	        ex.printStackTrace();
+	    }
+
+		return blobClient.getBlobUrl();
 	}
 }
