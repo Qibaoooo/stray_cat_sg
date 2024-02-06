@@ -15,7 +15,7 @@ const CatMap = () => {
   
     const onGoogleApiLoaded = ({ map, maps }) => {
       mapRef.current = map
-      console.log((map))
+      // console.log((map))
       // setMapReady(true)
     }
 

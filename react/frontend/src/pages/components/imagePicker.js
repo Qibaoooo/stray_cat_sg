@@ -32,7 +32,7 @@ const ImagePicker = ( { imageURLs , setImageURLs }) => {
       // Also just use the current epoch time as the temp file name.
       uploadSightingPhoto(event.target.files[0], Date.now().toString(), fileType).then(
         (resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           setImageURLs((oldArray) => [...oldArray, resp.data]);
         }
       );

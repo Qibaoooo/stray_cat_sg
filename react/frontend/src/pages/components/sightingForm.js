@@ -42,7 +42,8 @@ const SightingForm = () => {
         tempImageURLs: imageURLs
       }
     ).then(resp => {
-      console.log(resp)
+      // console.log(resp)
+      window.location.href = "/list"
     })
 
     setValidated(true);

@@ -34,7 +34,7 @@ function LoginPage() {
     login(username, password)
       .then((response) => {
         if (response.status == 200) {
-          console.log(JSON.stringify(response.data.username));
+          // console.log(JSON.stringify(response.data.username));
           setUserinfoLocal(response.data);
           window.location.href = "/map";
         } else {

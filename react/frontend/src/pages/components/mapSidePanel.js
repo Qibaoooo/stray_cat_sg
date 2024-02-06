@@ -18,7 +18,9 @@ const ButtonGroups = () => {
   return (
     <div style={{ minWidth: "100px", textAlign: "start" }}>
       <div style={divStyles}>
-        <img src={paw} style={imgStyles}></img>
+        {window.location.href.includes("/list") && (
+          <img src={paw} style={imgStyles}></img>
+        )}
         <Button
           className={buttonClass}
           onClick={() => {
@@ -29,7 +31,9 @@ const ButtonGroups = () => {
         </Button>
       </div>
       <div style={divStyles}>
-        <img src={paw} style={imgStyles}></img>
+      {window.location.href.includes("/map") && (
+          <img src={paw} style={imgStyles}></img>
+        )}
         <Button
           className={buttonClass}
           onClick={() => {
@@ -40,7 +44,9 @@ const ButtonGroups = () => {
         </Button>
       </div>
       <div style={divStyles}>
-        <img src={paw} style={imgStyles}></img>
+      {window.location.href.includes("/newSighting") && (
+          <img src={paw} style={imgStyles}></img>
+        )}
         <Button
           className={buttonClass}
           onClick={() => {
@@ -51,7 +57,9 @@ const ButtonGroups = () => {
         </Button>
       </div>
       <div style={divStyles}>
-        <img src={paw} style={imgStyles}></img>
+      {window.location.href.includes("/lost") && (
+          <img src={paw} style={imgStyles}></img>
+        )}
         <Button className={buttonClass}>lost cat</Button>
       </div>
     </div>

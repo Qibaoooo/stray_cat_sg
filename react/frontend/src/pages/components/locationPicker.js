@@ -11,14 +11,14 @@ const LocationPicker = ({ center, setCenter }) => {
   const [gettingLocation, setGettingLocation] = useState(false);
 
   const onGoogleApiLoaded = (map, maps) => {
-    console.log(map);
+    // console.log(map);
     mapRef.current = map;
   };
 
   const onSetToCurrentLocation = () => {
     setGettingLocation(true);
     navigator.geolocation.getCurrentPosition((p) => {
-      console.log(p);
+      // console.log(p);
       setCenter([p.coords.longitude, p.coords.latitude]);
       mapRef.current.map.setCenter({
         lat: p.coords.latitude,
