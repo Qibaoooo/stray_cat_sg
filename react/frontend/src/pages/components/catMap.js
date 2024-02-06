@@ -22,7 +22,6 @@ const CatMap = () => {
     useEffect(()=>{
       getAllCatSightings()
       .then(resp => {
-        console.log(resp.data);
         SetCatSightings(resp.data);
       })
       .catch(e=>{

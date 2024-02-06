@@ -1,5 +1,10 @@
 package nus.iss.team11.controller;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import nus.iss.team11.Payload.NewCatSightingRequest;
+import nus.iss.team11.azureUtil.AzureContainerUtil;
+import nus.iss.team11.controller.service.AzureImageService;
 import nus.iss.team11.controller.service.CatSightingService;
+import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.CatSighting;
 
 @Controller
@@ -24,6 +32,12 @@ public class CatSightingController {
 
 	@Autowired
 	CatSightingService catSightingService;
+
+	@Autowired
+	AzureContainerUtil azureContainerUtil;
+	
+	@Autowired
+	AzureImageService azureImageService;
 
 	@GetMapping(value = "/api/cat_sightings")
 	public ResponseEntity<String> getAllCS() {
@@ -43,14 +57,14 @@ public class CatSightingController {
 	}
 
 	@PostMapping(value = "/api/cat_sightings")
-	public ResponseEntity<String> createNewCatSighting(@RequestBody NewCatSightingRequest newSightingRequest) {
+	public ResponseEntity<String> createNewCatSighting(@RequestBody NewCatSightingRequest newSightingRequest) throws Exception {
 		CatSighting newCatSighting = new CatSighting();
 		return saveCatSightingToDB(newSightingRequest, newCatSighting);
 	}
 
 	@PutMapping(value = "/api/cat_sightings")
 	public ResponseEntity<String> updateNewCatSighting(@RequestBody NewCatSightingRequest newSightingRequest,
-			@RequestParam Integer id) {
+			@RequestParam Integer id) throws Exception {
 		CatSighting csToBeUpdated = catSightingService.getCatSightingById(id);
 		return saveCatSightingToDB(newSightingRequest, csToBeUpdated);
 	}
@@ -66,17 +80,39 @@ public class CatSightingController {
 	}
 
 	private ResponseEntity<String> saveCatSightingToDB(NewCatSightingRequest newSightingRequest,
-			CatSighting csToBeSaved) {
+			CatSighting csToBeSaved) throws Exception {
+		// save catSighting object
 		csToBeSaved.setSightingName(newSightingRequest.getSightingName());
 		csToBeSaved.setLocationLat(newSightingRequest.getLocationLat());
 		csToBeSaved.setLocationLong(newSightingRequest.getLocationLong());
-		csToBeSaved.setTime(newSightingRequest.getTime());
+		csToBeSaved.setTime(
+				Instant.ofEpochMilli(newSightingRequest.getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
 		csToBeSaved.setSuggestedCatName(newSightingRequest.getSuggestedCatName());
 		csToBeSaved.setSuggestedCatBreed(newSightingRequest.getSuggestedCatBreed());
 
 		csToBeSaved = catSightingService.saveSighting(csToBeSaved);
+		
+		// save azureImage objects
+		List<String> tempImageURLs = newSightingRequest.getTempImageURLs();
+
+		for (int i = 0; i < tempImageURLs.size(); i++) {
+			AzureImage ai = new AzureImage();
+			ai.setFileName(getFileNameForSightingPhoto(newSightingRequest.getSightingName(), i, tempImageURLs.get(i)));
+			ai.setImageURL(azureContainerUtil.deriveImageURL(ai.getFileName()));
+			ai.setCatSighting(csToBeSaved);
+			
+			azureContainerUtil.moveTempImageToImagesContainer(tempImageURLs.get(i), ai.getFileName());
+			
+			azureImageService.saveImage(ai);
+		}
 
 		return new ResponseEntity<>("Saved : " + String.valueOf(csToBeSaved.getId()), HttpStatus.OK);
+	}
+	
+	private String getFileNameForSightingPhoto(String sightingName, int idx, String tempImageURL) {
+		String[] urlSplit = tempImageURL.split("\\.");
+		String fileType = urlSplit[urlSplit.length - 1];
+		return sightingName + "_photo_" + idx + "." + fileType;
 	}
 
 }

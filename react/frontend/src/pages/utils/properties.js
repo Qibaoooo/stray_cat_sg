@@ -11,8 +11,8 @@ export const getJsonHeaders = () => {
 
 export const getJsonHeadersWithJWT = () => {
   if (getUserinfoFromLocal() === null) {
-    console.log("getUserinfoFromLocal() returned null. Please login first.")
-    return
+    console.log("getUserinfoFromLocal() returned null. Please login first.");
+    return;
   }
   return {
     "Content-Type": "application/json",
@@ -21,6 +21,17 @@ export const getJsonHeadersWithJWT = () => {
     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
     Authorization: "Bearer " + getUserinfoFromLocal().jwt,
   };
+};
+
+export const getImagePNGHeadersWithJWT = () => {
+  let headers = getJsonHeadersWithJWT();
+  headers = { "Content-Type": "image/png", ...headers };
+  return headers;
+};
+export const getImageJPGHeadersWithJWT = () => {
+  let headers = getJsonHeadersWithJWT();
+  headers = { "Content-Type": "image/jpeg", ...headers };
+  return headers;
 };
 
 export const SingaporeGeoCoord = {

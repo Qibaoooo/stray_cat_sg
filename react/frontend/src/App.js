@@ -5,6 +5,7 @@ import MapPage from "pages/mapPage";
 import CatDetailsPage from "pages/catDetailsPage";
 import LoginPage from "pages/loginPage";
 import ListPage from "pages/listPage";
+import UploadSighting from "pages/uploadSightingPage";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/list" element={<ListPage />} />
         <Route path="/catDetails" element={<CatDetailsPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/newSighting" element={<UploadSighting />} />
       </Routes>
     </div>
   );

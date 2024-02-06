@@ -24,7 +24,6 @@ function LoginPage() {
 
   useEffect(() => {
     if (getUserinfoFromLocal()) {
-      console.log(getUserinfoFromLocal());
       // alr logged in, redirect
       window.location.href = "/map";
     }
