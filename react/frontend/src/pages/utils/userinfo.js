@@ -8,8 +8,8 @@ let getUserinfoFromLocal = () => {
 }
 
 let clearUserInfoAndRedirectToLogin = () => {
-    alert("please login first.")
     localStorage.removeItem('scs_userinfo')
+    alert("please login first.")
     window.location.href = "/login"
 }
 

@@ -1,6 +1,9 @@
-import { getUserinfoFromLocal, setUserinfoLocal } from "pages/utils/userinfo";
+import {
+  clearUserInfoAndRedirectToLogin,
+  getUserinfoFromLocal,
+} from "pages/utils/userinfo";
 import React, { useEffect, useState } from "react";
-import { Button, Row, Stack } from "react-bootstrap";
+import { Button, Stack } from "react-bootstrap";
 import paw from "../../images/paw.png";
 
 const ButtonGroups = () => {
@@ -16,19 +19,36 @@ const ButtonGroups = () => {
     <div style={{ minWidth: "100px", textAlign: "start" }}>
       <div style={divStyles}>
         <img src={paw} style={imgStyles}></img>
-        <Button className={buttonClass} onClick={()=>{window.location.href = "/list";}}>
+        <Button
+          className={buttonClass}
+          onClick={() => {
+            window.location.href = "/list";
+          }}
+        >
           list view
         </Button>
       </div>
       <div style={divStyles}>
         <img src={paw} style={imgStyles}></img>
-        <Button className={buttonClass} onClick={()=>{window.location.href = "/map";}}>
+        <Button
+          className={buttonClass}
+          onClick={() => {
+            window.location.href = "/map";
+          }}
+        >
           map view
         </Button>
       </div>
       <div style={divStyles}>
         <img src={paw} style={imgStyles}></img>
-        <Button className={buttonClass}>upload sighting</Button>
+        <Button
+          className={buttonClass}
+          onClick={() => {
+            window.location.href = "/newSighting";
+          }}
+        >
+          upload sighting
+        </Button>
       </div>
       <div style={divStyles}>
         <img src={paw} style={imgStyles}></img>
@@ -46,6 +66,9 @@ const MapSidePanel = () => {
   const [username, SetUsername] = useState("");
 
   useEffect(() => {
+    if (getUserinfoFromLocal() == null) {
+      return;
+    }
     SetUsername(getUserinfoFromLocal().username);
   }, []);
 
@@ -57,8 +80,8 @@ const MapSidePanel = () => {
             <p>hi, {username}</p>
             <Button
               onClick={() => {
-                setUserinfoLocal("");
-                window.location.reload();
+                clearUserInfoAndRedirectToLogin();
+                window.location.href = "/login";
               }}
             >
               logout
@@ -67,7 +90,13 @@ const MapSidePanel = () => {
         ) : (
           <div>
             <p>please login</p>
-            <Button>login</Button>
+            <Button
+              onClick={() => {
+                window.location.href = "/login";
+              }}
+            >
+              login
+            </Button>
           </div>
         )}
         {/* spacer */}

@@ -10,9 +10,15 @@ import nus.iss.team11.repository.AzureImageRepository;
 public class AzureImageServiceImpl implements AzureImageService{
 	@Autowired
 	AzureImageRepository azureImageRepository;
+	
 	@Override
 	public AzureImage findImageByFileName(String fileName) {
 		return azureImageRepository.findByFileName(fileName);
+	}
+	
+	@Override
+	public AzureImage saveImage(AzureImage azureImage) {
+		return azureImageRepository.save(azureImage);
 	}
 
 }

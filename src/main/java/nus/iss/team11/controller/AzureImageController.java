@@ -40,7 +40,7 @@ public class AzureImageController {
 			return new ResponseEntity<>("no fileName in request param", HttpStatus.BAD_REQUEST);
 		}
 		
-		String blobUrl = azureContainerUtil.uploadImageToContainer(imageFile, fileName);
+		String blobUrl = azureContainerUtil.uploadToTempContainer(imageFile, fileName);
 		return new ResponseEntity<>(blobUrl, HttpStatus.OK);
 	}
 	

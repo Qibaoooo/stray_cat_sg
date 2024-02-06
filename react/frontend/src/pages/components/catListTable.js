@@ -13,7 +13,6 @@ const CatListTable = ({ viewType }) => {
   const [sightings, SetSightings] = useState([]);
 
   useEffect(() => {
-    console.log(viewType);
     if (viewType === "cat") {
       getAllCats()
         .then((resp) => {

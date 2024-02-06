@@ -4,10 +4,33 @@
 import axios from "axios";
 import { backendIP, getJsonHeadersWithJWT } from "../properties";
 
-let getAllCatSightings = () => {
-    return axios.get(`${backendIP}/api/cat_sightings`, {
-        headers: getJsonHeadersWithJWT(),
-    });
-}
+const getAllCatSightings = () => {
+  return axios.get(`${backendIP}/api/cat_sightings`, {
+    headers: getJsonHeadersWithJWT(),
+  });
+};
 
-export { getAllCatSightings };
+const createNewCatSightings = ({
+  sightingName,
+  locationLat,
+  locationLong,
+  time,
+  suggestedCatName,
+  suggestedCatBreed,
+  tempImageURLs,
+}) => {
+  let payload = {
+    sightingName,
+    locationLat,
+    locationLong,
+    time,
+    suggestedCatName,
+    suggestedCatBreed,
+    tempImageURLs,
+  };
+  return axios.post(`${backendIP}/api/cat_sightings`, payload, {
+    headers: getJsonHeadersWithJWT(),
+  });
+};
+
+export { getAllCatSightings, createNewCatSightings };

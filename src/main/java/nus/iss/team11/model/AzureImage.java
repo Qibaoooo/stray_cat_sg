@@ -43,7 +43,7 @@ public class AzureImage {
 		if (fileName == null) {
 			return null;
 		}
-		String[] arr = fileName.split("_");
-		return arr[0] + "_" + arr[1] + "_" + arr[2];
+		String[] arr = fileName.split("_photo_");
+		return arr[0];
 	}
 }
