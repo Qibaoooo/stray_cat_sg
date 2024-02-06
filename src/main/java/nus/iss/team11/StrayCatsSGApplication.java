@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -128,21 +132,29 @@ public class StrayCatsSGApplication {
 			;
 
 			// group cat sightings into cats
-			// only for first 5 sightings!
-			csMap.keySet().stream().limit(5).forEach((csName) -> {
-				// init cat from sighting
-				Cat cat = new Cat();
-				CatSighting cs = csMap.get(csName);
-				cat.setCatName("cat from " + cs.getSightingName());
-				cat.setLabels(Arrays.asList("test0", "test1", "test2"));
-				catRepository.save(cat);
+			// only do .setApproved(true) for first 5 sightings!
+			Integer approvedCount = 0;
+			for (Entry<String, CatSighting> entry: csMap.entrySet()) {
+				CatSighting cs = entry.getValue();
+				
+				Cat cat = new Cat(cs);
 
 				// update relationship
 				cs.setCat(cat);
-				cs.setApproved(true);
+				cat.addLabel("forTesting");
+				
+				// approve the first 5 sightings
+				if (approvedCount < 5) {
+					cs.setApproved(true);
+					cat.setApproved(true);
+					approvedCount++;
+				}
+				
+				// set cat and cs
+				catRepository.save(cat);
 				catSightingRepository.save(cs);
-			});
-
+			}
+			
 			// dummy comments
 			SCSUser cuser = new SCSUser();
 			cuser.setUsername("commentuser");
@@ -169,7 +181,7 @@ public class StrayCatsSGApplication {
 		} else {
 			vMap = azureContainerUtil.readCSVIntoHashMap("vectors.csv");
 		}
-		
+
 		vMap.keySet().stream().forEach(fileName -> {
 
 			AzureImage ai = azureImageRepository.findByFileName(fileName);

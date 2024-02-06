@@ -48,7 +48,7 @@ const CatListTable = ({ viewType }) => {
         {viewType === "cat"
           ? cats.map((cat, index, array) => {
               return (
-                <tr>
+                <tr onClick={()=>{window.location.href = `/catDetails?id=${cat.id}`}}>
                   <td>
                     <img
                       src={cat.catSightings[0].imagesURLs[0]}
@@ -63,7 +63,7 @@ const CatListTable = ({ viewType }) => {
             })
           : sightings.map((sighting, index, array) => {
               return (
-                <tr>
+                <tr onClick={()=>{window.location.href = `/catDetails?id=${sighting.cat}`}}>
                   <td>
                     <img
                       src={sighting.imagesURLs[0]}
