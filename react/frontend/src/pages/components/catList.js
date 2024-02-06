@@ -3,7 +3,7 @@ import { Button, Row, Stack } from "react-bootstrap";
 import CatListTable from "./catListTable";
 
 const CatList = () => {
-  const [currentViewType, SetCurrentViewType] = useState("cat");
+  const [currentViewType, SetCurrentViewType] = useState("sighting");
 
   const onToggleView = ()=>{
     if (currentViewType === "cat") {
