@@ -13,10 +13,9 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
   };
   
   const imgStyle = {
-    maxWidth: '550px',
+    maxWidth: '350px',
     height: 'auto',
     borderRadius: '50px',
-    
   };
 
   const contentStyle={
@@ -24,11 +23,8 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
     fontFamily:'Comic Sans MS, cursive',
   };
 
-
-
-
   return (
-    <Stack style={{ minHeight: "100vh", display: 'flex', alignItems: 'center',gap: '20px'}}>
+    <Stack className="m-5" style={{ minHeight: "100vh", display: 'flex', alignItems: 'center',gap: '20px'}}>
       <img className="m-3" src={displayImgUrl} alt="cat" style={imgStyle}></img>
       <div
         className="mx-3"

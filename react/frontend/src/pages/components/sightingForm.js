@@ -43,6 +43,7 @@ const SightingForm = () => {
       }
     ).then(resp => {
       console.log(resp)
+      window.location.href = `/catDetails?id=${resp.data.cat}`
     })
 
     setValidated(true);

@@ -1,5 +1,7 @@
 package nus.iss.team11.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +29,16 @@ public class Cat {
 
 	@OneToMany(mappedBy = "cat")
 	private List<CatSighting> catSightings;
+	
+	public Cat(CatSighting catSighting) {
+		this.catName = catSighting.getSightingName();
+		this.labels = new ArrayList<>();
+		this.isApproved = false;
+	}
 
 	private String catName;
 	private String catBreed;
+	private boolean isApproved;
 
 	private List<String> labels;
 
@@ -45,6 +54,7 @@ public class Cat {
 		json.put("id", id);
 		json.put("catName", catName);
 		json.put("catBreed", catBreed);
+		json.put("isApproved", isApproved);
 		json.put("labels", labels);
 		json.put("catSightings", catSightings
 				.stream()
@@ -52,5 +62,12 @@ public class Cat {
 				.collect(Collectors.toList()));
 
 		return json;
+	}
+	
+	public void addLabel(String label) {
+		if (this.labels == null) {
+			this.labels = new ArrayList<>();
+		}
+		this.labels.add(label);
 	}
 }
