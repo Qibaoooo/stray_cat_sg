@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getComments } from "pages/utils/api/apiComment";
+import { createNewComment, getComments } from "pages/utils/api/apiComment";
 import { Table } from "react-bootstrap";
 import send_btn from "../../images/send_btn.png";
 
@@ -10,18 +10,31 @@ const CatCommentPanel = ({ id }) => {
     setPublicComment(event.target.value);
   };
 
-  const handleSubmit = () => {
-    // 在这里执行提交评论的逻辑，可以将评论传递给父组件或者发送到服务器
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (publiccomment.length < 1) {
+      alert("please enter comment");
+      return;
+    }
 
-    // 清空输入框
+    createNewComment(
+      {
+        content: publiccomment,
+        labels: null,
+        cat_id: id
+      }).then(() => {
+        getComments(id).then((resp) => {
+          setComments(resp.data);
+        });
+
     setPublicComment('');
-  };
+  })};
 
   useEffect(() => {
     getComments(id).then((resp) => {
       setComments(resp.data);
     });
-  }, []);
+  }, [id]);
   return (
     <div style={{ minHeight: "100vh" }}>
       <div style={{ backgroundColor: '#FFFBEE', paddingTop: "5px", paddingBottom: "5px", marginRight: "50px" }}>
@@ -69,6 +82,7 @@ const CatCommentPanel = ({ id }) => {
         })) : <div>Leave your first comment here!!!</div>}
         <div style={{ paddingRight: "20px",marginTop:"10px" }}>
         <table width="100%">
+          <tbody>
           <tr>
             <td width="15%">
               avator
@@ -86,6 +100,7 @@ const CatCommentPanel = ({ id }) => {
               </button>
             </td>
           </tr>
+          </tbody>
         </table>
         </div>
       </div>
