@@ -1,4 +1,3 @@
-import "./App.css";
 import React, { useEffect, useLayoutEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import MapPage from "pages/mapPage";
@@ -21,7 +20,7 @@ function App() {
   });
 
   return (
-    <div className="App" style={{ fontFamily: "Comic Sans MS, cursive" }}>
+    <div style={{ fontFamily: "Comic Sans MS, cursive", textAlign:"center" }}>
       <Routes>
         <Route path="/" element={<RedirectToMapPage />} />
         <Route path="/map" element={<MapPage />} />

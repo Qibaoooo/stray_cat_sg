@@ -5,18 +5,28 @@ import {
 import React, { useEffect, useState } from "react";
 import { Button, Stack } from "react-bootstrap";
 import paw from "../../images/paw.png";
+import banner from "../../images/top_banner.png";
 import { RxAvatar } from "react-icons/rx";
 
 const UserSection = ({ username }) => {
+  const loginButtonClass = "m-auto my-3 bg-secondary-subtle border-1";
   return (
     <div>
       {username !== "" ? (
-        <div>
-          <RxAvatar className="my-3" size={50} ></RxAvatar>
-          <p>hi, {username}</p>
+        <div className="m-3">
           <Button
+            className="btn border-0 m-auto bg-secondary"
+            style={{ display: "block" }}
+          >
+            <RxAvatar className="my-3" size={50}></RxAvatar>
+            <p>hi, {username}</p>
+          </Button>
+          <Button
+            className={loginButtonClass}
+            size="sm"
+            style={{ display: "block" }}
             onClick={() => {
-              clearUserInfoAndReload()
+              clearUserInfoAndReload();
             }}
           >
             <u>logout</u>
@@ -24,8 +34,15 @@ const UserSection = ({ username }) => {
         </div>
       ) : (
         <div>
-          <p>please login</p>
           <Button
+            className="btn border-0 mx-auto bg-secondary"
+            style={{ display: "block", marginTop:"40px" }}
+          >
+            <p>please log in</p>
+          </Button>
+          <Button
+            className={loginButtonClass}
+            size="sm"
             onClick={() => {
               window.location.href = "/login";
             }}
@@ -90,7 +107,15 @@ const MapSidePanel = () => {
 
   return (
     <div>
-      <Stack className="my-5" style={{ height: "86vh" }}>
+      <Stack
+        className="py-5 bg-secondary"
+        style={{
+          height: "100vh",
+          backgroundImage: `url(${banner})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "contain",
+        }}
+      >
         <UserSection username={username}></UserSection>
         {/* spacer */}
         <div className="my-auto"></div>

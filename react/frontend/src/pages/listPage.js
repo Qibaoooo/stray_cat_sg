@@ -5,11 +5,11 @@ import CatList from './components/catList';
 
 const listPage = () => {
     return (
-        <Row>
-          <Col xs={8}>
+        <Row className="g-0">
+          <Col className="g-0" xs={8}>
             <CatList />
           </Col>
-          <Col xs={4}>
+          <Col className="g-0" xs={4}>
             <MapSidePanel />
           </Col>
         </Row>

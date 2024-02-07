@@ -24,19 +24,19 @@ const CatDetailsPage = () => {
   return (
     <div style={{ backgroundColor: "#FFFAD9" }}>
       <h3>&nbsp;</h3>
-      <Row>
-        <Col xs={6}>
+      <Row className="g-0">
+        <Col className="g-0" xs={6}>
           <CatDetailsPanel cat={cat} displayImgUrl={imgUrl}></CatDetailsPanel>
           {/* <Button onClick={handleButtonClick}>Back to Home</Button> */}
         </Col>
 
-        <Col xs={6}>
+        <Col className="g-0" xs={6}>
           {!!cat.isApproved ? (
             <CatCommentPanel id={id}></CatCommentPanel>
           ) : (
             <div>
               <h5 style={{ marginTop: "40vh" }}>
-                <p style={{fontSize:"3rem"}}>🚧</p>
+                <p style={{ fontSize: "3rem" }}>🚧</p>
                 This cat's information is pending approval by site admins.
               </h5>
             </div>
