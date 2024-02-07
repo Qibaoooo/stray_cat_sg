@@ -1,4 +1,4 @@
-package nus.iss.sa57.csc_android;
+package nus.iss.sa57.csc_android.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +21,7 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.util.List;
 
+import nus.iss.sa57.csc_android.R;
 import nus.iss.sa57.csc_android.model.CatSighting;
 
 public class CatSightingAdapter extends ArrayAdapter<Object> {
@@ -48,8 +49,8 @@ public class CatSightingAdapter extends ArrayAdapter<Object> {
         TextView uploadby = view.findViewById(R.id.uploadedby);
         uploadby.setText(catSightingList.get(pos).getSightingName());
         TextView location = view.findViewById(R.id.location);
-        location.setText("Latitude: " + catSightingList.get(pos).getLocationLat().toString()
-                + " Longtitude: " + catSightingList.get(pos).getLocationLong().toString());
+        location.setText(GeocodeHelper.getAddressFromLocation(context,catSightingList.get(pos).
+                        getLocationLat(),catSightingList.get(pos).getLocationLong()));
         TextView uploadtime = view.findViewById(R.id.uploadtime);
         uploadtime.setText(catSightingList.get(pos).getTime().toString());
         return view;

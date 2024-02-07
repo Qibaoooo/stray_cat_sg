@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import nus.iss.sa57.csc_android.model.CatSighting;
+import nus.iss.sa57.csc_android.utils.CatSightingAdapter;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     //change this host to switch to deployed server
@@ -144,30 +145,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
         final CountDownLatch latch = new CountDownLatch(csList.size());
-        for (CatSighting cs : csList) {
-            for (int i = 0; i < cs.getImagesURLs().size(); i++) {
+        for (int i = 0; i < csList.size(); i++) {
+            CatSighting cs = csList.get(i);
+            //for (CatSighting cs : csList) {
+            //for (int i = 0; i < cs.getImagesURLs().size(); i++) {
 
-                File destFile = new File(externalFilesDir, ("img-" + String.valueOf(cs.getId()) + "-" + String.valueOf(i)));
-                Thread t = new Thread(new ImageDownloadThread(cs, destFile, latch));
-                t.start();
-            }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        latch.await();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setupList();
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
+//            File destFile = new File(externalFilesDir, ("img-" + String.valueOf(cs.getId()) + "-" + String.valueOf(i)));
+            File destFile = new File(externalFilesDir, ("img-" + String.valueOf(i)));
+            Thread t = new Thread(new ImageDownloadThread(cs, destFile, latch));
+            t.start();
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    latch.await();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setupList();
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void setupList() {
