@@ -35,17 +35,19 @@ const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, set
       // Also just use the current epoch time as the temp file name.
       uploadSightingPhoto(newImageFile, Date.now().toString(), fileType).then(
         (resp) => {
-          const newImageURL = resp.data;
-          setImageURLs((oldArray) => [...oldArray, newImageURL]);
+          const tempImageURL = resp.data;
+          setImageURLs((oldArray) => [...oldArray, tempImageURL]);
 
           // only send request to ML api if needed.
           if (requireVectors) {
-            getVectorsOfImage(newImageURL).then((resp)=>{
+            getVectorsOfImage(tempImageURL).then((resp)=>{
               console.log(resp)
               const newVector = resp.data;
+              let newPair = {}
+              newPair[tempImageURL] = newVector
               setVectorMap({
                 ...vectorMap,
-                newImageFile: newVector
+                ...newPair
               })
             })
           }
