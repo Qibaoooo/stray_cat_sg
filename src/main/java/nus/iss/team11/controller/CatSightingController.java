@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ctc.wstx.util.DataUtil;
+
 import netscape.javascript.JSObject;
 import nus.iss.team11.Payload.NewCatSightingRequest;
 import nus.iss.team11.azureUtil.AzureContainerUtil;
@@ -30,6 +32,7 @@ import nus.iss.team11.controller.service.AzureImageService;
 import nus.iss.team11.controller.service.CatService;
 import nus.iss.team11.controller.service.CatSightingService;
 import nus.iss.team11.controller.service.SCSUserService;
+import nus.iss.team11.dataUtil.CSVUtil;
 import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.Cat;
 import nus.iss.team11.model.CatSighting;
@@ -48,6 +51,9 @@ public class CatSightingController {
 	@Autowired
 	SCSUserService scsUserService;
 
+	@Autowired
+	CSVUtil csvUtil;
+	
 	@Autowired
 	AzureContainerUtil azureContainerUtil;
 
@@ -147,6 +153,7 @@ public class CatSightingController {
 			ai.setFileName(getFileNameForSightingPhoto(newSightingRequest.getSightingName(), i, tempImageURLs.get(i)));
 			ai.setImageURL(azureContainerUtil.deriveImageURL(ai.getFileName()));
 			ai.setCatSighting(csToBeSaved);
+			ai.setVector(csvUtil.getStringFromVector(vectorMap.get(tempImageURLs.get(i))));
 
 			azureContainerUtil.moveTempImageToImagesContainer(tempImageURLs.get(i), ai.getFileName());
 
