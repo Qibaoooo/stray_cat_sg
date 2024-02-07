@@ -1,49 +1,75 @@
 import { getCat } from "pages/utils/api/apiCat";
 import React, { useEffect, useState } from "react";
-import { Stack } from "react-bootstrap";
+import { Carousel, Stack } from "react-bootstrap";
 
 const CatDetailsPanel = ({ cat, displayImgUrl }) => {
   const tdStyles = {
     paddingRight: "1rem",
     width: "6rem",
     textAlign: "end",
-    fontSize: '1.2rem',
-    fontFamily: 'Comic Sans MS, cursive',
-    fontWeight: 'bold',
-  };
-  
-  const imgStyle = {
-    maxWidth: '350px',
-    height: 'auto',
-    borderRadius: '50px',
+    fontSize: "1.2rem",
+    fontFamily: "Comic Sans MS, cursive",
+    fontWeight: "bold",
   };
 
-  const contentStyle={
-    fontSize:"1rem",
-    fontFamily:'Comic Sans MS, cursive',
+  const imgStyle = {
+    maxWidth: "80%",
+    height: "auto",
+    borderRadius: "50px",
+  };
+
+  const contentStyle = {
+    fontSize: "1rem",
+    fontFamily: "Comic Sans MS, cursive",
   };
 
   return (
-    <Stack className="m-5" style={{ minHeight: "100vh", display: 'flex', alignItems: 'center',gap: '20px'}}>
-      <img className="m-3" src={displayImgUrl} alt="cat" style={imgStyle}></img>
+    <Stack
+      className="m-5"
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        gap: "20px",
+      }}
+    >
+      <Carousel data-bs-theme="dark" slide={false}>
+        {displayImgUrl.map((url, index, array) => {
+          return (
+            <Carousel.Item key={index}>
+              <div style={{ height: "50vh", width: "40vh" }}>
+                <img className="m-3" src={url} alt="cat" style={imgStyle}></img>
+              </div>
+            </Carousel.Item>
+          );
+        })}
+      </Carousel>
       <div
         className="mx-3"
         style={{
           border: "4px solid black",
           borderRadius: "2rem",
           textAlign: "center",
-          backgroundColor:"white",
+          backgroundColor: "white",
           overflow: "hidden",
-          width: "550px", 
+          width: "550px",
           height: "250px",
         }}
       >
-        <h5 style={{ fontSize: '1.5rem', fontFamily: 'Comic Sans MS, cursive', padding: '15px',fontWeight: 'bold' }}>Cat Details</h5>
-        <table 
-          
+        <h5
+          style={{
+            fontSize: "1.5rem",
+            fontFamily: "Comic Sans MS, cursive",
+            padding: "15px",
+            fontWeight: "bold",
+          }}
+        >
+          Cat Details
+        </h5>
+        <table
           cellPadding={3}
           cellSpacing={0}
-          style={{ borderCollapse: "collapse", margin: "auto", }}
+          style={{ borderCollapse: "collapse", margin: "auto" }}
         >
           <tbody>
             <tr>
