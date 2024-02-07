@@ -14,5 +14,6 @@ public class JwtResponse {
 	private int id;
 	private String username;
 	private String role;
-
+	private long expirationTime;
+	
 }

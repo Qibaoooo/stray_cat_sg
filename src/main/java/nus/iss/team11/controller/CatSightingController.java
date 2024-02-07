@@ -1,5 +1,6 @@
 package nus.iss.team11.controller;
 
+import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -27,9 +28,11 @@ import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.controller.service.AzureImageService;
 import nus.iss.team11.controller.service.CatService;
 import nus.iss.team11.controller.service.CatSightingService;
+import nus.iss.team11.controller.service.SCSUserService;
 import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.Cat;
 import nus.iss.team11.model.CatSighting;
+import nus.iss.team11.model.SCSUser;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -40,6 +43,9 @@ public class CatSightingController {
 
 	@Autowired
 	CatService catService;
+	
+	@Autowired
+	SCSUserService scsUserService;
 	
 	@Autowired
 	AzureContainerUtil azureContainerUtil;
@@ -65,8 +71,19 @@ public class CatSightingController {
 	}
 
 	@PostMapping(value = "/api/cat_sightings")
-	public ResponseEntity<String> createNewCatSighting(@RequestBody NewCatSightingRequest newSightingRequest) throws Exception {
+	public ResponseEntity<String> createNewCatSighting(@RequestBody NewCatSightingRequest newSightingRequest, Principal principal) throws Exception {
 		CatSighting newCatSighting = new CatSighting();
+		
+		// set user
+		SCSUser user;
+		try {
+			user = scsUserService.getUserByUsername(principal.getName()).get();			
+		} catch (Exception e) {
+			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
+		}
+		newCatSighting.setScsUser(user);
+		
+		// save cs to DB
 		newCatSighting = saveCatSightingToDB(newSightingRequest, newCatSighting);
 		
 		// creat cat object
@@ -107,7 +124,7 @@ public class CatSightingController {
 
 	private CatSighting saveCatSightingToDB(NewCatSightingRequest newSightingRequest,
 			CatSighting csToBeSaved) throws Exception {
-
+		
 		// save catSighting object
 		csToBeSaved.setSightingName(newSightingRequest.getSightingName());
 		csToBeSaved.setLocationLat(newSightingRequest.getLocationLat());

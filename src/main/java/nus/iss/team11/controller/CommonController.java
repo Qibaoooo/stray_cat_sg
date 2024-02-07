@@ -2,8 +2,10 @@ package nus.iss.team11.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +37,9 @@ public class CommonController {
 
 	@Autowired
 	PasswordEncoder encoder;
+	
+	@Value("${SCS.app.jwtExpirationMs}")
+	private int jwtExpirationMs;
 
 	@Autowired
 	JwtUtils jwtUtils;
@@ -46,12 +51,13 @@ public class CommonController {
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
-
+		Date expiration = new Date((new Date()).getTime() + jwtExpirationMs);
+		String jwt = jwtUtils.generateJwtToken(authentication, expiration);
+		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 		String role = userDetails.getAuthorities().iterator().next().toString();
-
-		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), role));
+		
+		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), role, expiration.getTime()));
 	}
 
 	@PostMapping(value = "/api/logout")

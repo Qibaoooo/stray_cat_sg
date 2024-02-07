@@ -1,6 +1,7 @@
 package nus.iss.team11.controller.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class SCSUserServiceImpl implements SCSUserService{
 	@Override
 	public void deleteSCSUser (int id) {
 	scsUserRepository.deleteById(id);
+	}
+
+	@Override
+	public Optional<SCSUser> getUserByUsername(String username) {
+		return scsUserRepository.findByUsername(username);
 	}
 
 }
