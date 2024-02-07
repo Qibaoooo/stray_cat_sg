@@ -110,9 +110,8 @@ public class StrayCatsSGApplication {
 
 					cs.setSightingName(sightingName);
 					cs.setTime(LocalDate.now());
-					cs.setApproved(false);
-					cs.setSuggestedCatName("test cat 1");
-					cs.setSuggestedCatBreed("test cat breed 1");
+					cs.setSuggestedCatName("test cat");
+					cs.setSuggestedCatBreed(getRandomBreed());
 
 					setLatLongForCatSighting(cs);
 
@@ -145,7 +144,6 @@ public class StrayCatsSGApplication {
 
 				// approve the first 5 sightings
 				if (approvedCount < 5) {
-					cs.setApproved(true);
 					cat.setApproved(true);
 					cat.setCatBreed(getRandomBreed());
 					approvedCount++;

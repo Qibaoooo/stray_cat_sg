@@ -46,13 +46,14 @@ public class CatSighting {
 	private String suggestedCatName;
 	private String suggestedCatBreed;
 	
+	// for now this value is not used yet.
+	// might need this later when we have multiple sightings under same cat.
 	private boolean isApproved;
 	
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 
 		json.put("id", id);
-		json.put("isApproved", isApproved);
 		json.put("suggestedCatName", suggestedCatName);
 		json.put("suggestedCatBreed", suggestedCatBreed);
 		json.put("locationLat", locationLat);
