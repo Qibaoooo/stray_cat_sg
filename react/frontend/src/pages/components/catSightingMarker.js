@@ -30,9 +30,9 @@ const CatSightingMarker = ({ sighting }) => {
             src={sighting.imagesURLs[0]}
             style={{ width: "150px", border: "1px solid #ddd" }}
           />
-          <p>{sighting.cat ? `cat id ${sighting.cat}` : "unknown cat"}</p>
-          <p>
-            <a href={`/catDetails?id=${sighting.cat}`}>see details</a>
+          <p>{sighting.sightingName ? `${sighting.sightingName}` : "unknown cat"}</p>
+          <p className="h6">
+            <a className="text-secondary" href={`/catDetails?id=${sighting.cat}`}>see details</a>
           </p>
           <button className="close-button" onClick={closeInfoWindow}>
             &times;
