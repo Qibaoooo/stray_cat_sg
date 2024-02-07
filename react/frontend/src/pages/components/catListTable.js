@@ -35,7 +35,13 @@ const CatListTable = ({ viewType }) => {
   }, [viewType]);
 
   return (
-    <Table className="my-3" striped bordered={false} hover variant="primary">
+    <Table
+      className="my-3"
+      striped
+      bordered={false}
+      hover
+      variant="primary"
+    >
       <thead>
         <tr>
           <th>{tableCols[0]}</th>
@@ -48,7 +54,11 @@ const CatListTable = ({ viewType }) => {
         {viewType === "cat"
           ? cats.map((cat, index, array) => {
               return (
-                <tr onClick={()=>{window.location.href = `/catDetails?id=${cat.id}`}}>
+                <tr
+                  onClick={() => {
+                    window.location.href = `/catDetails?id=${cat.id}`;
+                  }}
+                >
                   <td>
                     <img
                       src={cat.catSightings[0].imagesURLs[0]}
@@ -63,7 +73,11 @@ const CatListTable = ({ viewType }) => {
             })
           : sightings.map((sighting, index, array) => {
               return (
-                <tr onClick={()=>{window.location.href = `/catDetails?id=${sighting.cat}`}}>
+                <tr
+                  onClick={() => {
+                    window.location.href = `/catDetails?id=${sighting.cat}`;
+                  }}
+                >
                   <td>
                     <img
                       src={sighting.imagesURLs[0]}

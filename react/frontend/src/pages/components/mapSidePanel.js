@@ -61,8 +61,8 @@ const MapSidePanel = () => {
   }, []);
 
   return (
-    <div style={{}}>
-      <Stack style={{ height: "100vh" }}>
+    <div >
+      <Stack className="my-5" style={{ height: "86vh" }}>
         {username !== "" ? (
           <div>
             <p>hi, {username}</p>

@@ -5,27 +5,31 @@ import CatListTable from "./catListTable";
 const CatList = () => {
   const [currentViewType, SetCurrentViewType] = useState("sighting");
 
-  const onToggleView = ()=>{
+  const onToggleView = () => {
     if (currentViewType === "cat") {
-      SetCurrentViewType("sighting")
+      SetCurrentViewType("sighting");
     } else {
-      SetCurrentViewType("cat")
+      SetCurrentViewType("cat");
     }
-  }
+  };
 
   return (
-    <Stack style={{}}>
+    <Stack>
       <Row style={{ textAlign: "start" }}>
         <div className="p-5">
-          <Button 
-          className="bg-secondary-subtle" 
-          size="lg"
-          onClick={onToggleView}
-          >{currentViewType}</Button>
+          <Button
+            className="bg-secondary-subtle"
+            size="lg"
+            onClick={onToggleView}
+          >
+            {currentViewType}
+          </Button>
           <span className="mx-3">
             Toggle between views of cats and cat sightings.
           </span>
-          <CatListTable viewType={currentViewType} />
+          <div style={{ maxHeight: "80vh", overflow: "auto" }}>
+            <CatListTable viewType={currentViewType} />
+          </div>
         </div>
       </Row>
     </Stack>
