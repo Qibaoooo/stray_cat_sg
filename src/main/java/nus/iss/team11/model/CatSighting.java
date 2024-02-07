@@ -1,6 +1,7 @@
 package nus.iss.team11.model;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -66,12 +67,12 @@ public class CatSighting {
 		images.stream().forEach(image -> {
 			urls.put(image.getImageURL());
 		});
-		
 		json.put("imagesURLs",urls);
-		
+				
 		// TODO: add this when we have test data for scsUser
 		//json.put("uploadedBy", scsUser.getUsername());
 		
 		return json;
 	}
+
  }

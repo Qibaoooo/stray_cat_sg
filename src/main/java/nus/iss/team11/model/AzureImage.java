@@ -1,5 +1,9 @@
 package nus.iss.team11.model;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nus.iss.team11.dataUtil.CSVUtil;
 
 @Entity
 @AllArgsConstructor
@@ -46,4 +51,5 @@ public class AzureImage {
 		String[] arr = fileName.split("_photo_");
 		return arr[0];
 	}
+	
 }
