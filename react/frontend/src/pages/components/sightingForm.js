@@ -58,6 +58,7 @@ const SightingForm = () => {
       <ImagePicker
         imageURLs={imageURLs}
         setImageURLs={setImageURLs}
+        requireVectors={true}
       ></ImagePicker>
       <hr></hr>
       <Form.Group className="mb-3" controlId="SuggestedCatName">
