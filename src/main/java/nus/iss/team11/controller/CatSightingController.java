@@ -65,7 +65,9 @@ public class CatSightingController {
 		JSONArray sightings = new JSONArray();
 
 		catSightingService.getAllCatSightings().stream().forEach(sighting -> {
-			sightings.put(sighting.toJSON());
+			JSONObject sightingJSON = sighting.toJSON();
+			sightingJSON = csvUtil.appendVectorMapToSightingJSON(sighting, sightingJSON);
+			sightings.put(sightingJSON);
 		});
 
 		return new ResponseEntity<>(sightings.toString(), HttpStatus.OK);

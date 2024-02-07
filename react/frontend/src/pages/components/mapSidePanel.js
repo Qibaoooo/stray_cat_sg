@@ -55,7 +55,7 @@ const ButtonGroups = () => {
     <div style={{ minWidth: "100px", textAlign: "start" }}>
       {URLPathList.map((url, index, array) => {
         return (
-          <div style={divStyles}>
+          <div style={divStyles} key={index}>
             {window.location.href.includes(url) && (
               <img src={paw} style={imgStyles}></img>
             )}

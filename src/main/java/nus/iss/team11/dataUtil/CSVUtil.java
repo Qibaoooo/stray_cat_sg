@@ -10,10 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+
+import nus.iss.team11.model.AzureImage;
+import nus.iss.team11.model.CatSighting;
 
 @Component
 public class CSVUtil {
@@ -53,8 +57,11 @@ public class CSVUtil {
 		return vMap;
 	}
 
-	public List<Float> getVectorForm(String vectorString) {
+	public List<Float> getVectorFromString(String vectorString) {
 		List<Float> floats = new ArrayList<>();
+		if (vectorString == null) {
+			return floats;
+		}
 		String cleanedVectorString = vectorString.replace("[", "").replace("]", "");
 		List<String> vStrings = Arrays.asList(cleanedVectorString.split(","));
 		for (String vStr : vStrings) {
@@ -75,6 +82,15 @@ public class CSVUtil {
 		}
 		result = result.substring(0, result.length() - 2) + "]";
 		return result;
+	}
+
+	public JSONObject appendVectorMapToSightingJSON(CatSighting sighting, JSONObject sightingJSON) {
+		JSONObject vectorMap = new JSONObject();
+		sighting.getImages().forEach(ai->{
+			vectorMap.put(ai.getImageURL(), getVectorFromString(ai.getVector()));
+		});
+		sightingJSON.put("vectorMap", vectorMap);
+		return sightingJSON;
 	}
 
 }
