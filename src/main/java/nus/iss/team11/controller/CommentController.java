@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import nus.iss.team11.controller.payload.NewComment;
+import nus.iss.team11.Payload.NewComment;
 import nus.iss.team11.controller.service.CatService;
 import nus.iss.team11.controller.service.CommentService;
 import nus.iss.team11.controller.service.SCSUserService;
