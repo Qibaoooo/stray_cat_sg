@@ -8,6 +8,7 @@ import { createNewCatSightings } from "pages/utils/api/apiCatSightings";
 const SightingForm = () => {
   const [validated, setValidated] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
+  const [vectorMap, setVectorMap] = useState({});
   const [center, setCenter] = useState([
     SingaporeGeoCoord.lng,
     SingaporeGeoCoord.lat,
@@ -39,7 +40,8 @@ const SightingForm = () => {
         time: Date.now(),
         suggestedCatName: suggestedCatName,
         suggestedCatBreed: observedCatbreed,
-        tempImageURLs: imageURLs
+        tempImageURLs: imageURLs,
+        vectorMap: vectorMap
       }
     ).then(resp => {
       window.location.href = `/catDetails?id=${resp.data.cat}`
@@ -59,6 +61,8 @@ const SightingForm = () => {
         imageURLs={imageURLs}
         setImageURLs={setImageURLs}
         requireVectors={true}
+        vectorMap={vectorMap}
+        setVectorMap={setVectorMap}
       ></ImagePicker>
       <hr></hr>
       <Form.Group className="mb-3" controlId="SuggestedCatName">

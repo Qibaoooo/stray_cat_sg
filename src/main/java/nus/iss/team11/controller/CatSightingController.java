@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,13 +44,13 @@ public class CatSightingController {
 
 	@Autowired
 	CatService catService;
-	
+
 	@Autowired
 	SCSUserService scsUserService;
-	
+
 	@Autowired
 	AzureContainerUtil azureContainerUtil;
-	
+
 	@Autowired
 	AzureImageService azureImageService;
 
@@ -71,21 +72,22 @@ public class CatSightingController {
 	}
 
 	@PostMapping(value = "/api/cat_sightings")
-	public ResponseEntity<String> createNewCatSighting(@RequestBody NewCatSightingRequest newSightingRequest, Principal principal) throws Exception {
+	public ResponseEntity<String> createNewCatSighting(@RequestBody NewCatSightingRequest newSightingRequest,
+			Principal principal) throws Exception {
 		CatSighting newCatSighting = new CatSighting();
-		
+
 		// set user
 		SCSUser user;
 		try {
-			user = scsUserService.getUserByUsername(principal.getName()).get();			
+			user = scsUserService.getUserByUsername(principal.getName()).get();
 		} catch (Exception e) {
 			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
 		}
 		newCatSighting.setScsUser(user);
-		
+
 		// save cs to DB
 		newCatSighting = saveCatSightingToDB(newSightingRequest, newCatSighting);
-		
+
 		// creat cat object
 		Cat newCat = new Cat(newCatSighting);
 		newCat = catService.saveCat(newCat);
@@ -93,11 +95,11 @@ public class CatSightingController {
 		// update relationship
 		newCatSighting.setCat(newCat);
 		newCatSighting = catSightingService.saveSighting(newCatSighting);
-		
+
 		JSONObject json = new JSONObject();
 		json.put("catSighting", newCatSighting.getId());
 		json.put("cat", newCat.getId());
-		
+
 		return new ResponseEntity<>(json.toString(), HttpStatus.OK);
 
 	}
@@ -107,7 +109,7 @@ public class CatSightingController {
 			@RequestParam Integer id) throws Exception {
 		CatSighting csToBeUpdated = catSightingService.getCatSightingById(id);
 		csToBeUpdated = saveCatSightingToDB(newSightingRequest, csToBeUpdated);
-		
+
 		return new ResponseEntity<>("Updated : " + String.valueOf(csToBeUpdated.getId()), HttpStatus.OK);
 
 	}
@@ -122,9 +124,9 @@ public class CatSightingController {
 		return new ResponseEntity<>("Deleted : " + String.valueOf(csToBeDeleted.getId()), HttpStatus.OK);
 	}
 
-	private CatSighting saveCatSightingToDB(NewCatSightingRequest newSightingRequest,
-			CatSighting csToBeSaved) throws Exception {
-		
+	private CatSighting saveCatSightingToDB(NewCatSightingRequest newSightingRequest, CatSighting csToBeSaved)
+			throws Exception {
+
 		// save catSighting object
 		csToBeSaved.setSightingName(newSightingRequest.getSightingName());
 		csToBeSaved.setLocationLat(newSightingRequest.getLocationLat());
@@ -135,24 +137,25 @@ public class CatSightingController {
 		csToBeSaved.setSuggestedCatBreed(newSightingRequest.getSuggestedCatBreed());
 
 		csToBeSaved = catSightingService.saveSighting(csToBeSaved);
-		
+
 		// save azureImage objects
 		List<String> tempImageURLs = newSightingRequest.getTempImageURLs();
+		Map<String, List<Float>> vectorMap = newSightingRequest.getVectorMap();
 
 		for (int i = 0; i < tempImageURLs.size(); i++) {
 			AzureImage ai = new AzureImage();
 			ai.setFileName(getFileNameForSightingPhoto(newSightingRequest.getSightingName(), i, tempImageURLs.get(i)));
 			ai.setImageURL(azureContainerUtil.deriveImageURL(ai.getFileName()));
 			ai.setCatSighting(csToBeSaved);
-			
+
 			azureContainerUtil.moveTempImageToImagesContainer(tempImageURLs.get(i), ai.getFileName());
-			
+
 			azureImageService.saveImage(ai);
 		}
-		
+
 		return csToBeSaved;
 	}
-	
+
 	private String getFileNameForSightingPhoto(String sightingName, int idx, String tempImageURL) {
 		String[] urlSplit = tempImageURL.split("\\.");
 		String fileType = urlSplit[urlSplit.length - 1];
