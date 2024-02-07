@@ -1,10 +1,11 @@
 package nus.iss.sa57.csc_android;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,44 +15,47 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
-import nus.iss.sa57.csc_android.model.AzureImage;
 import nus.iss.sa57.csc_android.model.CatSighting;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     //change this host to switch to deployed server
     private static String HOST;
     List<CatSighting> csList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HOST = getResources().getString(R.string.host_local);
+        setupButtons();
         csList = fetchCatSightingList();
     }
 
-    private void setupList() {
-        //need an adapter to inflate the listView
-        CatSightingAdapter adapter=new CatSightingAdapter(this,csList);
-        ListView listView=findViewById(R.id.listView);
-        if(listView!=null){
-            Log.e("MainActivity", "ListView not null");
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(this);
-        }
-        //need onClickListener
+    private void setupButtons() {
+        ImageButton upload_btn = findViewById(R.id.upload_btn);
+        upload_btn.setOnClickListener(this);
     }
-@Override
-public void onItemClick(AdapterView<?>av, View v, int pos, long id){
-        //TO DO: TO BE COMPLETED
-}
-    private List<CatSighting> fetchCatSightingList(){
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.upload_btn) {
+            //goto upload activity
+        }
+    }
+
+    private List<CatSighting> fetchCatSightingList() {
         List<CatSighting> csList = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
@@ -110,13 +114,6 @@ public void onItemClick(AdapterView<?>av, View v, int pos, long id){
                             //it reads every field in the JSONObject and bind the data
                             //to the CatSighting object
                             CatSighting cs = CatSighting.parseFromJSON(jsonObject);
-
-                            //Record Test Infomation, only for testing
-                            String sightingName = jsonObject.getString("sightingName");
-                            Log.d("MainActivity", "CatSighting Name: " + sightingName);
-                            Log.d("MainActivity", "CatSighting Name: " + cs.getSightingName());
-                            Log.d("MainActivity", "CatSighting Time: " + cs.getTime());
-
                             csList.add(cs);
                         }
                     } catch (JSONException e) {
@@ -128,7 +125,7 @@ public void onItemClick(AdapterView<?>av, View v, int pos, long id){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setupList();
+                        downloadImgFiles();
                     }
                 });
 
@@ -136,66 +133,93 @@ public void onItemClick(AdapterView<?>av, View v, int pos, long id){
         }).start();
         return csList;
     }
+
+    public void downloadImgFiles() {
+        File externalFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File[] files = externalFilesDir.listFiles();
+        if (files != null) {
+            for (File f : files
+            ) {
+                f.delete();
+            }
+        }
+        final CountDownLatch latch = new CountDownLatch(csList.size());
+        for (CatSighting cs : csList) {
+            for (int i = 0; i < cs.getImagesURLs().size(); i++) {
+
+                File destFile = new File(externalFilesDir, ("img-" + String.valueOf(cs.getId()) + "-" + String.valueOf(i)));
+                Thread t = new Thread(new ImageDownloadThread(cs, destFile, latch));
+                t.start();
+            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        latch.await();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setupList();
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+    }
+
+    private void setupList() {
+        CatSightingAdapter adapter = new CatSightingAdapter(this, csList);
+        ListView listView = findViewById(R.id.listView);
+        if (listView != null) {
+            Log.e("MainActivity", "ListView not null");
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(this);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
+        //TODO: TO BE COMPLETED
+    }
+
 }
 
-//    private void fetchSingleCatSighting() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                String urlString = "http://10.0.2.2:8080/android/test";
-//                HttpURLConnection urlConnection = null;
-//                BufferedReader reader = null;
-//                String responseData = null;
-//                try {
-//                    URL url = new URL(urlString);
-//                    urlConnection = (HttpURLConnection) url.openConnection();
-//                    urlConnection.setRequestMethod("GET");
-//
-//                    int responseCode = urlConnection.getResponseCode();
-//                    if (responseCode == HttpURLConnection.HTTP_OK) {
-//                        reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-//                        StringBuilder stringBuilder = new StringBuilder();
-//                        String line;
-//                        while ((line = reader.readLine()) != null) {
-//                            stringBuilder.append(line).append("\n");
-//                        }
-//                        responseData = stringBuilder.toString();
-//                    } else {
-//                        Log.e("MainActivity", "HTTP error code: " + responseCode);
-//                    }
-//                } catch (IOException e) {
-//                    Log.e("MainActivity", "Error fetching data from server: " + e.getMessage());
-//                } finally {
-//                    if (urlConnection != null) {
-//                        urlConnection.disconnect();
-//                    }
-//                    if (reader != null) {
-//                        try {
-//                            reader.close();
-//                        } catch (IOException e) {
-//                            Log.e("MainActivity", "Error closing reader: " + e.getMessage());
-//                        }
-//                    }
-//                }
-//                if (responseData != null) {
-//                    try {
-//                        JSONObject jsonObject = new JSONObject(responseData);
-//                        String sightingName = jsonObject.getString("sightingName");
-//                        Log.d("MainActivity", "CatSighting Name: " + sightingName);
-//                        CatSighting cs = CatSighting.parseFromJSON(jsonObject);
-//                        Log.d("MainActivity", "CatSighting Name: " + cs.getSightingName());
-//                        Log.d("MainActivity", "CatSighting Time: " + cs.getTime());
-//                        List<AzureImage> imgs = cs.getImages();
-//                        for (AzureImage ai : imgs){
-//                            Log.d("MainActivity", "CatSighting Img Id: " + ai.getFileName());
-//                        }
-//                    } catch (JSONException e) {
-//                        Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
-//                    }
-//                } else {
-//                    Log.e("MainActivity", "Failed to fetch data from server");
-//                }
-//            }
-//        }).start();
-//    }
+class ImageDownloadThread implements Runnable {
+    private CatSighting cs;
+    private File destFile;
+    private CountDownLatch latch;
 
+    public ImageDownloadThread(CatSighting cs, File destFile, CountDownLatch latch) {
+        this.cs = cs;
+        this.destFile = destFile;
+        this.latch = latch;
+    }
+
+    @Override
+    public void run() {
+        String urlString = cs.getImagesURLs().get(0);
+        URLConnection urlConnection = null;
+        try {
+            URL url = new URL(urlString);
+            urlConnection = url.openConnection();
+
+            InputStream in = urlConnection.getInputStream();
+            FileOutputStream out = new FileOutputStream(destFile);
+
+            byte[] buf = new byte[4096];
+            int bytesRead = -1;
+            while ((bytesRead = in.read(buf)) != -1) {
+                out.write(buf, 0, bytesRead);
+            }
+            out.close();
+            in.close();
+            latch.countDown();
+        } catch (Exception e) {
+            Log.e("MainActivity", "Failed to download image");
+            latch.countDown();
+        }
+    }
+}

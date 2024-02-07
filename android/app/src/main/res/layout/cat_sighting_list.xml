@@ -4,13 +4,12 @@
     android:layout_height="80dp"
     android:orientation="horizontal">
 
-    <TextView
+    <ImageView
         android:id="@+id/catphoto"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="cat photo" />
+        android:gravity="center" />
 
     <LinearLayout
         android:layout_width="0dp"
