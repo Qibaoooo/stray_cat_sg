@@ -11,5 +11,5 @@ public interface SCSUserService {
 	Optional<SCSUser> getUserByUsername(String username);
 	SCSUser saveSCSUser(SCSUser scsUser);
 	void deleteSCSUser(int id);
-
+    SCSUser findUserByUsername(String username);
 }
