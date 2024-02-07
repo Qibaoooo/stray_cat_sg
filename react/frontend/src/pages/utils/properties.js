@@ -3,9 +3,19 @@ import { getUserinfoFromLocal } from "./userinfo";
 export const getJsonHeaders = () => {
   return {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  };
+};
+
+export const getJsonHeadersForMLApi = () => {
+  return {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    "origin": "https://stray-cats-ml-container.azurewebsites.net"
   };
 };
 
@@ -16,7 +26,7 @@ export const getJsonHeadersWithJWT = () => {
   }
   return {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
     Authorization: "Bearer " + getUserinfoFromLocal().jwt,
@@ -42,3 +52,6 @@ export const SingaporeGeoCoord = {
 export const backendIP = process.env.REACT_APP_BACKEND_IP
   ? process.env.REACT_APP_BACKEND_IP
   : "http://localhost:8080";
+
+export const machineLearningIP =
+  "https://stray-cats-ml-container.azurewebsites.net";
