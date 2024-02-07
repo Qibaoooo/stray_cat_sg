@@ -34,4 +34,8 @@ public class SCSUserServiceImpl implements SCSUserService{
 	scsUserRepository.deleteById(id);
 	}
 
+	@Override
+	public SCSUser findUserByUsername(String username) {
+		return scsUserRepository.findByUsername(username).orElseThrow();
+	}
 }

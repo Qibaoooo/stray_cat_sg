@@ -9,5 +9,5 @@ public interface SCSUserService {
 	SCSUser getUserById(int id);
 	SCSUser saveSCSUser(SCSUser scsUser);
 	void deleteSCSUser(int id);
-
+    SCSUser findUserByUsername(String username);
 }
