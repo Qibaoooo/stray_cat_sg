@@ -1,6 +1,7 @@
 package nus.iss.team11.Payload;
 
 import java.util.List;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,4 +20,5 @@ public class NewCatSightingRequest {
 	private String suggestedCatName;
 	private String suggestedCatBreed;
 	private List<String> tempImageURLs;
+	private Map<String, List<Float>> vectorMap;
 }

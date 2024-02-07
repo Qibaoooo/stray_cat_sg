@@ -1,16 +1,31 @@
-let setUserinfoLocal = (info) => {
+const setUserinfoLocal = (info) => {
     localStorage.setItem('scs_userinfo', JSON.stringify(info))
 }
 
-let getUserinfoFromLocal = () => {
+const getUserinfoFromLocal = () => {
     let userinfo = JSON.parse(localStorage.getItem('scs_userinfo'))
     return userinfo
 }
 
-let clearUserInfoAndRedirectToLogin = () => {
+const clearUserInfoAndRedirectToLogin = () => {
     localStorage.removeItem('scs_userinfo')
     alert("please login first.")
     window.location.href = "/login"
 }
 
-export { setUserinfoLocal, getUserinfoFromLocal, clearUserInfoAndRedirectToLogin }
+const clearUserInfoAndReload = () => {
+    localStorage.removeItem('scs_userinfo')
+    window.location.reload()
+}
+
+const requireLoginUser = () => {
+    let userinfo = JSON.parse(localStorage.getItem('scs_userinfo'))
+    if (userinfo == null) {
+        clearUserInfoAndRedirectToLogin()
+    }
+    if (userinfo.expirationTime < Date.now()) {
+        clearUserInfoAndRedirectToLogin()
+    }
+}
+
+export { setUserinfoLocal, getUserinfoFromLocal, clearUserInfoAndRedirectToLogin, clearUserInfoAndReload, requireLoginUser }

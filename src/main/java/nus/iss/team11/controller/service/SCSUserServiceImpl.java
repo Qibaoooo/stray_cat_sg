@@ -1,6 +1,7 @@
 package nus.iss.team11.controller.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,4 +39,10 @@ public class SCSUserServiceImpl implements SCSUserService{
 	public SCSUser findUserByUsername(String username) {
 		return scsUserRepository.findByUsername(username).orElseThrow();
 	}
+
+  @Override
+	public Optional<SCSUser> getUserByUsername(String username) {
+		return scsUserRepository.findByUsername(username);
+	}
+
 }

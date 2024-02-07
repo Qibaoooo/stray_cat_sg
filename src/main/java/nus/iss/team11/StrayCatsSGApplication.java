@@ -134,27 +134,28 @@ public class StrayCatsSGApplication {
 			// group cat sightings into cats
 			// only do .setApproved(true) for first 5 sightings!
 			Integer approvedCount = 0;
-			for (Entry<String, CatSighting> entry: csMap.entrySet()) {
+			for (Entry<String, CatSighting> entry : csMap.entrySet()) {
 				CatSighting cs = entry.getValue();
-				
+
 				Cat cat = new Cat(cs);
 
 				// update relationship
 				cs.setCat(cat);
 				cat.addLabel("forTesting");
-				
+
 				// approve the first 5 sightings
 				if (approvedCount < 5) {
 					cs.setApproved(true);
 					cat.setApproved(true);
+					cat.setCatBreed(getRandomBreed());
 					approvedCount++;
 				}
-				
+
 				// set cat and cs
 				catRepository.save(cat);
 				catSightingRepository.save(cs);
 			}
-			
+
 			// dummy comments
 			SCSUser cuser = new SCSUser();
 			cuser.setUsername("commentuser");
@@ -171,6 +172,25 @@ public class StrayCatsSGApplication {
 			// load vector for test images
 			loadVectors(azureImageRepository);
 		};
+	}
+
+	private String getRandomBreed() {
+		List<String> breeds = List.of("Abyssinian",
+				"British Shorthair",
+				"Burmese",
+				"Cornish Rex",
+				"Devon Rex",
+				"Himalayan",
+				"Maine Coon",
+				"Manx",
+				"Persian",
+				"Russian Blue",
+				"Scottish Fold",
+				"Siamese",
+				"Sphynx",
+				"Turkish Angora",
+				"Turkish Van");
+	    return breeds.get(new Random().nextInt(breeds.size()));
 	}
 
 	private void loadVectors(AzureImageRepository azureImageRepository) throws IOException, CsvException {

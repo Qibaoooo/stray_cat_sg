@@ -1,17 +1,20 @@
 import { uploadSightingPhoto } from "pages/utils/api/apiAzureImage";
+import { getVectorsOfImage } from "pages/utils/api/apiMachineLearning";
 import { getFileType } from "pages/utils/fileUtil";
 import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const ImagePicker = ( { imageURLs , setImageURLs }) => {
+const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, setVectorMap }) => {
   const fileInputRef = useRef();
   const [images, setImages] = useState([]);
 
   const handleChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       
+      const newImageFile = event.target.files[0];
+
       // filter for file type
-      const fileType = getFileType(event.target.files[0].name)
+      const fileType = getFileType(newImageFile.name)
       if (! ((fileType === "png") || (fileType === "jpg"))) {
         alert("only jpg and png files are supported.")
         return
@@ -20,7 +23,7 @@ const ImagePicker = ( { imageURLs , setImageURLs }) => {
       // show mini size images uploaded
       setImages((oldArray) => [
         ...oldArray,
-        URL.createObjectURL(event.target.files[0]),
+        URL.createObjectURL(newImageFile),
       ]);
 
       // IMPORTANT NOTE:
@@ -30,10 +33,24 @@ const ImagePicker = ( { imageURLs , setImageURLs }) => {
       // So, we upload photos to `temp` container first.
       // When user click [submit form], we rename and move these photos to `images` container.
       // Also just use the current epoch time as the temp file name.
-      uploadSightingPhoto(event.target.files[0], Date.now().toString(), fileType).then(
+      uploadSightingPhoto(newImageFile, Date.now().toString(), fileType).then(
         (resp) => {
-          // console.log(resp.data);
-          setImageURLs((oldArray) => [...oldArray, resp.data]);
+          const tempImageURL = resp.data;
+          setImageURLs((oldArray) => [...oldArray, tempImageURL]);
+
+          // only send request to ML api if needed.
+          if (requireVectors) {
+            getVectorsOfImage(tempImageURL).then((resp)=>{
+              console.log(resp)
+              const newVector = resp.data;
+              let newPair = {}
+              newPair[tempImageURL] = newVector
+              setVectorMap({
+                ...vectorMap,
+                ...newPair
+              })
+            })
+          }
         }
       );
     }
@@ -63,7 +80,7 @@ const ImagePicker = ( { imageURLs , setImageURLs }) => {
       <p>
         {imageURLs.map((url, index, array) => {
           return (
-            <a className="text-info m-2" href={url}>
+            <a className="text-info m-2" href={url} key={index}>
               image blob link {index}
             </a>
           );

@@ -18,6 +18,7 @@ const createNewCatSightings = ({
   suggestedCatName,
   suggestedCatBreed,
   tempImageURLs,
+  vectorMap,
 }) => {
   let payload = {
     sightingName,
@@ -27,6 +28,7 @@ const createNewCatSightings = ({
     suggestedCatName,
     suggestedCatBreed,
     tempImageURLs,
+    vectorMap
   };
   return axios.post(`${backendIP}/api/cat_sightings`, payload, {
     headers: getJsonHeadersWithJWT(),

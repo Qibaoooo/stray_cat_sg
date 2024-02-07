@@ -16,6 +16,7 @@ const CatListTable = ({ viewType }) => {
     if (viewType === "cat") {
       getAllCats()
         .then((resp) => {
+          console.log(resp.data);
           SetCats(resp.data);
           SetTableCols(CatCols);
         })
@@ -25,6 +26,7 @@ const CatListTable = ({ viewType }) => {
     } else {
       getAllCatSightings()
         .then((resp) => {
+          console.log(resp.data);
           SetSightings(resp.data);
           SetTableCols(SightingCols);
         })
@@ -35,13 +37,7 @@ const CatListTable = ({ viewType }) => {
   }, [viewType]);
 
   return (
-    <Table
-      className="my-3"
-      striped
-      bordered={false}
-      hover
-      variant="primary"
-    >
+    <Table className="my-3" striped bordered={false} hover variant="primary">
       <thead>
         <tr>
           <th>{tableCols[0]}</th>
@@ -55,6 +51,7 @@ const CatListTable = ({ viewType }) => {
           ? cats.map((cat, index, array) => {
               return (
                 <tr
+                  key={index}
                   onClick={() => {
                     window.location.href = `/catDetails?id=${cat.id}`;
                   }}
@@ -74,6 +71,7 @@ const CatListTable = ({ viewType }) => {
           : sightings.map((sighting, index, array) => {
               return (
                 <tr
+                  key={index}
                   onClick={() => {
                     window.location.href = `/catDetails?id=${sighting.cat}`;
                   }}
