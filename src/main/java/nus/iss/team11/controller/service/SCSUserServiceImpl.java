@@ -36,6 +36,11 @@ public class SCSUserServiceImpl implements SCSUserService{
 	}
 
 	@Override
+	public SCSUser findUserByUsername(String username) {
+		return scsUserRepository.findByUsername(username).orElseThrow();
+	}
+
+  @Override
 	public Optional<SCSUser> getUserByUsername(String username) {
 		return scsUserRepository.findByUsername(username);
 	}
