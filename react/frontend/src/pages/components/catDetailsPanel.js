@@ -38,7 +38,7 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
         {displayImgUrl.map((url, index, array) => {
           return (
             <Carousel.Item key={index}>
-              <div style={{ height: "65vh", width: "52vh" }}>
+              <div style={{ height: "45vh", width: "50vh" }}>
                 <img className="m-3" src={url} alt="cat" style={imgStyle}></img>
               </div>
             </Carousel.Item>
