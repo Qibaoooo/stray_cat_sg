@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import MapPage from "pages/mapPage";
 import CatDetailsPage from "pages/catDetailsPage";
@@ -7,16 +7,23 @@ import LoginPage from "pages/loginPage";
 import ListPage from "pages/listPage";
 import UploadSighting from "pages/uploadSightingPage";
 
-function App() {
+const RedirectToMapPage = () => {
+  useEffect(() => {
+    window.location.href = "/map"
+  });
 
-  useLayoutEffect(()=>{
+  return null;
+};
+
+function App() {
+  useLayoutEffect(() => {
     document.body.className = document.body.className + " bg-primary";
-  })
+  });
 
   return (
-    <div className="App" style={{fontFamily:"Comic Sans MS, cursive"}}>
+    <div className="App" style={{ fontFamily: "Comic Sans MS, cursive" }}>
       <Routes>
-        <Route path="/" element={<MapPage />} />
+        <Route path="/" element={<RedirectToMapPage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/list" element={<ListPage />} />
         <Route path="/catDetails" element={<CatDetailsPage />} />

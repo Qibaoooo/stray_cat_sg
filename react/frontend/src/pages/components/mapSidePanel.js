@@ -15,53 +15,33 @@ const ButtonGroups = () => {
     window.location.href = "/list";
   };
 
+  const URLPathList = ["/list", "/map", "/newSighting", "/lost"];
+  const ButtonTexts = {
+    "/list": "list view",
+    "/map": "map view",
+    "/newSighting": "upload sighting",
+    "/lost": "lost cat",
+  };
+
   return (
     <div style={{ minWidth: "100px", textAlign: "start" }}>
-      <div style={divStyles}>
-        {window.location.href.includes("/list") && (
-          <img src={paw} style={imgStyles}></img>
-        )}
-        <Button
-          className={buttonClass}
-          onClick={() => {
-            window.location.href = "/list";
-          }}
-        >
-          list view
-        </Button>
-      </div>
-      <div style={divStyles}>
-      {window.location.href.includes("/map") && (
-          <img src={paw} style={imgStyles}></img>
-        )}
-        <Button
-          className={buttonClass}
-          onClick={() => {
-            window.location.href = "/map";
-          }}
-        >
-          map view
-        </Button>
-      </div>
-      <div style={divStyles}>
-      {window.location.href.includes("/newSighting") && (
-          <img src={paw} style={imgStyles}></img>
-        )}
-        <Button
-          className={buttonClass}
-          onClick={() => {
-            window.location.href = "/newSighting";
-          }}
-        >
-          upload sighting
-        </Button>
-      </div>
-      <div style={divStyles}>
-      {window.location.href.includes("/lost") && (
-          <img src={paw} style={imgStyles}></img>
-        )}
-        <Button className={buttonClass}>lost cat</Button>
-      </div>
+      {URLPathList.map((url, index, array) => {
+        return (
+          <div style={divStyles}>
+            {window.location.href.includes(url) && (
+              <img src={paw} style={imgStyles}></img>
+            )}
+            <Button
+              className={buttonClass}
+              onClick={() => {
+                window.location.href = url;
+              }}
+            >
+              {ButtonTexts[url]}
+            </Button>
+          </div>
+        );
+      })}
     </div>
   );
 };
