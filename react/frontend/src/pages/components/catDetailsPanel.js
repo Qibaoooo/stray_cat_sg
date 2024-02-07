@@ -13,7 +13,8 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
   };
 
   const imgStyle = {
-    maxWidth: "80%",
+    maxWidth: "90%",
+    maxHeight: "90%",
     height: "auto",
     borderRadius: "50px",
   };
@@ -30,14 +31,14 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
-        gap: "20px",
+        gap: "10px",
       }}
     >
       <Carousel data-bs-theme="dark" slide={false}>
         {displayImgUrl.map((url, index, array) => {
           return (
             <Carousel.Item key={index}>
-              <div style={{ height: "50vh", width: "40vh" }}>
+              <div style={{ height: "65vh", width: "52vh" }}>
                 <img className="m-3" src={url} alt="cat" style={imgStyle}></img>
               </div>
             </Carousel.Item>

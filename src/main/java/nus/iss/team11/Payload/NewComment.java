@@ -1,4 +1,4 @@
-package nus.iss.team11.controller.payload;
+package nus.iss.team11.Payload;
 
 import java.util.List;
 
