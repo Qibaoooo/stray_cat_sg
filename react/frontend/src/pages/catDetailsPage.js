@@ -12,12 +12,12 @@ const CatDetailsPage = () => {
   const id = searchParams.get("id");
 
   const [cat, SetCat] = useState({});
-  const [imgUrl, SetImgUrl] = useState("");
+  const [imgUrl, SetImgUrl] = useState([]);
 
   useEffect(() => {
     getCat(id).then((resp) => {
       SetCat(resp.data);
-      SetImgUrl(resp.data.catSightings[0].imagesURLs[0]);
+      SetImgUrl(resp.data.catSightings[0].imagesURLs);
     });
   }, []);
 
