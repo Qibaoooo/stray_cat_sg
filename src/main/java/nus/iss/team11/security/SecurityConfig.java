@@ -46,7 +46,7 @@ public class SecurityConfig {
 	@Autowired
 	PasswordEncoder encoder;
 	
-	private static String[] testingPath = {"/api/vectors/**", "/api/cat_sightings/**"};
+	private static String[] testingPath = {"/api/vectors/**", "/api/cat_sightings/**", "/api/scsusers/**"};
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
