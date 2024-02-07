@@ -4,10 +4,9 @@ import { getFileType } from "pages/utils/fileUtil";
 import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const ImagePicker = ( { imageURLs , setImageURLs, requireVectors }) => {
+const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, setVectorMap }) => {
   const fileInputRef = useRef();
   const [images, setImages] = useState([]);
-  const [vectorMap, setVectorMap] = useState({});
 
   const handleChange = (event) => {
     if (event.target.files && event.target.files[0]) {
