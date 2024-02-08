@@ -1,5 +1,6 @@
 package nus.iss.sa57.csc_android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -54,6 +55,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (v.getId() == R.id.upload_btn) {
             //goto upload activity
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("catId",csList.get(pos).getId());
+        Log.d("MainActivity", "Calling Details Activity");
+        startActivity(intent);
     }
 
     private List<CatSighting> fetchCatSightingList() {
@@ -129,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         downloadImgFiles();
                     }
                 });
-
             }
         }).start();
         return csList;
@@ -144,16 +152,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 f.delete();
             }
         }
-        final CountDownLatch latch = new CountDownLatch(csList.size());
-        for (int i = 0; i < csList.size(); i++) {
-            CatSighting cs = csList.get(i);
-            //for (CatSighting cs : csList) {
-            //for (int i = 0; i < cs.getImagesURLs().size(); i++) {
+        int sum = 0;
+        for (CatSighting cs : csList){
+            sum += cs.getImagesURLs().size();
+        }
+        final CountDownLatch latch = new CountDownLatch(sum);
+        //for (int i = 0; i < csList.size(); i++) {
+        //    CatSighting cs = csList.get(i);
+        for (CatSighting cs : csList) {
+            for (int i = 0; i < cs.getImagesURLs().size(); i++) {
 
-//            File destFile = new File(externalFilesDir, ("img-" + String.valueOf(cs.getId()) + "-" + String.valueOf(i)));
-            File destFile = new File(externalFilesDir, ("img-" + String.valueOf(i)));
+            File destFile = new File(externalFilesDir, ("img-" + String.valueOf(cs.getId()) + "-" + String.valueOf(i)));
+            //File destFile = new File(externalFilesDir, ("img-" + String.valueOf(i)));
             Thread t = new Thread(new ImageDownloadThread(cs, destFile, latch));
             t.start();
+            }
         }
         new Thread(new Runnable() {
             @Override
@@ -183,10 +196,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
-        //TODO: TO BE COMPLETED
-    }
+
 
 }
 

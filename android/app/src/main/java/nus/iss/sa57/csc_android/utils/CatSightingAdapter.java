@@ -43,7 +43,7 @@ public class CatSightingAdapter extends ArrayAdapter<Object> {
         }
         ImageView catphoto = view.findViewById(R.id.catphoto);
         File externalFilesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File destFile = new File(externalFilesDir, ("img-" + String.valueOf(pos)));
+        File destFile = new File(externalFilesDir, ("img-" + catSightingList.get(pos).getId() + "-0"));
         Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
         catphoto.setImageBitmap(bitmap);
         TextView uploadby = view.findViewById(R.id.uploadedby);
