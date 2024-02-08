@@ -6,4 +6,6 @@
     <color name="deep_yellow">#FFFFD695</color>
     <color name="light_yellow">#FFFDFDD5</color>
     <color name="light_green">#FFDAF3A4</color>
+    <color name="light_orange">#99FFD695</color>
+    <color name="light_30_oragnge">#4DFFD695</color>
 </resources>
