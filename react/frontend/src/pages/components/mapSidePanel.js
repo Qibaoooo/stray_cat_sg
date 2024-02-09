@@ -7,30 +7,22 @@ import { Button, Stack } from "react-bootstrap";
 import paw from "../../images/paw.png";
 import banner from "../../images/top_banner.png";
 import { RxAvatar } from "react-icons/rx";
+import LoginLogoutButton from "./loginLogoutButton";
 
-const UserSection = ({ username }) => {
-  const loginButtonClass = "m-auto my-3 bg-secondary-subtle border-1";
+const UserSection = ({ user }) => {
   return (
     <div>
-      {username !== "" ? (
+      {!!user ? (
         <div className="m-3">
           <Button
             className="btn border-0 m-auto bg-secondary"
             style={{ display: "block" }}
+            onClick={()=>{window.location.href = `/account?user=${user.id}`}}
           >
             <RxAvatar className="my-3" size={50}></RxAvatar>
-            <p>hi, {username}</p>
+            <p>hi, {user.username}</p>
           </Button>
-          <Button
-            className={loginButtonClass}
-            size="sm"
-            style={{ display: "block" }}
-            onClick={() => {
-              clearUserInfoAndReload();
-            }}
-          >
-            <u>logout</u>
-          </Button>
+          <LoginLogoutButton type="logout"></LoginLogoutButton>
         </div>
       ) : (
         <div>
@@ -40,15 +32,7 @@ const UserSection = ({ username }) => {
           >
             <p>please log in</p>
           </Button>
-          <Button
-            className={loginButtonClass}
-            size="sm"
-            onClick={() => {
-              window.location.href = "/login";
-            }}
-          >
-            <u>login</u>
-          </Button>
+          <LoginLogoutButton type="login"></LoginLogoutButton>
         </div>
       )}
     </div>
@@ -96,13 +80,13 @@ const SocialMediaIcons = () => {
 };
 
 const MapSidePanel = () => {
-  const [username, SetUsername] = useState("");
+  const [user, SetUser] = useState("");
 
   useEffect(() => {
     if (getUserinfoFromLocal() == null) {
       return;
     }
-    SetUsername(getUserinfoFromLocal().username);
+    SetUser(getUserinfoFromLocal());
   }, []);
 
   return (
@@ -116,7 +100,7 @@ const MapSidePanel = () => {
           backgroundSize: "contain",
         }}
       >
-        <UserSection username={username}></UserSection>
+        <UserSection user={user}></UserSection>
         {/* spacer */}
         <div className="my-auto"></div>
         <div className="p-2">
