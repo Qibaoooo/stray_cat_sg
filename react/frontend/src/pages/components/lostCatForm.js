@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import LocationPicker from "./locationPicker";
 import ImagePicker from "./imagePicker";
 import { SingaporeGeoCoord } from "pages/utils/properties";
-import { createNewCatSightings } from "pages/utils/api/apiCatSightings";
+import { sendCatVector } from "pages/utils/api/apiLostCat";
+import { useHistory } from "react-router-dom";
 
-const SightingForm = () => {
+const LostCatForm = () => {
   const [validated, setValidated] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
+  const [vectorMap, setVectorMap] = useState({});
+
   const [center, setCenter] = useState([
     SingaporeGeoCoord.lng,
     SingaporeGeoCoord.lat,
@@ -31,19 +33,18 @@ const SightingForm = () => {
       return;
     }
 
-    createNewCatSightings(
+    sendCatVector(
       {
-        sightingName: suggestedCatName,
-        locationLat: center[1],
-        locationLong: center[0],
-        time: Date.now(),
+        vectorMap: vectorMap,
+        tempImageURLs: imageURLs,
         suggestedCatName: suggestedCatName,
         suggestedCatBreed: observedCatbreed,
-        tempImageURLs: imageURLs
-      }
-    ).then(resp => {
-      window.location.href = `/catDetails?id=${resp.data.cat}`
-    })
+      }).then(
+        resp=>{
+          console.log(resp);
+        }
+      )
+
 
     setValidated(true);
   };
@@ -58,17 +59,20 @@ const SightingForm = () => {
       <ImagePicker
         imageURLs={imageURLs}
         setImageURLs={setImageURLs}
+        requireVectors={true}
+        vectorMap={vectorMap}
+        setVectorMap={setVectorMap}
       ></ImagePicker>
       <hr></hr>
       <Form.Group className="mb-3" controlId="SuggestedCatName">
-        <Form.Label>Give this cat a name:</Form.Label>
+        <Form.Label>Name of your cat:</Form.Label>
         <Form.Control type="text" required />
         <Form.Control.Feedback type="invalid">
           Please suggest a name for this sighting.
         </Form.Control.Feedback>
       </Form.Group>
       <Form.Group className="mb-3" controlId="ObservedCatbreed">
-        <Form.Label>Suggest a breed for him/her:</Form.Label>
+        <Form.Label>Breed of your cat:</Form.Label>
         <Form.Control type="text" required={false}/>
       </Form.Group>
       <hr></hr>
@@ -79,4 +83,4 @@ const SightingForm = () => {
   );
 };
 
-export default SightingForm;
+export default LostCatForm;
