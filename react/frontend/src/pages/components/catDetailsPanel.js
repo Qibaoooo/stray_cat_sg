@@ -5,7 +5,7 @@ import { Carousel, Stack } from "react-bootstrap";
 const CatDetailsPanel = ({ cat, displayImgUrl }) => {
   const tdStyles = {
     paddingRight: "1rem",
-    width: "6rem",
+    width: "8rem",
     textAlign: "end",
     fontSize: "1.2rem",
     fontFamily: "Comic Sans MS, cursive",
@@ -92,9 +92,11 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
               </td>
             </tr>
             <tr>
-              <td style={tdStyles}>Location:</td>
+              <td style={tdStyles}>Last seen:</td>
               <td>
-                <span style={contentStyle}>?</span>
+                <span style={contentStyle}>
+                  {`lat: ${cat.catSightings[0].locationLat} lng: ${cat.catSightings[0].locationLong}`}
+                </span>
               </td>
             </tr>
           </tbody>

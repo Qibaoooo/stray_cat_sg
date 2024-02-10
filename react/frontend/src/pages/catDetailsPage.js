@@ -16,6 +16,7 @@ const CatDetailsPage = () => {
 
   useEffect(() => {
     getCat(id).then((resp) => {
+      console.log(resp.data)
       SetCat(resp.data);
       SetImgUrl(resp.data.catSightings[0].imagesURLs);
     });

@@ -142,8 +142,8 @@ public class StrayCatsSGApplication {
 				cs.setCat(cat);
 				cat.addLabel("forTesting");
 
-				// approve the first 5 sightings
-				if (approvedCount < 5) {
+				// approve the first 99 sightings
+				if (approvedCount < 99) {
 					cat.setApproved(true);
 					cat.setCatBreed(getRandomBreed());
 					approvedCount++;
