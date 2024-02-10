@@ -3,9 +3,8 @@ package nus.iss.team11.controller;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublishers;
-import java.util.HashMap;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,7 @@ import nus.iss.team11.controller.service.CatSightingService;
 import nus.iss.team11.controller.service.SCSUserService;
 import nus.iss.team11.dataUtil.CSVUtil;
 import nus.iss.team11.model.AzureImage;
+import nus.iss.team11.model.CatSighting;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -55,19 +55,6 @@ public class LostCatController {
 		List<String> tempUrls = lostCatVector.getTempImageURLs();
 		List<Float> queryVector = vectorMap.get(tempUrls.get(0));
 		List<AzureImage> images = azureImageService.findAll();
-//		Map<Integer, Map<String, List<Float>>> imagesVectorDictionary = new HashMap<Integer,Map<String, List<Float>>>();
-//		
-//		
-//		for(AzureImage image: images) {
-//			int imageId = image.getId();
-//			List<Float> imageVectors = csvUtil.getVectorFromString(image.getVector());
-//			if(!imagesVectorDictionary.containsKey(imageId)) {
-//				Map<String, List<Float>> filenameToVector = new HashMap<String,List<Float>>();
-//				filenameToVector.put(image.getFileName(), imageVectors);
-//				imagesVectorDictionary.put(imageId, filenameToVector);
-//			}
-//			imagesVectorDictionary.get(imageId).put(image.getFileName(), imageVectors);
-//		}
 		
 		JSONObject vectorsDictJson = new JSONObject();
 
@@ -88,11 +75,6 @@ public class LostCatController {
 	        vectorsDictJson.put(String.valueOf(imageId), imageVectorJson);
 	    }
 		
-		//Create Json object for Machine Learning API
-//		for(String Url: tempUrls) {
-//			String vector = csvUtil.getStringFromVector(vectorMap.get(Url));
-//			System.out.println(vector);
-//		}
 		JSONObject json = new JSONObject();
 		json.put("query_vector",new JSONArray(queryVector));
 		json.put("vectors_dict", vectorsDictJson);
@@ -113,12 +95,43 @@ public class LostCatController {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Response status code: " + response.statusCode());
-            System.out.println("Response body: " + response.body());
+//            System.out.println("Response status code: " + response.statusCode());
+//            System.out.println("Response body: " + response.body());
             return new ResponseEntity<>(response.body().toString(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
 		return new ResponseEntity<>("", HttpStatus.OK); 
 	}
+
+
+	@PostMapping(value = "/api/show_top_cats")
+	public ResponseEntity<String> showTopCats(@RequestBody Map<String, Object> payload){
+		
+		System.out.println(payload.get("data"));
+		JSONArray topCats = new JSONArray();
+		Map<String, Object> data = (Map<String, Object>) payload.get("data");
+	    if (data != null) {
+	        Map<String, Double> groups = (Map<String, Double>) data.get("top_similar_groups");
+	        
+	        for(String key: groups.keySet()) {
+	        	CatSighting potentialCatSighting = catSightingService.getCatSightingById(Integer.parseInt(key));
+	        	JSONObject sightingJSON = potentialCatSighting.toJSON();
+				
+				// Get the probability value for the current CatSighting using its key
+			    Double probability = groups.get(key);
+			    
+			    // Add the probability to the sightingJSON
+			    sightingJSON.put("probability", probability);
+				topCats.put(sightingJSON);
+	        }
+	        
+	        return new ResponseEntity<>(topCats.toString(), HttpStatus.OK);
+	        
+	    }
+	    
+		return null;
+	}
+	
 }
+	

@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import ImagePicker from "./imagePicker";
-import { SingaporeGeoCoord } from "pages/utils/properties";
 import { sendCatVector } from "pages/utils/api/apiLostCat";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LostCatForm = () => {
   const [validated, setValidated] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
   const [vectorMap, setVectorMap] = useState({});
+  const navigate  = useNavigate();
 
-  const [center, setCenter] = useState([
-    SingaporeGeoCoord.lng,
-    SingaporeGeoCoord.lat,
-  ]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,7 +37,8 @@ const LostCatForm = () => {
         suggestedCatBreed: observedCatbreed,
       }).then(
         resp=>{
-          console.log(resp);
+          const simplifiedMatches = JSON.stringify(resp);
+          navigate("/result", {state:{ matches: simplifiedMatches}});
         }
       )
 

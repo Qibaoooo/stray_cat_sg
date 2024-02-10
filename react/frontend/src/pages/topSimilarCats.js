@@ -4,7 +4,7 @@ import MapSidePanel from './components/mapSidePanel';
 import TopCatsList from './components/topCatsList';
 import { requireLoginUser } from './utils/userinfo';
 
-const UploadSighting = () => {
+const CatResults = () => {
   
   useEffect(()=>{
     requireLoginUser()
@@ -22,4 +22,4 @@ const UploadSighting = () => {
   );
 }
 
-export default UploadSighting
+export default CatResults

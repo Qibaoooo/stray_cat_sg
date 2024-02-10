@@ -6,6 +6,7 @@ import LoginPage from "pages/loginPage";
 import ListPage from "pages/listPage";
 import UploadSighting from "pages/uploadSightingPage";
 import LostCat from "pages/lostCat";
+import CatResults from "pages/topSimilarCats"
 
 const RedirectToMapPage = () => {
   useEffect(() => {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/newSighting" element={<UploadSighting />} />
         <Route path="/lost" element={<LostCat />} />
+        <Route path="/result" element={<CatResults />} />
       </Routes>
     </div>
   );

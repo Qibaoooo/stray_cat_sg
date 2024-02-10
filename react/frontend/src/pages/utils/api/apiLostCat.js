@@ -19,4 +19,10 @@ const sendCatVector = ({
   });
 }
 
-export { sendCatVector };
+let getTopCats = (data) => {
+  return axios.post(`${backendIP}/api/show_top_cats`, data, {
+      headers: getJsonHeadersWithJWT(),
+  });
+}
+
+export { sendCatVector, getTopCats };
