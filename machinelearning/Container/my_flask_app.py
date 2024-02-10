@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from waitress import serve
 
 import json
@@ -15,6 +16,7 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import load_model
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+
 
 #Importing Model
 model = load_model("main.model")
@@ -49,6 +51,7 @@ class NumpyArrayEncoder(JSONEncoder):
     
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def hello():
@@ -132,39 +135,48 @@ def compare_multi_vectors():
     print(sorted_cosine_similarities)
     return json.dumps({"cosine_similarities": sorted_cosine_similarities})
 
-@app.route('/gettopsimilarcats', methods = ["POST"])
+@app.route('/gettopsimilarcats/', methods = ["POST"])
 def get_similar_cats():
     data = request.get_json()
 
     query_vector = np.array(data["query_vector"])
     vectors_dict = data["vectors_dict"]
 
-    vector_matrix = np.array(list(vectors_dict.values()))
+    # Flatten the vectors and keep track of their group IDs and filenames
+    all_vectors = []
+    group_id_to_filenames = defaultdict(list)  # Maps group IDs to their filenames
+
+    for group_id, photos in vectors_dict.items():
+        for filename, vector in photos.items():
+            all_vectors.append(vector)
+            group_id_to_filenames[group_id].append(filename)  # Keep track of filenames under each group ID
+
+    vector_matrix = np.array(all_vectors)
 
     # Normalize the query vector and all vectors in the dictionary
     query_norm = query_vector / np.linalg.norm(query_vector)
     vectors_norm = vector_matrix / np.linalg.norm(vector_matrix, axis=1, keepdims=True)
-    
+
     # Calculate dot products
     dot_products = np.dot(vectors_norm, query_norm)
 
-    # Create a dictionary of {filename: cosine_similarity} pairs
-    cosine_similarities = {filename: dot_product for filename, dot_product in zip(vectors_dict.keys(), dot_products)}
-
-    # Group the cosine similarities by the first part of the filename (assuming a naming convention like "cat_sightings_X_photo_Y.jpg")
-    grouped_similarities = defaultdict(list)
-    for filename, similarity in cosine_similarities.items():
-        group_prefix = filename.rsplit('_', 2)[0]  # Extract everything before the last two underscores
-        grouped_similarities[group_prefix].append(similarity)
+    # Assign dot products back to their respective group IDs and calculate average similarities
+    group_similarities = defaultdict(list)
+    currentIndex = 0
+    for group_id, filenames in group_id_to_filenames.items():
+        for _ in filenames:
+            group_similarities[group_id].append(dot_products[currentIndex])
+            currentIndex += 1
 
     # Calculate the average similarity for each group
-    average_group_similarities = {group: np.mean(similarities) for group, similarities in grouped_similarities.items()}
+    average_group_similarities = {group_id: np.mean(similarities) for group_id, similarities in group_similarities.items()}
 
     # Sort the groups by their average cosine similarity in descending order
     sorted_groups = sorted(average_group_similarities.items(), key=lambda item: item[1], reverse=True)
 
     # Return the top 5 groups
     top_5_groups = dict(sorted_groups[:5])
+
     
     return json.dumps({"top_similar_groups": top_5_groups})
    

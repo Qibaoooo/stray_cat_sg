@@ -23,7 +23,6 @@ public class CatSighting {
     private List<String> imagesURLs;
     private String suggestedCatName;
     private String suggestedCatBreed;
-    private boolean isApproved;
 
     public CatSighting() {
     }
@@ -99,14 +98,6 @@ public class CatSighting {
         this.suggestedCatBreed = suggestedCatBreed;
     }
 
-    public boolean isApproved() {
-        return isApproved;
-    }
-
-    public void setApproved(boolean approved) {
-        isApproved = approved;
-    }
-
     public static CatSighting parseFromJSON(JSONObject js) throws JSONException {
         CatSighting catSighting = new CatSighting();
         catSighting.setId(js.getInt("id"));
@@ -127,7 +118,6 @@ public class CatSighting {
 
         catSighting.setSuggestedCatName(js.getString("suggestedCatName"));
         catSighting.setSuggestedCatBreed(js.getString("suggestedCatBreed"));
-        catSighting.setApproved(js.getBoolean("isApproved"));
 
         return catSighting;
     }
