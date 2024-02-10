@@ -66,7 +66,10 @@ public class CatSightingController {
 
 		catSightingService.getAllCatSightings().stream().forEach(sighting -> {
 			JSONObject sightingJSON = sighting.toJSON();
-			sightingJSON = csvUtil.appendVectorMapToSightingJSON(sighting, sightingJSON);
+			
+			// We do not need VectorMap for now, but leave this here just in case for later.
+			// sightingJSON = csvUtil.appendVectorMapToSightingJSON(sighting, sightingJSON);
+			
 			sightings.put(sightingJSON);
 		});
 
