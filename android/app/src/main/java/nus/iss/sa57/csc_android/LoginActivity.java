@@ -62,10 +62,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    if(login(jsonObject.toString())){
-                        Intent intent = new Intent(this, MainActivity.class);
-                        startActivity(intent);
-                    }
+                    // login() method will take care of starting new intent
+                    login(jsonObject.toString());
                 } else {
                     Toast.makeText(this, "Password is required!", Toast.LENGTH_SHORT).show();
                 }
@@ -103,7 +101,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             editor.putString("username",username);
                             editor.putString("password",password);
                         }
+                        runOnUiThread(()->{
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        });
                     } else{
+                        // show error?
                         isLoginSuccess = false;
                     }
                 } catch (IOException e) {
