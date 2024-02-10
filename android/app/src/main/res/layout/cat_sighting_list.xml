@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="120dp"
     android:orientation="horizontal">
 
-    <TextView
+    <ImageView
         android:id="@+id/catphoto"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="cat photo" />
+        android:gravity="center" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -24,29 +23,57 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/uploadedby"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="uploaded by" />
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/uploadtime"
+                <TextView
+                    android:id="@+id/uploadedby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_rectangle_background"
+                    android:gravity="center"
+                    android:text="uploaded by"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:textColor="@color/pink"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="uploaded time" />
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/uploadtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_rectangle_background"
+                    android:gravity="center"
+                    android:text="uploaded time"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:textColor="@color/pink"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/location"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="location" />
+            android:gravity="left">
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingHorizontal="8dp"
+                android:text="location"
+                android:textSize="16dp"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
