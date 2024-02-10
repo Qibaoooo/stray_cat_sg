@@ -43,6 +43,8 @@ public class SCSUser {
 		JSONObject json = new JSONObject();
 		json.put("id", id);
 		json.put("username", username);
+		json.put("isAdmin", isAdmin);
+		json.put("isOwner", isOwner);
 		return json;
 	}
 }

@@ -37,11 +37,11 @@ public class SCSUserController {
 		});
 		return new ResponseEntity<>(scsUsers.toString(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value="/api/scsusers/{id}")
 	public ResponseEntity<String> getSingleUser(@PathVariable Integer id){
 		SCSUser user = scsUserService.getUserById(id);
-		return new ResponseEntity<>(user.toString(), HttpStatus.OK);
+		return new ResponseEntity<>(user.toJSON().toString(), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/api/scsusers")
