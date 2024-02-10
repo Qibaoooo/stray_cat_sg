@@ -10,7 +10,8 @@ const TopCatsList = () => {
   const CatCols = ["", "Cat Name", "Cat breed", "Match Possibility (%)"];
 
   const [tableCols, SetTableCols] = useState(CatCols);
-  const [cats, SetCats] = useState([]);
+  // const [cats, SetCats] = useState([]);
+  // We are returning sightings object from API, not cat
   const [sightings, SetSightings] = useState([]);
   const location = useLocation();
   const { matches } = location.state;
@@ -21,7 +22,7 @@ const TopCatsList = () => {
     getTopCats(actualMatches)
     .then((resp) => {
       let data = resp.data.sort((a,b) => b.probability - a.probability)
-      SetCats(data);
+      SetSightings(data);
       console.log(data);
     })
     .catch((e) => {
@@ -40,23 +41,24 @@ const TopCatsList = () => {
         </tr>
       </thead>
       <tbody>
-        {cats.map((cat, index, array) => {
+        {sightings.map((sighting, index, array) => {
               return (
                 <tr
                   key={index}
                   onClick={() => {
-                    window.location.href = `/catDetails?id=${cat.id}`;
+                    console.log(sighting)
+                    window.location.href = `/catDetails?id=${sighting.cat}`;
                   }}
                 >
                   <td>
                     <img
-                      src={cat.imagesURLs[0]}
+                      src={sighting.imagesURLs[0]}
                       style={{ width: "50px" }}
                     ></img>
                   </td>
-                  <td>{cat.sightingName}</td>
-                  <td>{cat.suggestedCatBreed}</td>
-                  <td>{Math.round(cat.probability * 100 * 100)/100 }</td>
+                  <td>{sighting.sightingName}</td>
+                  <td>{sighting.suggestedCatBreed}</td>
+                  <td>{Math.round(sighting.probability * 100 * 100)/100 }</td>
                 </tr>
               );
             })}

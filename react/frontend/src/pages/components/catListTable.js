@@ -16,7 +16,7 @@ const CatListTable = ({ viewType }) => {
     if (viewType === "cat") {
       getAllCats()
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           SetCats(resp.data);
           SetTableCols(CatCols);
         })
@@ -26,7 +26,7 @@ const CatListTable = ({ viewType }) => {
     } else {
       getAllCatSightings()
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           SetSightings(resp.data);
           SetTableCols(SightingCols);
         })
