@@ -1,5 +1,7 @@
 package nus.iss.team11.controller.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,11 @@ public class AzureImageServiceImpl implements AzureImageService{
 	@Override
 	public AzureImage saveImage(AzureImage azureImage) {
 		return azureImageRepository.save(azureImage);
+	}
+	
+	@Override
+	public List<AzureImage> findAll(){
+		return azureImageRepository.findAll();
 	}
 
 }

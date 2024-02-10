@@ -13,4 +13,6 @@ let getAllCats = () => {
     })
 }
 
+
+
 export { getCat, getAllCats };
