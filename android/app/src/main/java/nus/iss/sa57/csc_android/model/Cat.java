@@ -15,7 +15,7 @@ public class Cat {
 
     private int id;
     private String catName;
-    private String breed;
+    private String catBreed;
     private boolean isApproved;
     private List<String> labels;
     private List<CatSighting> catSightings;
@@ -36,12 +36,12 @@ public class Cat {
         this.catName = catName;
     }
 
-    public String getBreed() {
-        return breed;
+    public String getCatBreed() {
+        return catBreed;
     }
 
-    public void setBreed(String breed) {
-        this.breed = breed;
+    public void setCatBreed(String catBreed) {
+        this.catBreed = catBreed;
     }
 
     public boolean isApproved() {

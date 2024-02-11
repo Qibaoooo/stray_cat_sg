@@ -63,8 +63,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
         Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("catId",csList.get(pos).getCatId());
+        intent.putExtra("catId",csList.get(pos).getCat());
         Log.d("MainActivity", "Calling Details Activity");
+        Log.d("Intent",String.valueOf(csList.get(pos).getCat()));
         startActivity(intent);
     }
 
@@ -120,9 +121,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         Gson gson = new Gson();
                         responseList = gson.fromJson(responseData,listType);
 
-                        if(!responseList.isEmpty()){
-                            csList = responseList;
-                        }
+                        csList = responseList;
+                        Log.d("MainActivity","csList setup");
                     } catch (JsonSyntaxException e) {
                         Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
                     }

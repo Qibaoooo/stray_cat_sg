@@ -118,7 +118,7 @@ public class DetailsActivity extends AppCompatActivity {
         TextView idView = findViewById(R.id.detail_id);
         idView.setText(String.valueOf(cat.getId()));
         TextView breed = findViewById(R.id.detail_breed);
-        breed.setText(cat.getBreed());
+        breed.setText(cat.getCatBreed());
         TextView labels = findViewById(R.id.detail_labels);
         if(cat.getLabels() != null) {
             labels.setText(String.join(" ", cat.getLabels()));
@@ -127,8 +127,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
         ImageView catphoto = findViewById(R.id.detail_photo);
         File externalFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        //File destFile = new File(externalFilesDir, ("img-" + cat.getCatSightings().get(0).getId() + "-0"));
-        File destFile = new File(externalFilesDir, ("img-" + "35" + "-0"));
+        File destFile = new File(externalFilesDir, ("img-" + cat.getCatSightings().get(0).getId() + "-0"));
         Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
         catphoto.setImageBitmap(bitmap);
     }
