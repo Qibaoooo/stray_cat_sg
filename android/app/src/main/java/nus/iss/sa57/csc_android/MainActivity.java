@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 
 import nus.iss.sa57.csc_android.model.CatSighting;
 import nus.iss.sa57.csc_android.utils.CatSightingAdapter;
+import nus.iss.sa57.csc_android.utils.HttpHelper;
 import nus.iss.sa57.csc_android.utils.ImageDownloadThread;
 import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
@@ -93,42 +94,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //Here HOST is declared at the top of the java file
                 //change that to switch to deployed server
                 String urlString = HOST + "/api/cat_sightings";
-                HttpURLConnection urlConnection = null;
-                BufferedReader reader = null;
-                String responseData = null;
-                try {
-                    URL url = new URL(urlString);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-
-                    int responseCode = urlConnection.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                        StringBuilder stringBuilder = new StringBuilder();
-                        //read response data line by line
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            stringBuilder.append(line).append("\n");
-                        }
-                        responseData = stringBuilder.toString();
-                    } else {
-                        Log.e("MainActivity", "HTTP error code: " + responseCode);
-                    }
-                } catch (IOException e) {
-                    Log.e("MainActivity", "Error fetching data from server: " + e.getMessage());
-                } finally {
-                    //Close and release used resources
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException e) {
-                            Log.e("MainActivity", "Error closing reader: " + e.getMessage());
-                        }
-                    }
-                }
+                String responseData = HttpHelper.getResponse(urlString);
 
                 //Deal with response
                 List<CatSighting> responseList = new ArrayList<>();

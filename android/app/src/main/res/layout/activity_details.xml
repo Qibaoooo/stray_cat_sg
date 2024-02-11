@@ -115,13 +115,13 @@
         android:layout_marginBottom="61dp"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageView
+            android:id="@+id/detail_avator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/round_btn_background"
-            android:gravity="center"
-            android:text="avator" />
+            android:gravity="center" />
 
         <EditText
             android:id="@+id/editText"
