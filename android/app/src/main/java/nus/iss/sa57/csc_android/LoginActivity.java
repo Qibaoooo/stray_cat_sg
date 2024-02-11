@@ -13,16 +13,21 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+import nus.iss.sa57.csc_android.payload.LoginResponse;
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText usernameView;
     private EditText passwordView;
     private CheckBox rememberBox;
@@ -44,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         Log.d("LoginActivity", "Button Clicked");
         usernameView = findViewById(R.id.username);
         username = usernameView.getText().toString();
@@ -52,9 +57,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = passwordView.getText().toString();
         rememberBox = findViewById(R.id.remember);
         isRemember = rememberBox.isChecked();
-        if(v.getId() == R.id.login){
-            if(!username.isEmpty()){
-                if(!password.isEmpty()){
+        if (v.getId() == R.id.login) {
+            if (!username.isEmpty()) {
+                if (!password.isEmpty()) {
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("username", username);
@@ -67,19 +72,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     Toast.makeText(this, "Password is required!", Toast.LENGTH_SHORT).show();
                 }
-            } else{
-                Toast.makeText(this,"Username is required!",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Username is required!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private boolean login(final String data){
+    private boolean login(final String data) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String urlString = HOST + "/api/auth/login";
                 HttpURLConnection urlConnection = null;
-                try{
+                try {
                     URL url = new URL(urlString);
                     urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("POST");
@@ -92,20 +97,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     outputStream.flush();
                     outputStream.close();
                     int responseCode = urlConnection.getResponseCode();
+
+
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         isLoginSuccess = true;
-                        if(isRemember){
+
+                        // parse login response and save to SharedPreferences
+                        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(
+                                        urlConnection.getInputStream()));
+                        Gson gson = new Gson();
+                        LoginResponse lr = gson.fromJson(in, LoginResponse.class);
+                        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+                        SharedPreferences.Editor userInfoEditor = userInfoPref.edit();
+                        userInfoEditor.putString("jwt", lr.getJwt());
+                        userInfoEditor.putInt("id", lr.getId());
+                        userInfoEditor.putString("username", lr.getUsername());
+                        userInfoEditor.putString("role", lr.getRole());
+                        userInfoEditor.putLong("expirationTime", lr.getExpirationTime());
+
+                        if (isRemember) {
                             SharedPreferences pref = getSharedPreferences("login_info", MODE_PRIVATE);
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putBoolean("isRemember",isRemember);
-                            editor.putString("username",username);
-                            editor.putString("password",password);
+                            editor.putBoolean("isRemember", isRemember);
+                            editor.putString("username", username);
+                            editor.putString("password", password);
                         }
-                        runOnUiThread(()->{
+                        runOnUiThread(() -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         });
-                    } else{
+                    } else {
                         // show error?
                         isLoginSuccess = false;
                     }
@@ -117,11 +139,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return isLoginSuccess;
     }
 
-    private void loggedinUser(){
+    private void loggedinUser() {
         SharedPreferences pref = getSharedPreferences("login_info", MODE_PRIVATE);
-        if(pref.getBoolean("isRemember",false)){
-            username = pref.getString("username",null);
-            password = pref.getString("password",null);
+        if (pref.getBoolean("isRemember", false)) {
+            username = pref.getString("username", null);
+            password = pref.getString("password", null);
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("username", username);
@@ -130,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             }
             isLoginSuccess = login(jsonObject.toString());
-            if(isLoginSuccess){
+            if (isLoginSuccess) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }
