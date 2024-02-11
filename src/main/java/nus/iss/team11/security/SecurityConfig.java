@@ -47,7 +47,7 @@ public class SecurityConfig {
 	@Autowired
 	PasswordEncoder encoder;
 	
-	private static String[] testingPath = {"/api/vectors/**", "/api/cat_sightings/**"};
+	private static String[] ownerAPIs = {"/api/show_top_cats", "/api/get_top_cats"};
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,8 +57,8 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> 
  					auth
  					.requestMatchers("/api/auth/**").permitAll()
- 					.requestMatchers(testingPath).permitAll() //remove later
  					.requestMatchers("/api/admin/**").hasRole("admin")
+ 					.requestMatchers(ownerAPIs).hasRole("owner")
  						.anyRequest().authenticated()
 				);
 
