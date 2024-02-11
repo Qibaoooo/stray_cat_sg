@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_yellow"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <include layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="56dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/avator"
+                android:layout_marginTop="30dp"/>
+            <TextView
+                android:id="@+id/account_username"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_rectangle_background"
+                android:text="username"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:paddingHorizontal="10dp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/account_id"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_rectangle_background"
+                android:text="id"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:paddingHorizontal="10dp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/account_role"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_rectangle_background"
+                android:text="role"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:paddingHorizontal="10dp"
+                android:gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/account_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Edit Personal Profile    >>"
+                android:gravity="left"
+                android:textSize="24dp"
+                android:fontFamily="@font/kavoon"
+                android:background="@color/light_orange"
+                android:layout_marginBottom="30dp"
+                android:textColor="@color/pink"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="5dp"/>
+            <TextView
+                android:id="@+id/account_owner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apply to be an Owner    >>"
+                android:gravity="left"
+                android:textSize="24dp"
+                android:fontFamily="@font/kavoon"
+                android:background="@color/light_orange"
+                android:layout_marginBottom="30dp"
+                android:textColor="@color/pink"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="5dp"/>
+            <TextView
+                android:id="@+id/account_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Logout    >>"
+                android:gravity="left"
+                android:textSize="24dp"
+                android:fontFamily="@font/kavoon"
+                android:background="@color/light_orange"
+                android:layout_marginBottom="30dp"
+                android:textColor="@color/pink"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/navigation_bar" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
