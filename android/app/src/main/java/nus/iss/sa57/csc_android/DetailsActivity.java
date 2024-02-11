@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import nus.iss.sa57.csc_android.model.Cat;
+import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
 public class DetailsActivity extends AppCompatActivity {
     private int catId;
@@ -36,6 +38,9 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         HOST = getResources().getString(R.string.host_local);
+        View nav_bar = findViewById(R.id.nav_bar);
+        NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
+        nav_handler.setupBar();
         Intent intent = getIntent();
         catId = intent.getIntExtra("catId",0);
         fetchCat(catId);
