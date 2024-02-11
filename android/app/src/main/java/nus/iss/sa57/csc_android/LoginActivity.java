@@ -115,14 +115,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         userInfoEditor.putString("username", lr.getUsername());
                         userInfoEditor.putString("role", lr.getRole());
                         userInfoEditor.putLong("expirationTime", lr.getExpirationTime());
+                        userInfoEditor.commit();
 
+                        SharedPreferences pref = getSharedPreferences("login_info", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
                         if (isRemember) {
-                            SharedPreferences pref = getSharedPreferences("login_info", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.putBoolean("isRemember", isRemember);
+                            editor.putBoolean("isRemember", true);
                             editor.putString("username", username);
                             editor.putString("password", password);
+                        } else {
+                            editor.clear();
                         }
+                        editor.commit();
                         runOnUiThread(() -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
@@ -145,20 +149,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (pref.getBoolean("isRemember", false)) {
             username = pref.getString("username", null);
             password = pref.getString("password", null);
-//            JSONObject jsonObject = new JSONObject();
-//            try {
-//                jsonObject.put("username", username);
-//                jsonObject.put("password", password);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            isLoginSuccess = login(jsonObject.toString());
-//            if (isLoginSuccess) {
-//                Intent intent = new Intent(this, MainActivity.class);
-//                startActivity(intent);
-//            }
-            usernameView.setText(username);
-            passwordView.setText(password);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("username", username);
+                jsonObject.put("password", password);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            login(jsonObject.toString());
         }
     }
 }
