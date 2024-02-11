@@ -120,9 +120,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         Type listType = new TypeToken<List<CatSighting>>(){}.getType();
                         Gson gson = new Gson();
                         responseList = gson.fromJson(responseData,listType);
-
-                        csList = responseList;
-                        Log.d("MainActivity","csList setup");
+                        if(!responseList.isEmpty()) {
+                            csList = responseList;
+                            Log.d("MainActivity", "csList setup");
+                        }
                     } catch (JsonSyntaxException e) {
                         Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
                     }
