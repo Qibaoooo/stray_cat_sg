@@ -16,12 +16,12 @@ public class CatServiceImpl implements CatService {
 	CatRepository catRepository;
 
 	@Override
-	public Cat findCatById(int id) {
+	public Cat getCatById(int id) {
 		return catRepository.getReferenceById(id);
 	}
 
 	@Override
-	public List<Cat> findAllCats() {
+	public List<Cat> getAllCats() {
 		List<Cat> cats = catRepository.findAll();
 		return cats.stream().filter(cat -> cat.isApproved()).collect(Collectors.toList());
 	}
@@ -29,6 +29,12 @@ public class CatServiceImpl implements CatService {
 	@Override
 	public Cat saveCat(Cat cat) {
 		return catRepository.save(cat);
+	}
+
+	@Override
+	public void deleteCat(Integer id) {
+		catRepository.deleteById(id);
+		
 	}
 
 }
