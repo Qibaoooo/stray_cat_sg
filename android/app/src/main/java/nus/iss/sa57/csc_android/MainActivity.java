@@ -186,11 +186,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void setupList() {
         CatSightingAdapter adapter = new CatSightingAdapter(this, csList);
         ListView listView = findViewById(R.id.listView);
-        if (listView != null) {
-            Log.e("MainActivity", "ListView not null");
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(this);
-        }
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
     }
 
 

@@ -10,10 +10,12 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,28 +24,41 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import nus.iss.sa57.csc_android.model.Cat;
+import nus.iss.sa57.csc_android.model.CatSighting;
+import nus.iss.sa57.csc_android.model.Comment;
+import nus.iss.sa57.csc_android.utils.CommentAdapter;
+import nus.iss.sa57.csc_android.utils.HttpHelper;
 import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
 public class DetailsActivity extends AppCompatActivity {
     private int catId;
     private Cat cat = new Cat();
+    private List<Comment> comments = new ArrayList<>();
     private static String HOST;
+    private ListView commentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         HOST = getResources().getString(R.string.host_local);
+
         View nav_bar = findViewById(R.id.nav_bar);
         NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
         nav_handler.setupBar();
+
         Intent intent = getIntent();
         catId = intent.getIntExtra("catId",0);
         fetchCat(catId);
+
+        commentList = findViewById(R.id.detail_commentlist);
     }
 
     private void fetchCat(int catId){
@@ -51,52 +66,33 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String urlString = HOST + "/api/cat/" + String.valueOf(catId);
-                HttpURLConnection urlConnection = null;
-                BufferedReader reader = null;
-                String responseData = null;
-                try {
-                    URL url = new URL(urlString);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-
-                    int responseCode = urlConnection.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                        StringBuilder stringBuilder = new StringBuilder();
-                        //read response data line by line
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            stringBuilder.append(line).append("\n");
-                        }
-                        responseData = stringBuilder.toString();
-                    } else {
-                        Log.e("DetailsActivity", "HTTP error code: " + responseCode);
-                    }
-                } catch (IOException e) {
-                    Log.e("DetailsActivity", "Error fetching data from server: " + e.getMessage());
-                } finally {
-                    //Close and release used resources
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException e) {
-                            Log.e("DetailsActivity", "Error closing reader: " + e.getMessage());
-                        }
-                    }
-                }
+                String responseData = HttpHelper.getResponse(urlString);
                 Cat responseCat = new Cat();
                 if (responseData != null) {
                     try {
-//                        JSONObject jsonObject = new JSONObject(responseData);
-//                        cat = Cat.parseFromJSON(jsonObject);
                         Gson gson = new Gson();
                         responseCat = gson.fromJson(responseData, Cat.class);
                         Log.d("DetailsAcvivity",responseCat.getCatName());
                         if(responseCat != null){
                             cat = responseCat;
+                        }
+                    } catch (JsonSyntaxException e) {
+                        Log.e("DetailsActivity", "Error parsing JSON: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("DetailsActivity", "Failed to fetch data from server");
+                }
+
+                urlString = HOST + "/api/comments/" + String.valueOf(catId);
+                responseData = HttpHelper.getResponse(urlString);
+                List<Comment> responseComments = new ArrayList<>();
+                if(responseData != null){
+                    try {
+                        Type listType = new TypeToken<List<Comment>>(){}.getType();
+                        Gson gson = new Gson();
+                        responseComments = gson.fromJson(responseData, listType);
+                        if(responseComments != null){
+                            comments = responseComments;
                         }
                     } catch (JsonSyntaxException e) {
                         Log.e("DetailsActivity", "Error parsing JSON: " + e.getMessage());
@@ -112,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void setupLayout(){
+    private void setupLayout(){
         TextView name = findViewById(R.id.detail_name);
         name.setText(cat.getCatName());
         TextView idView = findViewById(R.id.detail_id);
@@ -130,5 +126,10 @@ public class DetailsActivity extends AppCompatActivity {
         File destFile = new File(externalFilesDir, ("img-" + cat.getCatSightings().get(0).getId() + "-0"));
         Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
         catphoto.setImageBitmap(bitmap);
+
+        CommentAdapter adapter = new CommentAdapter(this,comments);
+        commentList = findViewById(R.id.detail_commentlist);
+        commentList.setAdapter(adapter);
     }
+
 }
