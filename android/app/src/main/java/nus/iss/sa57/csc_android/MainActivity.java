@@ -11,6 +11,10 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -34,7 +39,7 @@ import nus.iss.sa57.csc_android.utils.CatSightingAdapter;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     //change this host to switch to deployed server
     private static String HOST;
-    List<CatSighting> csList;
+    List<CatSighting> csList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         HOST = getResources().getString(R.string.host_local);
         setupButtons();
-        csList = fetchCatSightingList();
+        fetchCatSightingList();
     }
 
     private void setupButtons() {
@@ -60,13 +65,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
         Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("catId",csList.get(pos).getId());
+        intent.putExtra("catId",csList.get(pos).getCatId());
         Log.d("MainActivity", "Calling Details Activity");
         startActivity(intent);
     }
 
-    private List<CatSighting> fetchCatSightingList() {
-        List<CatSighting> csList = new ArrayList<>();
+    private void fetchCatSightingList() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -111,22 +115,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
 
                 //Deal with response
+                List<CatSighting> responseList = new ArrayList<>();
                 if (responseData != null) {
                     try {
-                        //What we get is a ResponseEntity<List<CatSighting>>
-                        //in the form of a JSONArray
-                        JSONArray jsonArray = new JSONArray(responseData);
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        Type listType = new TypeToken<List<CatSighting>>(){}.getType();
+                        Gson gson = new Gson();
+                        responseList = gson.fromJson(responseData,listType);
 
-                            //public static CatSighting parseFromJSON(JSONObject js)
-                            //This is a custom method to convert JSONObject to CatSighting
-                            //it reads every field in the JSONObject and bind the data
-                            //to the CatSighting object
-                            CatSighting cs = CatSighting.parseFromJSON(jsonObject);
-                            csList.add(cs);
+                        if(!responseList.isEmpty()){
+                            csList = responseList;
                         }
-                    } catch (JSONException e) {
+                    } catch (JsonSyntaxException e) {
                         Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
                     }
                 } else {
@@ -140,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 });
             }
         }).start();
-        return csList;
     }
 
     public void downloadImgFiles() {

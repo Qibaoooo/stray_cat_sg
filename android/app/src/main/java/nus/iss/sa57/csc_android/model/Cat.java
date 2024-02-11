@@ -68,34 +68,34 @@ public class Cat {
         this.catSightings = catSightings;
     }
 
-    public static Cat parseFromJSON(JSONObject js) throws JSONException {
-        Cat cat = new Cat();
-        cat.setId(js.getInt("id"));
-        cat.setCatName(js.getString("catName"));
-        cat.setBreed(js.getString("catBreed"));
-        cat.setApproved(js.getBoolean("isApproved"));
-
-        JSONArray labelsArray = js.getJSONArray("labels");
-        if (labelsArray.length() > 0) {
-            List<String> labelsList = new ArrayList<>();
-            for (int i = 0; i < labelsArray.length(); i++) {
-                String label = labelsArray.getString(i);
-                labelsList.add(label);
-            }
-            cat.setLabels(labelsList);
-        } else{
-            cat.setLabels(new ArrayList<>());
-        }
-
-        JSONArray sightingsArray = js.getJSONArray("catSightings");
-        List<CatSighting> sightingsList = new ArrayList<>();
-        for (int i = 0; i < sightingsArray.length(); i++) {
-            JSONObject sightingObject = sightingsArray.getJSONObject(i);
-            CatSighting cs = CatSighting.parseFromJSON(sightingObject);
-            sightingsList.add(cs);
-        }
-        cat.setCatSightings(sightingsList);
-
-        return cat;
-    }
+//    public static Cat parseFromJSON(JSONObject js) throws JSONException {
+//        Cat cat = new Cat();
+//        cat.setId(js.getInt("id"));
+//        cat.setCatName(js.getString("catName"));
+//        cat.setBreed(js.getString("catBreed"));
+//        cat.setApproved(js.getBoolean("isApproved"));
+//
+//        JSONArray labelsArray = js.getJSONArray("labels");
+//        if (labelsArray.length() > 0) {
+//            List<String> labelsList = new ArrayList<>();
+//            for (int i = 0; i < labelsArray.length(); i++) {
+//                String label = labelsArray.getString(i);
+//                labelsList.add(label);
+//            }
+//            cat.setLabels(labelsList);
+//        } else{
+//            cat.setLabels(new ArrayList<>());
+//        }
+//
+//        JSONArray sightingsArray = js.getJSONArray("catSightings");
+//        List<CatSighting> sightingsList = new ArrayList<>();
+//        for (int i = 0; i < sightingsArray.length(); i++) {
+//            JSONObject sightingObject = sightingsArray.getJSONObject(i);
+//            //CatSighting cs = CatSighting.parseFromJSON(sightingObject);
+//            //sightingsList.add(cs);
+//        }
+//        cat.setCatSightings(sightingsList);
+//
+//        return cat;
+//    }
 }
