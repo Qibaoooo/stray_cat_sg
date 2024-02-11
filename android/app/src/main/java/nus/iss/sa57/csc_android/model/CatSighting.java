@@ -20,7 +20,7 @@ public class CatSighting {
     private List<String> imagesURLs;
     private String suggestedCatName;
     private String suggestedCatBreed;
-    private int catId;
+    private int cat;
 
     public CatSighting() {
     }
@@ -89,12 +89,12 @@ public class CatSighting {
         this.suggestedCatBreed = suggestedCatBreed;
     }
 
-    public int getCatId() {
-        return catId;
+    public int getCat() {
+        return cat;
     }
 
-    public void setCatId(int catId) {
-        this.catId = catId;
+    public void setCat(int cat) {
+        this.cat = cat;
     }
 
     //    public static CatSighting parseFromJSON(JSONObject js) throws JSONException {
