@@ -8,8 +8,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,10 +26,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import nus.iss.sa57.csc_android.model.Cat;
+import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
 public class DetailsActivity extends AppCompatActivity {
     private int catId;
-    private Cat cat;
+    private Cat cat = new Cat();
     private static String HOST;
 
     @Override
@@ -33,13 +38,15 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         HOST = getResources().getString(R.string.host_local);
+        View nav_bar = findViewById(R.id.nav_bar);
+        NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
+        nav_handler.setupBar();
         Intent intent = getIntent();
         catId = intent.getIntExtra("catId",0);
-        cat = fetchCat(catId);
+        fetchCat(catId);
     }
 
-    private Cat fetchCat(int catId){
-        cat = new Cat();
+    private void fetchCat(int catId){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -80,12 +87,18 @@ public class DetailsActivity extends AppCompatActivity {
                         }
                     }
                 }
+                Cat responseCat = new Cat();
                 if (responseData != null) {
                     try {
-                        JSONObject jsonObject = new JSONObject(responseData);
-                        cat = Cat.parseFromJSON(jsonObject);
-
-                    } catch (JSONException e) {
+//                        JSONObject jsonObject = new JSONObject(responseData);
+//                        cat = Cat.parseFromJSON(jsonObject);
+                        Gson gson = new Gson();
+                        responseCat = gson.fromJson(responseData, Cat.class);
+                        Log.d("DetailsAcvivity",responseCat.getCatName());
+                        if(responseCat != null){
+                            cat = responseCat;
+                        }
+                    } catch (JsonSyntaxException e) {
                         Log.e("DetailsActivity", "Error parsing JSON: " + e.getMessage());
                     }
                 } else {
@@ -97,7 +110,6 @@ public class DetailsActivity extends AppCompatActivity {
                 });
             }
         }).start();
-        return cat;
     }
 
     public void setupLayout(){
@@ -115,7 +127,8 @@ public class DetailsActivity extends AppCompatActivity {
         }
         ImageView catphoto = findViewById(R.id.detail_photo);
         File externalFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File destFile = new File(externalFilesDir, ("img-" + cat.getCatSightings().get(0).getId() + "-0"));
+        //File destFile = new File(externalFilesDir, ("img-" + cat.getCatSightings().get(0).getId() + "-0"));
+        File destFile = new File(externalFilesDir, ("img-" + "35" + "-0"));
         Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
         catphoto.setImageBitmap(bitmap);
     }

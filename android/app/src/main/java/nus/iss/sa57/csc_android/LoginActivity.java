@@ -141,21 +141,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void loggedinUser() {
         SharedPreferences pref = getSharedPreferences("login_info", MODE_PRIVATE);
+        String m =String.valueOf(pref.getBoolean("isRemember", false));
         if (pref.getBoolean("isRemember", false)) {
             username = pref.getString("username", null);
             password = pref.getString("password", null);
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("username", username);
-                jsonObject.put("password", password);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            isLoginSuccess = login(jsonObject.toString());
-            if (isLoginSuccess) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            }
+//            JSONObject jsonObject = new JSONObject();
+//            try {
+//                jsonObject.put("username", username);
+//                jsonObject.put("password", password);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            isLoginSuccess = login(jsonObject.toString());
+//            if (isLoginSuccess) {
+//                Intent intent = new Intent(this, MainActivity.class);
+//                startActivity(intent);
+//            }
+            usernameView.setText(username);
+            passwordView.setText(password);
         }
     }
 }
