@@ -28,7 +28,6 @@ const CatDetailsPage = () => {
       <Row className="g-0">
         <Col className="g-0" xs={6}>
           <CatDetailsPanel cat={cat} displayImgUrl={imgUrl}></CatDetailsPanel>
-          {/* <Button onClick={handleButtonClick}>Back to Home</Button> */}
         </Col>
 
         <Col className="g-0" xs={6}>

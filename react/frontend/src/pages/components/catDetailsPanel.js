@@ -72,34 +72,36 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
           cellSpacing={0}
           style={{ borderCollapse: "collapse", margin: "auto" }}
         >
-          <tbody>
-            <tr>
-              <td style={tdStyles}>Name:</td>
-              <td>
-                <span style={contentStyle}>{cat.catName}</span>
-              </td>
-            </tr>
-            <tr>
-              <td style={tdStyles}>ID:</td>
-              <td>
-                <span style={contentStyle}>{cat.id}</span>
-              </td>
-            </tr>
-            <tr>
-              <td style={tdStyles}>Labels:</td>
-              <td>
-                <span style={contentStyle}>{cat.labels}</span>
-              </td>
-            </tr>
-            <tr>
-              <td style={tdStyles}>Last seen:</td>
-              <td>
-                <span style={contentStyle}>
-                  {`lat: ${cat.catSightings[0].locationLat} lng: ${cat.catSightings[0].locationLong}`}
-                </span>
-              </td>
-            </tr>
-          </tbody>
+          {Object.keys(cat).length !== 0 && (
+            <tbody>
+              <tr>
+                <td style={tdStyles}>Name:</td>
+                <td>
+                  <span style={contentStyle}>{cat.catName}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style={tdStyles}>ID:</td>
+                <td>
+                  <span style={contentStyle}>{cat.id}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style={tdStyles}>Labels:</td>
+                <td>
+                  <span style={contentStyle}>{cat.labels}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style={tdStyles}>Last seen:</td>
+                <td>
+                  <span style={contentStyle}>
+                    {`lat: ${cat.catSightings[0].locationLat} lng: ${cat.catSightings[0].locationLong}`}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          )}
         </table>
       </div>
     </Stack>
