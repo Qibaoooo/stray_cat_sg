@@ -1,6 +1,7 @@
 package nus.iss.sa57.csc_android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //change this host to switch to deployed server
     private static String HOST;
     List<CatSighting> csList = new ArrayList<>();
+    SharedPreferences listPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         HOST = getResources().getString(R.string.host_local);
         setupButtons();
+        listPref = getSharedPreferences("list_data", MODE_PRIVATE);
+        boolean isFetched = listPref.getBoolean("isFetched", false);
+        if(isFetched){
+            String responseData = listPref.getString("listData", null);
+            try {
+                Type listType = new TypeToken<List<CatSighting>>(){}.getType();
+                Gson gson = new Gson();
+                csList = gson.fromJson(responseData,listType);
+            } catch (JsonSyntaxException e) {
+                Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
+            }
+            setupList();
+        } else{
         fetchCatSightingList();
+        }
     }
 
     private void setupButtons() {
@@ -70,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void fetchCatSightingList() {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -124,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             csList = responseList;
                             Log.d("MainActivity", "csList setup");
                         }
+                        listPref.edit().putString("listData",responseData)
+                                .putBoolean("isFetched", true).commit();
                     } catch (JsonSyntaxException e) {
                         Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
                     }
