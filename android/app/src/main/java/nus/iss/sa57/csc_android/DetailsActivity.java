@@ -2,6 +2,7 @@ package nus.iss.sa57.csc_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -136,14 +138,19 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
         catphoto.setImageBitmap(bitmap);
 
-        setuoCommentList();
+        setupCommentList();
 
-        ImageView avator = findViewById(R.id.detail_avator);
+        ImageView avatar = findViewById(R.id.detail_avator);
         Bitmap avatorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avator);
-        avator.setImageBitmap(BitmapHelper.getCircleBitmap(avatorBitmap));
+        avatar.setImageBitmap(BitmapHelper.getCircleBitmap(avatorBitmap));
     }
 
-    private void setuoCommentList(){
+    private void setupCommentList(){
+        EditText contentView = findViewById(R.id.editText);
+        contentView.setText("");
+        contentView.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(contentView.getWindowToken(), 0);
         ListView commentList = findViewById(R.id.detail_commentlist);
         CommentAdapter adapter = new CommentAdapter(this,comments);
         commentList = findViewById(R.id.detail_commentlist);
@@ -203,7 +210,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                         Comment ncomment = gson.fromJson(in, Comment.class);
                         comments.add(ncomment);
                         runOnUiThread(() -> {
-                            setuoCommentList();
+                            setupCommentList();
                         });
                     } else {
                         // show error?
