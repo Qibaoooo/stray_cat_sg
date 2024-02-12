@@ -36,8 +36,8 @@ import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     //change this host to switch to deployed server
     private static String HOST;
-    List<CatSighting> csList = new ArrayList<>();
-    SharedPreferences listPref;
+    private List<CatSighting> csList = new ArrayList<>();
+    private SharedPreferences listPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void setupButtons() {
         ImageButton upload_btn = findViewById(R.id.upload_btn);
         upload_btn.setOnClickListener(this);
+        ImageButton map_btn = findViewById(R.id.map_btn);
+        map_btn.setOnClickListener(this);
         View nav_bar = findViewById(R.id.nav_bar);
         NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar, this);
         nav_handler.setupAccount();//don't want to setup cat
@@ -76,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onClick(View v) {
         if (v.getId() == R.id.upload_btn) {
             //goto upload activity
+        } else if (v.getId() == R.id.map_btn) {
+            Intent intent = new Intent(this, MapActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -83,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("catId", csList.get(pos).getCat());
-        Log.d("MainActivity", "Calling Details Activity");
-        Log.d("Intent", String.valueOf(csList.get(pos).getCat()));
         startActivity(intent);
     }
 
