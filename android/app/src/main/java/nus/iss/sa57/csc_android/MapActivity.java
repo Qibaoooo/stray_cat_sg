@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,7 +32,8 @@ import nus.iss.sa57.csc_android.model.CatSighting;
 import nus.iss.sa57.csc_android.utils.MarkerInfoWindowAdapter;
 
 public class MapActivity extends FragmentActivity
-        implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+        implements OnMapReadyCallback, View.OnClickListener,
+        GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private ActivityMapBinding binding;
@@ -60,21 +62,14 @@ public class MapActivity extends FragmentActivity
             finish();
         }
 
+        setupButtons();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -107,13 +102,28 @@ public class MapActivity extends FragmentActivity
         mMap.setOnInfoWindowClickListener(this);
     }
 
-
-
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
         Intent intent = new Intent(this, DetailsActivity.class);
         Integer catId = (Integer) marker.getTag();
         intent.putExtra("catId", catId.intValue());
         startActivity(intent);
+    }
+
+    private void setupButtons() {
+        ImageButton upload_btn = findViewById(R.id.upload_btn);
+        upload_btn.setOnClickListener(this);
+        ImageButton list_btn = findViewById(R.id.list_btn);
+        list_btn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.upload_btn) {
+            //goto upload activity
+        } else if (v.getId() == R.id.list_btn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }

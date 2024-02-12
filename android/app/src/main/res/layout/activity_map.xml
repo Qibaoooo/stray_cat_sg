@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapActivity" />
+    android:background="@color/light_yellow"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <include layout="@layout/title_bar" />
+
+    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="56dp"
+        tools:context=".MapActivity" />
+    <ImageButton
+        android:id="@+id/upload_btn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/round_btn_background"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="right"
+        android:src="@drawable/upload_btn"
+        android:alpha="0.7"/>
+    <ImageButton
+        android:id="@+id/list_btn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/round_btn_background"
+        android:layout_marginTop="136dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="right"
+        android:src="@drawable/list_btn"
+        android:alpha="0.7"/>
+
+    <include layout="@layout/navigation_bar" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
