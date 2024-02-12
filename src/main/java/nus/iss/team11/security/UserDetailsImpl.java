@@ -42,11 +42,11 @@ public class UserDetailsImpl implements UserDetails {
 	public static UserDetailsImpl build(SCSUser user) {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		if (user.isAdmin()) {
-			authorities = Arrays.asList(new SimpleGrantedAuthority("admin"));
+			authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_admin"));
 		} else if (user.isOwner()) {
-			authorities = Arrays.asList(new SimpleGrantedAuthority("owner"));
+			authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_owner"));
 		} else {
-			authorities = Arrays.asList(new SimpleGrantedAuthority("public_user"));
+			authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_public_user"));
 		}
 		
 		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);

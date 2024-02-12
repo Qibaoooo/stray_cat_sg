@@ -3,28 +3,31 @@ import { getVectorsOfImage } from "pages/utils/api/apiMachineLearning";
 import { getFileType } from "pages/utils/fileUtil";
 import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { RxClipboard } from "react-icons/rx";
 
-const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, setVectorMap }) => {
+const ImagePicker = ({
+  imageURLs,
+  setImageURLs,
+  requireVectors,
+  vectorMap,
+  setVectorMap,
+}) => {
   const fileInputRef = useRef();
   const [images, setImages] = useState([]);
 
   const handleChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      
       const newImageFile = event.target.files[0];
 
       // filter for file type
-      const fileType = getFileType(newImageFile.name)
-      if (! ((fileType === "png") || (fileType === "jpg"))) {
-        alert("only jpg and png files are supported.")
-        return
+      const fileType = getFileType(newImageFile.name);
+      if (!(fileType === "png" || fileType === "jpg")) {
+        alert("only jpg and png files are supported.");
+        return;
       }
 
       // show mini size images uploaded
-      setImages((oldArray) => [
-        ...oldArray,
-        URL.createObjectURL(newImageFile),
-      ]);
+      setImages((oldArray) => [...oldArray, URL.createObjectURL(newImageFile)]);
 
       // IMPORTANT NOTE:
       // here we do NOT upload directly to the `images` container
@@ -40,16 +43,16 @@ const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, set
 
           // only send request to ML api if needed.
           if (requireVectors) {
-            getVectorsOfImage(tempImageURL).then((resp)=>{
-              console.log(resp)
+            getVectorsOfImage(tempImageURL).then((resp) => {
+              console.log(resp);
               const newVector = resp.data;
-              let newPair = {}
-              newPair[tempImageURL] = newVector
+              let newPair = {};
+              newPair[tempImageURL] = newVector;
               setVectorMap({
                 ...vectorMap,
-                ...newPair
-              })
-            })
+                ...newPair,
+              });
+            });
           }
         }
       );
@@ -80,9 +83,21 @@ const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, set
       <p>
         {imageURLs.map((url, index, array) => {
           return (
-            <a className="text-info m-2" href={url} key={index}>
-              image blob link {index}
-            </a>
+            <div style={{overflow:"scroll", width:"100%"}}>
+              <a className="text-info m-2" href={url} key={index}>
+                image blob link {index}
+              </a>
+              <span> - </span>
+              <span
+                data-toggle="tooltip"
+                data-placement="top"
+                title="click to copy image vector"
+                onClick={() => {}}
+              >
+                <RxClipboard className="mx-1"></RxClipboard>
+                img vector {vectorMap[url]}
+              </span>
+            </div>
           );
         })}
       </p>
