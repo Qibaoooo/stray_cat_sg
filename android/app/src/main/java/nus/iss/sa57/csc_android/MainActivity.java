@@ -44,21 +44,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HOST = getResources().getString(R.string.host_local);
+
         setupButtons();
-        listPref = getSharedPreferences("list_data", MODE_PRIVATE);
-        boolean isFetched = listPref.getBoolean("isFetched", false);
-        if(isFetched){
+
+        listPref = getSharedPreferences("list_info", MODE_PRIVATE);
+        if (listPref.getBoolean("isFetched", false)) {
             String responseData = listPref.getString("listData", null);
             try {
-                Type listType = new TypeToken<List<CatSighting>>(){}.getType();
+                Type listType = new TypeToken<List<CatSighting>>() {
+                }.getType();
                 Gson gson = new Gson();
-                csList = gson.fromJson(responseData,listType);
+                csList = gson.fromJson(responseData, listType);
             } catch (JsonSyntaxException e) {
                 Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
             }
             setupList();
-        } else{
-        fetchCatSightingList();
+        } else {
+            fetchCatSightingList();
         }
     }
 
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ImageButton upload_btn = findViewById(R.id.upload_btn);
         upload_btn.setOnClickListener(this);
         View nav_bar = findViewById(R.id.nav_bar);
-        NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
+        NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar, this);
         nav_handler.setupAccount();//don't want to setup cat
     }
 
@@ -80,9 +82,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> av, View v, int pos, long id) {
         Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("catId",csList.get(pos).getCat());
+        intent.putExtra("catId", csList.get(pos).getCat());
         Log.d("MainActivity", "Calling Details Activity");
-        Log.d("Intent",String.valueOf(csList.get(pos).getCat()));
+        Log.d("Intent", String.valueOf(csList.get(pos).getCat()));
         startActivity(intent);
     }
 
@@ -100,14 +102,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 List<CatSighting> responseList = new ArrayList<>();
                 if (responseData != null) {
                     try {
-                        Type listType = new TypeToken<List<CatSighting>>(){}.getType();
+                        Type listType = new TypeToken<List<CatSighting>>() {
+                        }.getType();
                         Gson gson = new Gson();
-                        responseList = gson.fromJson(responseData,listType);
-                        if(!responseList.isEmpty()) {
+                        responseList = gson.fromJson(responseData, listType);
+                        if (!responseList.isEmpty()) {
                             csList = responseList;
                             Log.d("MainActivity", "csList setup");
                         }
-                        listPref.edit().putString("listData",responseData)
+                        listPref.edit().putString("listData", responseData)
                                 .putBoolean("isFetched", true).commit();
                     } catch (JsonSyntaxException e) {
                         Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
         int sum = 0;
-        for (CatSighting cs : csList){
+        for (CatSighting cs : csList) {
             sum += cs.getImagesURLs().size();
         }
         final CountDownLatch latch = new CountDownLatch(sum);
@@ -144,10 +147,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         for (CatSighting cs : csList) {
             for (int i = 0; i < cs.getImagesURLs().size(); i++) {
 
-            File destFile = new File(externalFilesDir, ("img-" + String.valueOf(cs.getId()) + "-" + String.valueOf(i)));
-            //File destFile = new File(externalFilesDir, ("img-" + String.valueOf(i)));
-            Thread t = new Thread(new ImageDownloadThread(cs, destFile, latch));
-            t.start();
+                File destFile = new File(externalFilesDir, ("img-" + String.valueOf(cs.getId()) + "-" + String.valueOf(i)));
+                //File destFile = new File(externalFilesDir, ("img-" + String.valueOf(i)));
+                Thread t = new Thread(new ImageDownloadThread(cs, destFile, latch));
+                t.start();
             }
         }
         new Thread(new Runnable() {
@@ -174,8 +177,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
     }
-
-
 
 }
 
