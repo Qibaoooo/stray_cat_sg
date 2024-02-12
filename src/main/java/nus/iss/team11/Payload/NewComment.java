@@ -12,7 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewComment {
-private String content;
-private List<String>labels;
-private int cat_id;
+	private String content;
+	private List<String>labels;
+	private int cat_id;
+	private String username;
 }
