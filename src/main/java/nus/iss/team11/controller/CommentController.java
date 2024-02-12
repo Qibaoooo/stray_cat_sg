@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import nus.iss.team11.Payload.NewComment;
+import nus.iss.team11.Payload.NewCommentAndroid;
 import nus.iss.team11.controller.service.CatService;
 import nus.iss.team11.controller.service.CommentService;
 import nus.iss.team11.controller.service.SCSUserService;
@@ -45,8 +46,8 @@ public class CommentController {
 	}
 
 	@PostMapping(value="/api/comments")
-	public ResponseEntity<String> createComment(Principal principal,@RequestBody NewComment new_comment){
-		String username=principal.getName();
+	public ResponseEntity<String> createComment(@RequestBody NewComment new_comment){
+		String username=new_comment.getUsername();
 		String content=new_comment.getContent();
 		List<String>labels=new_comment.getLabels();
 		Comment newcomment=new Comment();
@@ -56,8 +57,23 @@ public class CommentController {
 		newcomment.setScsUser(userService.findUserByUsername(username));
 		newcomment.setCat(catService.findCatById(new_comment.getCat_id()));
 		newcomment=commentService.saveComment(newcomment);
-		JSONObject json = new JSONObject();
-		json.put("comment", newcomment.getId());
+		JSONObject json = newcomment.toJSON();
 		return new ResponseEntity<>(json.toString(), HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/api/comment")
+	public ResponseEntity<String> createAnndroidComment(@RequestBody NewCommentAndroid new_comment){
+		String content=new_comment.getContent();
+		List<String>labels=new_comment.getLabels();
+		String username = new_comment.getUsername();
+		Comment newcomment=new Comment();
+		newcomment.setContent(content);
+		newcomment.setTime(new Date());
+		newcomment.setNewlabels(labels);
+		newcomment.setScsUser(userService.findUserByUsername(username));
+		newcomment.setCat(catService.findCatById(new_comment.getCat_id()));
+		newcomment=commentService.saveComment(newcomment);
+		JSONObject commentJSON = newcomment.toJSON();
+		return new ResponseEntity<>(commentJSON.toString(), HttpStatus.OK);
 	}
 }
