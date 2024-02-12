@@ -16,6 +16,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -90,6 +92,8 @@ public class MapActivity extends FragmentActivity
                     new MarkerOptions()
                             .position(csLatLng)
                             .title(cs.getSightingName()));
+            BitmapDescriptor newIcon = BitmapDescriptorFactory.fromResource(R.drawable.cat_icon);
+            marker.setIcon(newIcon);
             marker.setTag(cs.getId());
         }
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
