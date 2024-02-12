@@ -36,11 +36,11 @@ public class CommentAdapter extends ArrayAdapter<Object> {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.comments_list, parent, false);
         }
-        //ImageView avatar = view.findViewById(R.id.avatar);
+        ImageView avatar = view.findViewById(R.id.avatar);
         //File externalFilesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         //File destFile = new File(externalFilesDir, ("img-" + commentList.get(pos).getId() + "-0"));
-        //Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
-        //avatar.setImageBitmap(bitmap);
+        Bitmap avatorBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.avator);
+        avatar.setImageBitmap(BitmapHelper.getCircleBitmap(avatorBitmap));
         TextView nickname = view.findViewById(R.id.nickname);
         nickname.setText(commentList.get(pos).getScsUser().getUsername());
         TextView labels = view.findViewById(R.id.labels);

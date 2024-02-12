@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import nus.iss.team11.Payload.NewComment;
-import nus.iss.team11.Payload.NewCommentAndroid;
 import nus.iss.team11.controller.service.CatService;
 import nus.iss.team11.controller.service.CommentService;
 import nus.iss.team11.controller.service.SCSUserService;
@@ -61,19 +60,4 @@ public class CommentController {
 		return new ResponseEntity<>(json.toString(), HttpStatus.OK);
 	}
 	
-	@PostMapping(value="/api/comment")
-	public ResponseEntity<String> createAnndroidComment(@RequestBody NewCommentAndroid new_comment){
-		String content=new_comment.getContent();
-		List<String>labels=new_comment.getLabels();
-		String username = new_comment.getUsername();
-		Comment newcomment=new Comment();
-		newcomment.setContent(content);
-		newcomment.setTime(new Date());
-		newcomment.setNewlabels(labels);
-		newcomment.setScsUser(userService.findUserByUsername(username));
-		newcomment.setCat(catService.findCatById(new_comment.getCat_id()));
-		newcomment=commentService.saveComment(newcomment);
-		JSONObject commentJSON = newcomment.toJSON();
-		return new ResponseEntity<>(commentJSON.toString(), HttpStatus.OK);
-	}
 }

@@ -6,5 +6,6 @@
     <!--AZURE HOST-->
     <string name="host_azure"></string>
     <string name="title_activity_details">DetailsActivity</string>
+    <string name="title_activity_map">MapActivity</string>
 
 </resources>
