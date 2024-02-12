@@ -2,7 +2,7 @@ import { uploadSightingPhoto } from "pages/utils/api/apiAzureImage";
 import { getVectorsOfImage } from "pages/utils/api/apiMachineLearning";
 import { getFileType } from "pages/utils/fileUtil";
 import React, { useRef, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { RxClipboard } from "react-icons/rx";
 
 const ImagePicker = ({
@@ -14,6 +14,7 @@ const ImagePicker = ({
 }) => {
   const fileInputRef = useRef();
   const [images, setImages] = useState([]);
+  const [uploading, SetUploading] = useState(false);
 
   const handleChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -28,6 +29,9 @@ const ImagePicker = ({
 
       // show mini size images uploaded
       setImages((oldArray) => [...oldArray, URL.createObjectURL(newImageFile)]);
+
+      // start uploading from here
+      SetUploading(true);
 
       // IMPORTANT NOTE:
       // here we do NOT upload directly to the `images` container
@@ -52,7 +56,11 @@ const ImagePicker = ({
                 ...vectorMap,
                 ...newPair,
               });
+
+              SetUploading(false);
             });
+          } else {
+            SetUploading(false);
           }
         }
       );
@@ -60,7 +68,21 @@ const ImagePicker = ({
   };
 
   return (
-    <>
+    <div>
+      <Modal
+        show={uploading}
+        onHide={()=>{SetUploading(false)}}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header>
+          <Modal.Title>Uploading...</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          
+        </Modal.Body>
+      </Modal>
+
       <p>Click + to add photos</p>
 
       {images.map((url, index, array) => {
@@ -83,7 +105,7 @@ const ImagePicker = ({
       <p>
         {imageURLs.map((url, index, array) => {
           return (
-            <div style={{overflow:"scroll", width:"100%"}}>
+            <div style={{ overflow: "scroll", width: "100%" }}>
               <a className="text-info m-2" href={url} key={index}>
                 image blob link {index}
               </a>
@@ -91,11 +113,12 @@ const ImagePicker = ({
               <span
                 data-toggle="tooltip"
                 data-placement="top"
-                title="click to copy image vector"
-                onClick={() => {}}
+                title={JSON.stringify(vectorMap[url])}
+                style={{cursor:"pointer"}}
+                onClick={() => {navigator.clipboard.writeText(vectorMap[url])}}
               >
                 <RxClipboard className="mx-1"></RxClipboard>
-                img vector {vectorMap[url]}
+                img vector 
               </span>
             </div>
           );
@@ -108,7 +131,7 @@ const ImagePicker = ({
         type="file"
         hidden
       />
-    </>
+    </div>
   );
 };
 
