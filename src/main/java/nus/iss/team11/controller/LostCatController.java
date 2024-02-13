@@ -84,7 +84,7 @@ public class LostCatController {
 		JSONObject json = new JSONObject();
 		json.put("query_vector", new JSONArray(queryVector));
 		json.put("vectors_dict", vectorsDictJson);
-		System.out.println(json.toString());
+//		System.out.println(json.toString());
 
 		HttpClient client = HttpClient.newHttpClient();
 		String machineLearningIP = "https://stray-cats-ml-container.azurewebsites.net/gettopsimilarcats/";

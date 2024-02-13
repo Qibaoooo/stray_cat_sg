@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Stack } from "react-bootstrap";
-import { login } from "./utils/api/apiAuth";
-import { getUserinfoFromLocal, setUserinfoLocal } from "./utils/userinfo";
+import React, { useState } from "react";
+import { Button, Form, Stack } from "react-bootstrap";
 import MyAlert from "./components/myAlert";
 import loginBG from "../images/loginBG.png";
+import { register } from "./utils/api/apiAuth";
 
-function LoginPage() {
+const RegisterPage = () => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const [passwordConfirm, setPasswordConfirm] = useState();
   const [showAlert, setShowAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState();
   const onInputUN = ({ target: { value } }) => setUsername(value);
   const onInputPW = ({ target: { value } }) => setPassword(value);
+  const onInputPWConfirm = ({ target: { value } }) => setPasswordConfirm(value);
 
   const testStyle = {
     fontSize: "1.2rem",
@@ -21,35 +20,29 @@ function LoginPage() {
     fontWeight: "bold",
   };
 
-  useEffect(() => {
-    if (getUserinfoFromLocal()) {
-      // alr logged in, redirect
-      window.location.href = "/map";
-    }
-  }, []);
-
   const onFormSubmit = async (e) => {
     e.preventDefault();
-    login(username, password)
-      .then((response) => {
-        if (response.status == 200) {
-          // console.log(JSON.stringify(response.data.username));
-          setUserinfoLocal(response.data);
-          window.location.href = "/map";
-        } else {
-          setAlertMsg(JSON.stringify(response));
-          setShowAlert(true);
-        }
-      })
-      .catch((error) => {
-        if (error.response.status == 401) {
-          setAlertMsg("incorrect username/password.");
-          setShowAlert(true);
-        } else {
-          setAlertMsg("error, please try again.");
-          setShowAlert(true);
-        }
-      });
+
+    if (password !== passwordConfirm) {
+        setAlertMsg("please make sure passwords entered are the same");
+        setShowAlert(true);
+    }
+    register(username, password)
+    .then((response) => {
+      if (response.status == 200) {
+        // console.log(JSON.stringify(response.data.username));
+        alert(response.data)
+        window.location.href = "/login";
+      } else {
+        setAlertMsg(JSON.stringify(response));
+        setShowAlert(true);
+      }
+    })
+    .catch((error) => {
+        setAlertMsg(JSON.stringify(error));
+        setShowAlert(true);
+    });
+
   };
 
   return (
@@ -66,7 +59,7 @@ function LoginPage() {
           className="col-sm-4 mx-auto mt-5 p-4"
         >
           <h5 className="my-4" style={testStyle}>
-            login to ur account
+            register new user
           </h5>
           <Form.Group controlId="formGridUsername">
             <Form.Label style={testStyle}>Username</Form.Label>
@@ -87,6 +80,15 @@ function LoginPage() {
               placeholder="Password"
             />
           </Form.Group>
+
+          <Form.Group controlId="formGridPasswordConfirm">
+            <Form.Control
+              style={{ opacity: "0.5" }}
+              type="password"
+              onChange={onInputPWConfirm}
+              placeholder="Confirm password"
+            />
+          </Form.Group>
           <div>
             <Button
               className="opacity-75"
@@ -94,25 +96,14 @@ function LoginPage() {
               onClick={onFormSubmit}
               style={testStyle}
             >
-              Login
+              Submit
             </Button>
-            <p style={{ marginTop: "20px" }}>
-              <a
-                className="opacity-75"
-                onClick={() => {
-                  window.location.href = "/register";
-                }}
-                style={{ color: "black", cursor:"pointer" }}
-              >
-                Register
-              </a>
-            </p>
           </div>
         </Stack>
         <MyAlert
           showAlert={showAlert}
           variant="warning"
-          msg1="Login failed, error msg:"
+          msg1="Register failed, error msg:"
           msg2={alertMsg}
           handleCLose={() => setShowAlert(false)}
           showReturnTo={false}
@@ -120,6 +111,6 @@ function LoginPage() {
       </Form>
     </div>
   );
-}
+};
 
-export default LoginPage;
+export default RegisterPage;

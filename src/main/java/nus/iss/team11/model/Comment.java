@@ -34,6 +34,8 @@ public class Comment {
 	
 	private Date time;
 	
+//	private boolean isHighLight
+	
 	@ManyToOne
 	private SCSUser scsUser;
 	
