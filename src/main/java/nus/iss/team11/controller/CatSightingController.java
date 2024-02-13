@@ -95,7 +95,7 @@ public class CatSightingController {
 			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
 		}
 		newCatSighting.setScsUser(user);
-
+		
 		// save cs to DB
 		newCatSighting = saveCatSightingToDB(newSightingRequest, newCatSighting);
 
