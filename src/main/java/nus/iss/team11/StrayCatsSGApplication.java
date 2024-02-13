@@ -2,15 +2,13 @@ package nus.iss.team11;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,19 +22,16 @@ import com.opencsv.exceptions.CsvException;
 import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.dataUtil.CSVUtil;
 import nus.iss.team11.model.AzureImage;
+import nus.iss.team11.model.Cat;
 import nus.iss.team11.model.CatSighting;
 import nus.iss.team11.model.Comment;
-import nus.iss.team11.model.Cat;
-import nus.iss.team11.model.LostCat;
-import nus.iss.team11.model.Roll;
 import nus.iss.team11.model.SCSUser;
 import nus.iss.team11.repository.AzureImageRepository;
-import nus.iss.team11.repository.CatSightingRepository;
 import nus.iss.team11.repository.CatRepository;
-import nus.iss.team11.repository.LostCatRepository;
-import nus.iss.team11.repository.RollRepository;
-import nus.iss.team11.repository.SCSUserRepository;
+import nus.iss.team11.repository.CatSightingRepository;
 import nus.iss.team11.repository.CommentRepository;
+import nus.iss.team11.repository.LostCatRepository;
+import nus.iss.team11.repository.SCSUserRepository;
 
 @SpringBootApplication
 public class StrayCatsSGApplication {
@@ -109,7 +104,14 @@ public class StrayCatsSGApplication {
 					cs = new CatSighting();
 
 					cs.setSightingName(sightingName);
-					cs.setTime(LocalDate.now());
+					// Creating artificial cat sighting dates
+					Random random = new Random();
+					int randomDays = 1 + random.nextInt(100); // 1 to 100 inclusive
+
+					// Subtract the random number of days from the current date
+					LocalDate randomDateBeforeNow = LocalDate.now().minusDays(randomDays);
+					
+					cs.setTime(randomDateBeforeNow);
 					cs.setSuggestedCatName("test cat");
 					cs.setSuggestedCatBreed(getRandomBreed());
 
@@ -166,6 +168,33 @@ public class StrayCatsSGApplication {
 			c1.setScsUser(cuser);
 			c1.setNewlabels(new ArrayList<String>());
 			commentRepository.save(c1);
+			
+			// Creating more dummy comments
+			for (int i = 1; i <= 10; i++) {
+			    // Create a new user for each comment
+			    SCSUser temp = new SCSUser();
+			    temp.setUsername("commentuser" + i); // Unique username for each user
+			    temp.setPassword(encoder.encode("password" + i)); // Assuming you want a unique password for each
+			    scsUserRepository.save(temp); // Save the new user
+
+			    // Create a new comment
+			    Comment comment = new Comment();
+			    comment.setContent("comment " + i); // Unique content for each comment
+			    comment.setCat(csMap.get("cat_sightings_" + (i%12)).getCat()); 
+			    
+			    // Creating artificial cat sighting dates
+				Random random = new Random();
+				int randomDays = 1 + random.nextInt(100); // 1 to 100 inclusive
+
+				// Subtract the random number of days from the current date and  to Date object
+				LocalDate randomDateBeforeNow = LocalDate.now().minusDays(randomDays);
+				Date date = Date.from(randomDateBeforeNow.atStartOfDay(ZoneId.systemDefault()).toInstant());
+				
+			    comment.setTime(date); 
+			    comment.setScsUser(temp); 
+			    comment.setNewlabels(new ArrayList<>()); 
+			    commentRepository.save(comment); 
+			}
 
 			// load vector for test images
 			loadVectors(azureImageRepository);
