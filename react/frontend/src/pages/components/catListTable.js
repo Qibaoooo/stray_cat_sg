@@ -26,7 +26,7 @@ const CatListTable = ({ viewType }) => {
     } else {
       getAllCatSightings()
         .then((resp) => {
-          // console.log(resp.data);
+          console.log(resp.data);
           SetSightings(resp.data);
           SetTableCols(SightingCols);
         })

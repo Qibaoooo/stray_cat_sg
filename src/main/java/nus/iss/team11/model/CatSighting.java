@@ -69,7 +69,7 @@ public class CatSighting {
 			urls.put(image.getImageURL());
 		});
 		json.put("imagesURLs",urls);
-				
+
 		// TODO: add this when we have test data for scsUser
 		//json.put("uploadedBy", scsUser.getUsername());
 		

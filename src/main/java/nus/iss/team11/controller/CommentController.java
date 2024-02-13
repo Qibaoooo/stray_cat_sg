@@ -60,4 +60,17 @@ public class CommentController {
 		return new ResponseEntity<>(json.toString(), HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/api/getallcomments")
+	public ResponseEntity<String> getAllComments(){
+		JSONArray comments = new JSONArray();
+
+		commentService.getAll().stream().forEach(sighting -> {
+			JSONObject sightingJSON = sighting.toJSON();
+			comments.put(sightingJSON);
+		});
+		
+		
+		return new ResponseEntity<>(comments.toString(), HttpStatus.OK);
+	}
+	
 }
