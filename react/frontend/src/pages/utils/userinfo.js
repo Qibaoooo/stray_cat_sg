@@ -7,6 +7,10 @@ const getUserinfoFromLocal = () => {
   return userinfo;
 };
 
+const getUserRole = () => {
+  return getUserinfoFromLocal().role;
+};
+
 const clearUserInfoAndRedirectToLogin = () => {
   localStorage.removeItem("scs_userinfo");
   window.location.href = "/login";
@@ -33,4 +37,5 @@ export {
   clearUserInfoAndRedirectToLogin,
   clearUserInfoAndReload,
   requireLoginUser,
+  getUserRole,
 };

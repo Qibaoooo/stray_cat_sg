@@ -11,10 +11,18 @@ const ImagePicker = ({
   requireVectors,
   vectorMap,
   setVectorMap,
+  maxImageCount = 0,
 }) => {
   const fileInputRef = useRef();
   const [images, setImages] = useState([]);
   const [uploading, SetUploading] = useState(false);
+
+  const shouldDisplayAddButton = () => {
+    if (maxImageCount === 0) {
+      return true;
+    }
+    return images.length < maxImageCount;
+  };
 
   const handleChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -71,16 +79,16 @@ const ImagePicker = ({
     <div>
       <Modal
         show={uploading}
-        onHide={()=>{SetUploading(false)}}
+        onHide={() => {
+          SetUploading(false);
+        }}
         backdrop="static"
         keyboard={false}
       >
         <Modal.Header>
           <Modal.Title>Uploading...</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          
-        </Modal.Body>
+        <Modal.Body></Modal.Body>
       </Modal>
 
       <p>Click + to add photos</p>
@@ -95,13 +103,15 @@ const ImagePicker = ({
           ></img>
         );
       })}
-      <Button
-        className="mx-3"
-        variant="outline-dark"
-        onClick={() => fileInputRef.current.click()}
-      >
-        +
-      </Button>
+      {!!shouldDisplayAddButton() && (
+        <Button
+          className="mx-3"
+          variant="outline-dark"
+          onClick={() => fileInputRef.current.click()}
+        >
+          +
+        </Button>
+      )}
       <p>
         {imageURLs.map((url, index, array) => {
           return (
@@ -114,11 +124,13 @@ const ImagePicker = ({
                 data-toggle="tooltip"
                 data-placement="top"
                 title={JSON.stringify(vectorMap[url])}
-                style={{cursor:"pointer"}}
-                onClick={() => {navigator.clipboard.writeText(vectorMap[url])}}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigator.clipboard.writeText(vectorMap[url]);
+                }}
               >
                 <RxClipboard className="mx-1"></RxClipboard>
-                img vector 
+                img vector
               </span>
             </div>
           );
