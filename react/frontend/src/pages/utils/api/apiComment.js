@@ -22,6 +22,12 @@ let createNewComment = ({
     return axios.post(`${backendIP}/api/comments`, payload, {
       headers: getJsonHeadersWithJWT(),
     });
-  };
+};
 
-export { getComments, createNewComment};
+let getAllComments = () => {
+  return axios.get(`${backendIP}/api/getallcomments`,{
+    headers: getJsonHeadersWithJWT(),
+  });
+};
+
+export { getComments, createNewComment, getAllComments};
