@@ -59,6 +59,7 @@ const LostCatForm = () => {
         requireVectors={true}
         vectorMap={vectorMap}
         setVectorMap={setVectorMap}
+        maxImageCount={1}
       ></ImagePicker>
       <hr></hr>
       <Form.Group className="mb-3" controlId="SuggestedCatName">

@@ -67,12 +67,18 @@ public class LostCatController {
 			if (imageVectorJson == null) {
 				imageVectorJson = new JSONObject();
 			}
+			
+			if (imageVectors.size() > 1) {
+				// Put the vector list into the JSON object for this image
+				imageVectorJson.put(image.getFileName(), new JSONArray(imageVectors));
 
-			// Put the vector list into the JSON object for this image
-			imageVectorJson.put(image.getFileName(), new JSONArray(imageVectors));
+				// Put the updated JSON object back into the vectors dictionary
+				vectorsDictJson.put(String.valueOf(imageId), imageVectorJson);
+			} else {
+				System.out.println("empty vector detected, please clean DB data.");
+				System.out.println(image.getFileName());
+			}
 
-			// Put the updated JSON object back into the vectors dictionary
-			vectorsDictJson.put(String.valueOf(imageId), imageVectorJson);
 		}
 
 		JSONObject json = new JSONObject();
