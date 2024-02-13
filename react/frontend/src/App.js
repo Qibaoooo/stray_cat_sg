@@ -8,11 +8,15 @@ import UploadSighting from "pages/uploadSightingPage";
 import AccountPage from "pages/accountPage";
 import LostCat from "pages/lostCat";
 import CatResults from "pages/topSimilarCats"
-<<<<<<< HEAD
+
+import UploadVerification from "pages/uploadVerification";
+
+
 import RegisterPage from "pages/registerPage";
-=======
+
 import ChartAnalytics from "pages/components/chartAnalytics";
->>>>>>> 2afa44b (Added charts for cat sightings and comments)
+
+
 
 const RedirectToMapPage = () => {
   useEffect(() => {
@@ -40,7 +44,11 @@ function App() {
         <Route path="/account" element={<AccountPage />} />
         <Route path="/lost" element={<LostCat />} />
         <Route path="/result" element={<CatResults />} />
+
+        <Route path="/uploadVfcation" element={<UploadVerification/>}/>
+
         <Route path="/analytics" element={<ChartAnalytics/>}/>
+
       </Routes>
     </div>
   );
