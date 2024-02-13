@@ -33,6 +33,18 @@
             android:layout_gravity="right"
             android:src="@drawable/upload_btn"
             android:alpha="0.7"/>
+
+        <ImageButton
+            android:id="@+id/map_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/round_btn_background"
+            android:layout_marginTop="136dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:src="@drawable/map_btn"
+            android:alpha="0.7"/>
     </FrameLayout>
 
     <include layout="@layout/navigation_bar" />

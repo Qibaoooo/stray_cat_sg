@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createNewComment, getComments } from "pages/utils/api/apiComment";
 import { Table } from "react-bootstrap";
 import send_btn from "../../images/send_btn.png";
+import { getUserinfoFromLocal } from "pages/utils/userinfo";
 
 const CatCommentPanel = ({ id }) => {
   const [comments, setComments] = useState([]);
@@ -21,7 +22,8 @@ const CatCommentPanel = ({ id }) => {
       {
         content: publiccomment,
         labels: null,
-        cat_id: id
+        cat_id: id,
+        username: getUserinfoFromLocal().username,
       }).then(() => {
         getComments(id).then((resp) => {
           setComments(resp.data);

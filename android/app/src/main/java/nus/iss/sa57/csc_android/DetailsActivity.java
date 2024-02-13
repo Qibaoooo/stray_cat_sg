@@ -2,90 +2,110 @@ package nus.iss.sa57.csc_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import nus.iss.sa57.csc_android.model.Cat;
+import nus.iss.sa57.csc_android.model.CatSighting;
+import nus.iss.sa57.csc_android.model.Comment;
+import nus.iss.sa57.csc_android.payload.LoginResponse;
+import nus.iss.sa57.csc_android.utils.BitmapHelper;
+import nus.iss.sa57.csc_android.utils.CommentAdapter;
+import nus.iss.sa57.csc_android.utils.HttpHelper;
+import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements View.OnClickListener{
     private int catId;
-    private Cat cat;
+    private Cat cat = new Cat();
+    private List<Comment> comments = new ArrayList<>();
     private static String HOST;
+    SharedPreferences userInfoPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         HOST = getResources().getString(R.string.host_local);
+        userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+
+        View nav_bar = findViewById(R.id.nav_bar);
+        NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
+        nav_handler.setupBar();
+
+        ImageButton send_btn = findViewById(R.id.send_btn);
+        send_btn.setOnClickListener(this);
+
         Intent intent = getIntent();
         catId = intent.getIntExtra("catId",0);
-        cat = fetchCat(catId);
+        fetchCat(catId);
     }
 
-    private Cat fetchCat(int catId){
-        cat = new Cat();
+    private void fetchCat(int catId){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String urlString = HOST + "/api/cat/" + String.valueOf(catId);
-                HttpURLConnection urlConnection = null;
-                BufferedReader reader = null;
-                String responseData = null;
-                try {
-                    URL url = new URL(urlString);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-
-                    int responseCode = urlConnection.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                        StringBuilder stringBuilder = new StringBuilder();
-                        //read response data line by line
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            stringBuilder.append(line).append("\n");
-                        }
-                        responseData = stringBuilder.toString();
-                    } else {
-                        Log.e("DetailsActivity", "HTTP error code: " + responseCode);
-                    }
-                } catch (IOException e) {
-                    Log.e("DetailsActivity", "Error fetching data from server: " + e.getMessage());
-                } finally {
-                    //Close and release used resources
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException e) {
-                            Log.e("DetailsActivity", "Error closing reader: " + e.getMessage());
-                        }
-                    }
-                }
+                String responseData = HttpHelper.getResponse(urlString);
+                Cat responseCat = new Cat();
                 if (responseData != null) {
                     try {
-                        JSONObject jsonObject = new JSONObject(responseData);
-                        cat = Cat.parseFromJSON(jsonObject);
+                        Gson gson = new Gson();
+                        responseCat = gson.fromJson(responseData, Cat.class);
+                        Log.d("DetailsAcvivity",responseCat.getCatName());
+                        if(responseCat != null){
+                            cat = responseCat;
+                        }
+                    } catch (JsonSyntaxException e) {
+                        Log.e("DetailsActivity", "Error parsing JSON: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("DetailsActivity", "Failed to fetch data from server");
+                }
 
-                    } catch (JSONException e) {
+                urlString = HOST + "/api/comments/" + String.valueOf(catId);
+                responseData = HttpHelper.getResponse(urlString);
+                List<Comment> responseComments = new ArrayList<>();
+                if(responseData != null){
+                    try {
+                        Type listType = new TypeToken<List<Comment>>(){}.getType();
+                        Gson gson = new Gson();
+                        responseComments = gson.fromJson(responseData, listType);
+                        if(responseComments != null){
+                            comments = responseComments;
+                        }
+                    } catch (JsonSyntaxException e) {
                         Log.e("DetailsActivity", "Error parsing JSON: " + e.getMessage());
                     }
                 } else {
@@ -97,16 +117,15 @@ public class DetailsActivity extends AppCompatActivity {
                 });
             }
         }).start();
-        return cat;
     }
 
-    public void setupLayout(){
+    private void setupLayout(){
         TextView name = findViewById(R.id.detail_name);
         name.setText(cat.getCatName());
         TextView idView = findViewById(R.id.detail_id);
         idView.setText(String.valueOf(cat.getId()));
         TextView breed = findViewById(R.id.detail_breed);
-        breed.setText(cat.getBreed());
+        breed.setText(cat.getCatBreed());
         TextView labels = findViewById(R.id.detail_labels);
         if(cat.getLabels() != null) {
             labels.setText(String.join(" ", cat.getLabels()));
@@ -118,5 +137,89 @@ public class DetailsActivity extends AppCompatActivity {
         File destFile = new File(externalFilesDir, ("img-" + cat.getCatSightings().get(0).getId() + "-0"));
         Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
         catphoto.setImageBitmap(bitmap);
+
+        setupCommentList();
+
+        ImageView avatar = findViewById(R.id.detail_avator);
+        Bitmap avatorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avator);
+        avatar.setImageBitmap(BitmapHelper.getCircleBitmap(avatorBitmap));
     }
+
+    private void setupCommentList(){
+        EditText contentView = findViewById(R.id.editText);
+        contentView.setText("");
+        contentView.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(contentView.getWindowToken(), 0);
+        ListView commentList = findViewById(R.id.detail_commentlist);
+        CommentAdapter adapter = new CommentAdapter(this,comments);
+        commentList = findViewById(R.id.detail_commentlist);
+        commentList.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClick(View v){
+        if(v.getId() == R.id.send_btn){
+            EditText contentView = findViewById(R.id.editText);
+            String content = String.valueOf(contentView.getText());
+            if(content != null){
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("content", content);
+                    jsonObject.put("labels", new JSONArray());
+                    jsonObject.put("cat_id", catId);
+                    String username = userInfoPref.getString("username", null);
+                    jsonObject.put("username", username);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sendComment(jsonObject.toString());
+            }
+        }
+    }
+
+    private void sendComment(String data){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String urlString = HOST + "/api/comments";
+                HttpURLConnection urlConnection = null;
+                try {
+                    URL url = new URL(urlString);
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                    urlConnection.setRequestProperty("Accept", "application/json");
+                    String jwtToken = userInfoPref.getString("jwt", null);
+                    urlConnection.setRequestProperty("Authorization", "Bearer " + jwtToken);
+                    urlConnection.setDoOutput(true);
+                    urlConnection.setDoInput(true);
+                    DataOutputStream outputStream = new DataOutputStream(urlConnection.getOutputStream());
+                    outputStream.writeBytes(data);
+                    outputStream.flush();
+                    outputStream.close();
+                    int responseCode = urlConnection.getResponseCode();
+                    Log.d("post comment",String.valueOf(responseCode));
+
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        // parse login response and save to SharedPreferences
+                        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(
+                                        urlConnection.getInputStream()));
+                        Gson gson = new Gson();
+                        Comment ncomment = gson.fromJson(in, Comment.class);
+                        comments.add(ncomment);
+                        runOnUiThread(() -> {
+                            setupCommentList();
+                        });
+                    } else {
+                        // show error?
+                    }
+                } catch (IOException e) {
+                    Log.e("LoginActivity", "Error fetching data from server: " + e.getMessage());
+                }
+            }
+        }).start();
+    }
+
 }

@@ -45,8 +45,8 @@ public class CommentController {
 	}
 
 	@PostMapping(value="/api/comments")
-	public ResponseEntity<String> createComment(Principal principal,@RequestBody NewComment new_comment){
-		String username=principal.getName();
+	public ResponseEntity<String> createComment(@RequestBody NewComment new_comment){
+		String username=new_comment.getUsername();
 		String content=new_comment.getContent();
 		List<String>labels=new_comment.getLabels();
 		Comment newcomment=new Comment();
@@ -56,8 +56,8 @@ public class CommentController {
 		newcomment.setScsUser(userService.findUserByUsername(username));
 		newcomment.setCat(catService.getCatById(new_comment.getCat_id()));
 		newcomment=commentService.saveComment(newcomment);
-		JSONObject json = new JSONObject();
-		json.put("comment", newcomment.getId());
+		JSONObject json = newcomment.toJSON();
 		return new ResponseEntity<>(json.toString(), HttpStatus.OK);
 	}
+	
 }

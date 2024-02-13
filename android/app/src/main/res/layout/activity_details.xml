@@ -19,109 +19,125 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="20dp">
-
-            <ImageView
-                android:id="@+id/detail_photo"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+            android:layout_height="230dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
 
-                <TextView
-                    android:id="@+id/detail_name"
-                    style="@style/DetailsTextViewStyle"
-                    android:text="name" />
+                <ImageView
+                    android:id="@+id/detail_photo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/detail_id"
-                    style="@style/DetailsTextViewStyle"
-                    android:layout_marginTop="20dp"
-                    android:text="id" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/detail_breed"
-                    style="@style/DetailsTextViewStyle"
-                    android:layout_marginTop="20dp"
-                    android:text="breed" />
+                    <TextView
+                        android:id="@+id/detail_name"
+                        style="@style/DetailsTextViewStyle"
+                        android:text="name" />
+
+                    <TextView
+                        android:id="@+id/detail_id"
+                        style="@style/DetailsTextViewStyle"
+                        android:layout_marginTop="20dp"
+                        android:text="id" />
+
+                    <TextView
+                        android:id="@+id/detail_breed"
+                        style="@style/DetailsTextViewStyle"
+                        android:layout_marginTop="20dp"
+                        android:text="breed" />
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/detail_labels"
+                style="@style/DetailsLocStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:text="labels" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/detail_labels"
-            style="@style/DetailsLocStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
-            android:text="labels" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="40dp"
-            android:background="@color/light_orange"
-            android:fontFamily="@font/kavoon"
-            android:gravity="center"
-            android:paddingVertical="10dp"
-            android:text="Comments"
-            android:textColor="@color/pink"
-            android:textSize="24dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:orientation="vertical">
 
-            <ListView
-                android:id="@+id/detail_commentlist"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="40dp"
+                android:background="@color/light_orange"
+                android:fontFamily="@font/kavoon"
+                android:gravity="center"
+                android:paddingVertical="10dp"
+                android:text="Comments"
+                android:textColor="@color/pink"
+                android:textSize="24dp" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/light_30_oragnge"
-                android:divider="@color/light_yellow"
-                android:dividerHeight="8dp" />
-        </LinearLayout>
+                android:layout_marginTop="8dp">
 
+                <ListView
+                    android:id="@+id/detail_commentlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/light_30_oragnge"
+                    android:divider="@color/light_yellow"
+                    android:dividerHeight="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="61dp">
+        android:layout_marginBottom="61dp"
+        android:orientation="horizontal">
 
-        <TextView
+        <ImageView
+            android:id="@+id/detail_avator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="avator"
-            android:gravity="center"
-            android:background="@drawable/round_btn_background"/>
+            android:gravity="center" />
+
         <EditText
             android:id="@+id/editText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:hint="Leave Your Comments..."
-            android:padding="10dp"
             android:layout_marginHorizontal="5dp"
-            android:background="@drawable/edittext_background"/>
+            android:layout_weight="8"
+            android:background="@drawable/edittext_background"
+            android:hint="Leave Your Comments..."
+            android:padding="10dp" />
+
         <ImageButton
             android:id="@+id/send_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/send_btn"
             android:background="@color/light_yellow"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/send_btn" />
     </LinearLayout>
 
     <include layout="@layout/navigation_bar" />

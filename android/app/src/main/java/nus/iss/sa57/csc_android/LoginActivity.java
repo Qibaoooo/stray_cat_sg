@@ -37,12 +37,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean isRemember;
     private boolean isLoginSuccess = false;
     private static String HOST;
+    private SharedPreferences userInfoPref;
+    private SharedPreferences loginPref;
+    private SharedPreferences listPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         HOST = getResources().getString(R.string.host_local);
+
+        userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        loginPref = getSharedPreferences("login_info", MODE_PRIVATE);
+        listPref = getSharedPreferences("list_info", MODE_PRIVATE);
+
         loggedinUser();
         login_btn = findViewById(R.id.login);
         login_btn.setOnClickListener(this);
@@ -104,25 +112,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         // parse login response and save to SharedPreferences
                         BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                        urlConnection.getInputStream()));
+                                new InputStreamReader(urlConnection.getInputStream()));
                         Gson gson = new Gson();
                         LoginResponse lr = gson.fromJson(in, LoginResponse.class);
-                        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
-                        SharedPreferences.Editor userInfoEditor = userInfoPref.edit();
-                        userInfoEditor.putString("jwt", lr.getJwt());
-                        userInfoEditor.putInt("id", lr.getId());
-                        userInfoEditor.putString("username", lr.getUsername());
-                        userInfoEditor.putString("role", lr.getRole());
-                        userInfoEditor.putLong("expirationTime", lr.getExpirationTime());
+                        userInfoPref.edit()
+                                .putString("jwt", lr.getJwt())
+                                .putInt("id", lr.getId())
+                                .putString("username", lr.getUsername())
+                                .putString("role", lr.getRole())
+                                .putLong("expirationTime", lr.getExpirationTime())
+                                .commit();
 
                         if (isRemember) {
-                            SharedPreferences pref = getSharedPreferences("login_info", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.putBoolean("isRemember", isRemember);
-                            editor.putString("username", username);
-                            editor.putString("password", password);
+                            loginPref.edit()
+                                    .putBoolean("isRemember", true)
+                                    .putString("username", username)
+                                    .putString("password", password)
+                                    .commit();
+                        } else {
+                            loginPref.edit().clear().commit();
                         }
+
+                        listPref.edit()
+                                .putBoolean("isFetched", false)
+                                .commit();
+
                         runOnUiThread(() -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
@@ -140,10 +154,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void loggedinUser() {
-        SharedPreferences pref = getSharedPreferences("login_info", MODE_PRIVATE);
-        if (pref.getBoolean("isRemember", false)) {
-            username = pref.getString("username", null);
-            password = pref.getString("password", null);
+        if (loginPref.getBoolean("isRemember", false)) {
+            username = loginPref.getString("username", null);
+            password = loginPref.getString("password", null);
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("username", username);
@@ -151,11 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            isLoginSuccess = login(jsonObject.toString());
-            if (isLoginSuccess) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            }
+            login(jsonObject.toString());
         }
     }
 }

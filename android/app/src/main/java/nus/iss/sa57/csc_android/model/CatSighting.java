@@ -11,18 +11,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nus.iss.sa57.csc_android.model.AzureImage;
-
 public class CatSighting {
     private int id;
     private String sightingName;
     private Float locationLat;
     private Float locationLong;
-    private LocalDate time;
-    //private List<AzureImage> images;
+    private String time;
     private List<String> imagesURLs;
     private String suggestedCatName;
     private String suggestedCatBreed;
+    private int cat;
 
     public CatSighting() {
     }
@@ -59,21 +57,14 @@ public class CatSighting {
         this.locationLong = locationLong;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-//    public List<AzureImage> getImages() {
-//        return images;
-//    }
-//
-//    public void setImages(List<AzureImage> images) {
-//        this.images = images;
-//    }
     public List<String> getImagesURLs() {
         return imagesURLs;
     }
@@ -98,27 +89,35 @@ public class CatSighting {
         this.suggestedCatBreed = suggestedCatBreed;
     }
 
-    public static CatSighting parseFromJSON(JSONObject js) throws JSONException {
-        CatSighting catSighting = new CatSighting();
-        catSighting.setId(js.getInt("id"));
-        catSighting.setSightingName(js.getString("sightingName"));
-        catSighting.setLocationLat((float) js.getDouble("locationLat"));
-        catSighting.setLocationLong((float) js.getDouble("locationLong"));
-        String timeString = js.getString("time");
-        LocalDate date = LocalDate.parse(timeString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        catSighting.setTime(date);
-
-        JSONArray imagesURLsArray = js.getJSONArray("imagesURLs");
-        List<String> imagesURLsList = new ArrayList<>();
-        for (int i = 0; i < imagesURLsArray.length(); i++) {
-            String url = imagesURLsArray.getString(i);
-            imagesURLsList.add(url);
-        }
-        catSighting.setImagesURLs(imagesURLsList);
-
-        catSighting.setSuggestedCatName(js.getString("suggestedCatName"));
-        catSighting.setSuggestedCatBreed(js.getString("suggestedCatBreed"));
-
-        return catSighting;
+    public int getCat() {
+        return cat;
     }
+
+    public void setCat(int cat) {
+        this.cat = cat;
+    }
+
+    //    public static CatSighting parseFromJSON(JSONObject js) throws JSONException {
+//        CatSighting catSighting = new CatSighting();
+//        catSighting.setId(js.getInt("id"));
+//        catSighting.setSightingName(js.getString("sightingName"));
+//        catSighting.setLocationLat((float) js.getDouble("locationLat"));
+//        catSighting.setLocationLong((float) js.getDouble("locationLong"));
+//        String timeString = js.getString("time");
+//        LocalDate date = LocalDate.parse(timeString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        catSighting.setTime(date);
+//
+//        JSONArray imagesURLsArray = js.getJSONArray("imagesURLs");
+//        List<String> imagesURLsList = new ArrayList<>();
+//        for (int i = 0; i < imagesURLsArray.length(); i++) {
+//            String url = imagesURLsArray.getString(i);
+//            imagesURLsList.add(url);
+//        }
+//        catSighting.setImagesURLs(imagesURLsList);
+//
+//        catSighting.setSuggestedCatName(js.getString("suggestedCatName"));
+//        catSighting.setSuggestedCatBreed(js.getString("suggestedCatBreed"));
+//
+//        return catSighting;
+//    }
 }

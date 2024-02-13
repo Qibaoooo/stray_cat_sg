@@ -2,29 +2,36 @@ import { uploadSightingPhoto } from "pages/utils/api/apiAzureImage";
 import { getVectorsOfImage } from "pages/utils/api/apiMachineLearning";
 import { getFileType } from "pages/utils/fileUtil";
 import React, { useRef, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
+import { RxClipboard } from "react-icons/rx";
 
-const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, setVectorMap }) => {
+const ImagePicker = ({
+  imageURLs,
+  setImageURLs,
+  requireVectors,
+  vectorMap,
+  setVectorMap,
+}) => {
   const fileInputRef = useRef();
   const [images, setImages] = useState([]);
+  const [uploading, SetUploading] = useState(false);
 
   const handleChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      
       const newImageFile = event.target.files[0];
 
       // filter for file type
-      const fileType = getFileType(newImageFile.name)
-      if (! ((fileType === "png") || (fileType === "jpg"))) {
-        alert("only jpg and png files are supported.")
-        return
+      const fileType = getFileType(newImageFile.name);
+      if (!(fileType === "png" || fileType === "jpg")) {
+        alert("only jpg and png files are supported.");
+        return;
       }
 
       // show mini size images uploaded
-      setImages((oldArray) => [
-        ...oldArray,
-        URL.createObjectURL(newImageFile),
-      ]);
+      setImages((oldArray) => [...oldArray, URL.createObjectURL(newImageFile)]);
+
+      // start uploading from here
+      SetUploading(true);
 
       // IMPORTANT NOTE:
       // here we do NOT upload directly to the `images` container
@@ -40,16 +47,20 @@ const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, set
 
           // only send request to ML api if needed.
           if (requireVectors) {
-            getVectorsOfImage(tempImageURL).then((resp)=>{
-              console.log(resp)
+            getVectorsOfImage(tempImageURL).then((resp) => {
+              console.log(resp);
               const newVector = resp.data;
-              let newPair = {}
-              newPair[tempImageURL] = newVector
+              let newPair = {};
+              newPair[tempImageURL] = newVector;
               setVectorMap({
                 ...vectorMap,
-                ...newPair
-              })
-            })
+                ...newPair,
+              });
+
+              SetUploading(false);
+            });
+          } else {
+            SetUploading(false);
           }
         }
       );
@@ -57,7 +68,21 @@ const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, set
   };
 
   return (
-    <>
+    <div>
+      <Modal
+        show={uploading}
+        onHide={()=>{SetUploading(false)}}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header>
+          <Modal.Title>Uploading...</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          
+        </Modal.Body>
+      </Modal>
+
       <p>Click + to add photos</p>
 
       {images.map((url, index, array) => {
@@ -80,9 +105,22 @@ const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, set
       <p>
         {imageURLs.map((url, index, array) => {
           return (
-            <a className="text-info m-2" href={url} key={index}>
-              image blob link {index}
-            </a>
+            <div style={{ overflow: "scroll", width: "100%" }}>
+              <a className="text-info m-2" href={url} key={index}>
+                image blob link {index}
+              </a>
+              <span> - </span>
+              <span
+                data-toggle="tooltip"
+                data-placement="top"
+                title={JSON.stringify(vectorMap[url])}
+                style={{cursor:"pointer"}}
+                onClick={() => {navigator.clipboard.writeText(vectorMap[url])}}
+              >
+                <RxClipboard className="mx-1"></RxClipboard>
+                img vector 
+              </span>
+            </div>
           );
         })}
       </p>
@@ -93,7 +131,7 @@ const ImagePicker = ( { imageURLs , setImageURLs, requireVectors, vectorMap, set
         type="file"
         hidden
       />
-    </>
+    </div>
   );
 };
 
