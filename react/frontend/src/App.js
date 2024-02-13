@@ -8,6 +8,7 @@ import UploadSighting from "pages/uploadSightingPage";
 import AccountPage from "pages/accountPage";
 import LostCat from "pages/lostCat";
 import CatResults from "pages/topSimilarCats"
+import UploadVerification from "pages/uploadVerification";
 
 const RedirectToMapPage = () => {
   useEffect(() => {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/account" element={<AccountPage />} />
         <Route path="/lost" element={<LostCat />} />
         <Route path="/result" element={<CatResults />} />
+        <Route path="/uploadVfcation" element={<UploadVerification/>}/>
       </Routes>
     </div>
   );

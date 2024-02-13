@@ -14,16 +14,19 @@ const OwnerButton = ({ user }) => {
     <Button
       className={accountPageButtonClass}
       onClick={() => {
-        if (!!user.isOwner) {
-          window.location.href = "/newSighting";
-        }
-      }}
-    >
-      {!!user.isOwner ? (
-        <u>Search For Lost Cat</u>
-      ) : (
-        <u>Apply to be an owner</u>
-      )}
+         if (!!user.isOwner) {
+           window.location.href = "/newSighting";
+         }else{
+          window.location.href="/uploadVfcation";
+         }
+       }}
+     >
+       {!!user.isOwner ? (
+         <u>Search For Lost Cat</u>
+       ) : (
+         <u>Apply to be an owner</u>
+       )}
+  
     </Button>
   );
 };
@@ -47,13 +50,14 @@ const AccountPage = () => {
   useEffect(() => {
     getUserById(userId)
       .then((resp) => {
-        console.log(resp.data);
-        SetUser({ ...user, ...resp.data });
-      })
+        console.log(resp.data);     
+        SetUser({ ...user, ...resp.data });  
+    })
       .catch((e) => {
         clearUserInfoAndRedirectToLogin();
       });
   }, []);
+  
 
   return (
     <Row className="g-0">
