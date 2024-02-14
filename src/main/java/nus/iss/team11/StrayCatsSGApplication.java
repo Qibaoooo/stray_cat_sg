@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,6 @@ public class StrayCatsSGApplication {
 			;
 
 			// group cat sightings into cats
-			// only do .setApproved(true) for first 5 sightings!
 			Integer approvedCount = 0;
 			for (Entry<String, CatSighting> entry : csMap.entrySet()) {
 				CatSighting cs = entry.getValue();
@@ -143,9 +143,14 @@ public class StrayCatsSGApplication {
 				// update relationship
 				cs.setCat(cat);
 				cat.addLabel("forTesting");
+				
+				// set public_user1 as the uploader
+				Optional<SCSUser> uploader = scsUserRepository.findByUsername("public_user1");
+				cs.setScsUser(uploader.get());
 
-				// approve the first 99 sightings
-				if (approvedCount < 99) {
+				// approve the first 8 sightings
+				if (approvedCount < 8) {
+					cs.setApproved(true);
 					cat.setApproved(true);
 					cat.setCatBreed(getRandomBreed());
 					approvedCount++;

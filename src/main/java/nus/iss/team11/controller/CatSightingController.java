@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ctc.wstx.util.DataUtil;
+import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.CharArraySerializer;
 
 import netscape.javascript.JSObject;
 import nus.iss.team11.Payload.NewCatSightingRequest;
@@ -53,7 +55,7 @@ public class CatSightingController {
 
 	@Autowired
 	CSVUtil csvUtil;
-	
+
 	@Autowired
 	AzureContainerUtil azureContainerUtil;
 
@@ -61,15 +63,21 @@ public class CatSightingController {
 	AzureImageService azureImageService;
 
 	@GetMapping(value = "/api/cat_sightings")
-	public ResponseEntity<String> getAllCS() {
+	public ResponseEntity<String> getAllCS(@RequestParam boolean pending) {
 		JSONArray sightings = new JSONArray();
 
 		catSightingService.getAllCatSightings().stream().forEach(sighting -> {
+			if (pending) {
+				if (sighting.isApproved()) {
+					return;
+				}
+			}
+
 			JSONObject sightingJSON = sighting.toJSON();
-			
+
 			// We do not need VectorMap for now, but leave this here just in case for later.
 			// sightingJSON = csvUtil.appendVectorMapToSightingJSON(sighting, sightingJSON);
-			
+
 			sightings.put(sightingJSON);
 		});
 
@@ -95,7 +103,7 @@ public class CatSightingController {
 			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
 		}
 		newCatSighting.setScsUser(user);
-		
+
 		// save cs to DB
 		newCatSighting = saveCatSightingToDB(newSightingRequest, newCatSighting);
 
@@ -122,7 +130,18 @@ public class CatSightingController {
 		csToBeUpdated = saveCatSightingToDB(newSightingRequest, csToBeUpdated);
 
 		return new ResponseEntity<>("Updated : " + String.valueOf(csToBeUpdated.getId()), HttpStatus.OK);
+	}
 
+	// TODO: the proper RESTFul way to do this is to use a PATCH request.
+	@PostMapping(value = "/api/cat_sightings/approve")
+	public ResponseEntity<String> updateApprovalStatus(@RequestParam Integer id) {
+		CatSighting cs = catSightingService.getCatSightingById(id);
+		if (cs == null) {
+			return new ResponseEntity<>("unknown cat sighting id.", HttpStatus.BAD_REQUEST);
+		}
+		cs.setApproved(true);
+		catSightingService.saveSighting(cs);
+		return new ResponseEntity<>("Approved : " + String.valueOf(cs.getId()), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/cat_sightings")

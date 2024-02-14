@@ -1,12 +1,12 @@
 package nus.iss.team11.model;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,29 +27,30 @@ public class CatSighting {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-		
+
 	@ManyToOne
 	private SCSUser scsUser;
-	
+
 	@ManyToOne
 	private Cat cat;
-	
+
 	private String sightingName;
 	private Float locationLat;
 	private Float locationLong;
-	
+
 	private LocalDate time;
-	
+
 	@OneToMany(mappedBy = "catSighting")
+
 	private List<AzureImage> images;
-	
+
 	private String suggestedCatName;
 	private String suggestedCatBreed;
-	
+
 	// for now this value is not used yet.
 	// might need this later when we have multiple sightings under same cat.
 	private boolean isApproved;
-	
+
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 
@@ -58,22 +59,23 @@ public class CatSighting {
 		json.put("suggestedCatBreed", suggestedCatBreed);
 		json.put("locationLat", locationLat);
 		json.put("locationLong", locationLong);
-		json.put("time",time);
+		json.put("time", time);
 		json.put("sightingName", sightingName);
-		if (cat != null) {			
+		json.put("scsUser", scsUser.getUsername());
+		if (cat != null) {
 			json.put("cat", cat.getId());
 		}
-		
+
 		JSONArray urls = new JSONArray();
 		images.stream().forEach(image -> {
 			urls.put(image.getImageURL());
 		});
-		json.put("imagesURLs",urls);
+		json.put("imagesURLs", urls);
 
 		// TODO: add this when we have test data for scsUser
-		//json.put("uploadedBy", scsUser.getUsername());
-		
+		// json.put("uploadedBy", scsUser.getUsername());
+
 		return json;
 	}
 
- }
+}

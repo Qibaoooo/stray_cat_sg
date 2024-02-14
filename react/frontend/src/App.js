@@ -15,6 +15,7 @@ import UploadVerification from "pages/uploadVerification";
 import RegisterPage from "pages/registerPage";
 
 import ChartAnalytics from "pages/components/chartAnalytics";
+import AdminPage from "pages/adminPage";
 
 
 
@@ -44,11 +45,9 @@ function App() {
         <Route path="/account" element={<AccountPage />} />
         <Route path="/lost" element={<LostCat />} />
         <Route path="/result" element={<CatResults />} />
-
         <Route path="/uploadVfcation" element={<UploadVerification/>}/>
-
         <Route path="/analytics" element={<ChartAnalytics/>}/>
-
+        <Route path="/admin" element={<AdminPage/>}/>
       </Routes>
     </div>
   );

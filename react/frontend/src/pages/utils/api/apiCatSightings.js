@@ -5,7 +5,25 @@ import axios from "axios";
 import { backendIP, getJsonHeadersWithJWT } from "../properties";
 
 const getAllCatSightings = () => {
-  return axios.get(`${backendIP}/api/cat_sightings`, {
+  return axios.get(`${backendIP}/api/cat_sightings?pending=false`, {
+    headers: getJsonHeadersWithJWT(),
+  });
+};
+
+const getPendingCatSightings = () => {
+  return axios.get(`${backendIP}/api/cat_sightings?pending=true`, {
+    headers: getJsonHeadersWithJWT(),
+  });
+};
+
+const approveCatSighting = (id) => {
+  return axios.post(`${backendIP}/api/cat_sightings/approve?id=${id}`, {
+    headers: getJsonHeadersWithJWT(),
+  });
+};
+
+const rejectCatSighting = (id) => {
+  return axios.delete(`${backendIP}/api/cat_sightings?id=${id}`, {
     headers: getJsonHeadersWithJWT(),
   });
 };
@@ -28,11 +46,17 @@ const createNewCatSightings = ({
     suggestedCatName,
     suggestedCatBreed,
     tempImageURLs,
-    vectorMap
+    vectorMap,
   };
   return axios.post(`${backendIP}/api/cat_sightings`, payload, {
     headers: getJsonHeadersWithJWT(),
   });
 };
 
-export { getAllCatSightings, createNewCatSightings };
+export {
+  getAllCatSightings,
+  createNewCatSightings,
+  getPendingCatSightings,
+  approveCatSighting,
+  rejectCatSighting,
+};
