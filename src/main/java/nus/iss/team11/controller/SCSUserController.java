@@ -72,11 +72,9 @@ public class SCSUserController {
 	public ResponseEntity<String> SaveSCSUserToDB(NewSCSUserRequest newUserRequest, SCSUser userToBeSaved) {
 		userToBeSaved.setUsername(newUserRequest.getUsername());
 		userToBeSaved.setPassword(newUserRequest.getPassword());
-		userToBeSaved.setOwnerVerification(newUserRequest.getOwnerVerification());
 		userToBeSaved = scsUserService.saveSCSUser(userToBeSaved);
 		return new ResponseEntity<>("Saved: " + String.valueOf(userToBeSaved.getId()), HttpStatus.OK);
 	}
-	
 	
 
 }

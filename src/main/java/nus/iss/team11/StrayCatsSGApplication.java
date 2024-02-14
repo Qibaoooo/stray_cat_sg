@@ -26,12 +26,14 @@ import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.Cat;
 import nus.iss.team11.model.CatSighting;
 import nus.iss.team11.model.Comment;
+import nus.iss.team11.model.OwnerVerification;
 import nus.iss.team11.model.SCSUser;
 import nus.iss.team11.repository.AzureImageRepository;
 import nus.iss.team11.repository.CatRepository;
 import nus.iss.team11.repository.CatSightingRepository;
 import nus.iss.team11.repository.CommentRepository;
 import nus.iss.team11.repository.LostCatRepository;
+import nus.iss.team11.repository.OwnerVerificationRepository;
 import nus.iss.team11.repository.SCSUserRepository;
 
 @SpringBootApplication
@@ -53,7 +55,7 @@ public class StrayCatsSGApplication {
 	@Bean
 	CommandLineRunner loadData(AzureImageRepository azureImageRepository, CatSightingRepository catSightingRepository,
 			CatRepository catRepository, SCSUserRepository scsUserRepository, LostCatRepository lostCatRepository,
-			CommentRepository commentRepository) {
+			CommentRepository commentRepository, OwnerVerificationRepository ownerVerificationRepository) {
 		return (args) -> {
 
 			// clean start
@@ -62,10 +64,11 @@ public class StrayCatsSGApplication {
 			catSightingRepository.deleteAll();
 			catRepository.deleteAll();
 			lostCatRepository.deleteAll();
+			ownerVerificationRepository.deleteAll();
 			scsUserRepository.deleteAll();
 
 			// init some test users
-			String[] public_users = { "public_user1", "public_user2", "public_user13" };
+			String[] public_users = { "public_user1", "public_user2", "public_user3", "public_user4", "public_user5" };
 			String[] owners = { "owner1", "owner2", "owner3" };
 			String[] admins = { "admin1", "admin2", "admin3" };
 
@@ -73,7 +76,12 @@ public class StrayCatsSGApplication {
 				SCSUser user = new SCSUser();
 				user.setUsername(u);
 				user.setPassword(encoder.encode(u));
-				scsUserRepository.save(user);
+				user = scsUserRepository.save(user);
+				
+				OwnerVerification ov = new OwnerVerification();
+				ov.setUser(user);
+				ov.setStatus("pending");
+				ownerVerificationRepository.save(ov);
 			}
 			for (String u : owners) {
 				SCSUser user = new SCSUser();

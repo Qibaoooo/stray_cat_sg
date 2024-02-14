@@ -33,8 +33,13 @@ public class SCSUser {
 	private List<CatSighting> cat_sightings;
 	@OneToOne
 	private LostCat lostCat;
-	@OneToOne
-	private OwnerVerification ownerVerification;
+	
+	@OneToOne(mappedBy="user")
+	private OwnerVerification submittedOwnerVerification; // this is for public user
+	
+	@OneToOne(mappedBy="verifiedBy")
+	private OwnerVerification reviewedOwnerVerification; // this is for admin
+	
 	@OneToMany(mappedBy = "scsUser")
 	private List<Comment> comments;
 	
