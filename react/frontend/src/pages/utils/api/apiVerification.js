@@ -1,19 +1,23 @@
 import axios from "axios";
 import { backendIP, getJsonHeadersWithJWT } from "../properties";
 
-const createNewVerification=({
+const createNewVerification = ({
+  imageURL,
+  userId,
+}) => {
+  let payload = {
     imageURL,
-    
     userId,
-})=>{
-    let payload={
-    imageURL,
-    
-    userId,
-    };
-    return axios.post(`${backendIP}/api/verification`,payload,{
-        headers: getJsonHeadersWithJWT(),
-    });
+  };
+  return axios.post(`${backendIP}/api/verification`, payload, {
+    headers: getJsonHeadersWithJWT(),
+  });
 };
 
-export{createNewVerification};
+const getPendingVerifications = () => {
+    return axios.get(`${backendIP}/api/verification`, {
+        headers: getJsonHeadersWithJWT(),
+    })
+};
+
+export { createNewVerification, getPendingVerifications };

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
 import { approveCatSighting, getPendingCatSightings, rejectCatSighting } from "./utils/api/apiCatSightings";
+import { getPendingVerifications } from "./utils/api/apiVerification";
 
-const CatSightingsApprovalTable = ({ refresh, sightings }) => {
+const CatSightingsApprovalTable = ({ refreshSighting, sightings }) => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState({});
 
   const handleApprove = () => {
     approveCatSighting(selected.id).then(resp=>{
       console.log(resp)
-      refresh()
+      refreshSighting()
       setShow(false)
     }).catch(e=>{
       console.log(e)
@@ -18,7 +19,7 @@ const CatSightingsApprovalTable = ({ refresh, sightings }) => {
   const handleReject = () => {
     rejectCatSighting(selected.id).then(resp=>{
       console.log(resp)
-      refresh()
+      refreshSighting()
       setShow(false)
     }).catch(e=>{
       console.log(e)
@@ -105,16 +106,30 @@ const CatSightingsApprovalTable = ({ refresh, sightings }) => {
 
 const AdminPage = () => {
   const [sightings, SetSightings] = useState([]);
+  const [verifications, SetVerifications] = useState([]);
 
-  const refresh = () =>{
+  const refreshSighting = () =>{
     getPendingCatSightings().then((resp) => {
       console.log(resp.data);
       SetSightings(resp.data);
     })
   }
   useEffect(() => {
-    refresh()
+    refreshSighting()
   }, []);
+
+  const refreshVerification = () =>{
+    getPendingVerifications().then((resp) => {
+      console.log(resp.data);
+      SetVerifications(resp.data);
+    })
+  }
+  useEffect(() => {
+    refreshSighting()
+    refreshVerification()
+  }, []);
+
+
 
   return (
     <div className="col-8 mx-auto">
@@ -123,7 +138,7 @@ const AdminPage = () => {
         {" "}
         <u>Cat Sightings Pending Approval</u>
       </h6>
-      <CatSightingsApprovalTable refresh={refresh} sightings={sightings} />
+      <CatSightingsApprovalTable refreshSighting={refreshSighting} sightings={sightings} />
       <br></br>
       <h6>
         {" "}
