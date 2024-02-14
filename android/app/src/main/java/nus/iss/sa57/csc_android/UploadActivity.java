@@ -114,7 +114,11 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.upload_submit) {
-            submit();
+            try {
+                submit();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         } else if (v.getId() == R.id.upload_img) {
             tempUrls = new ArrayList<>();
             Intent intent = new Intent();
