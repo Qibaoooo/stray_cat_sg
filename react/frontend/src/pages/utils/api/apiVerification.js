@@ -20,4 +20,18 @@ const getPendingVerifications = () => {
     })
 };
 
-export { createNewVerification, getPendingVerifications };
+const rejectVerifications = (id) => {
+    return axios.delete(`${backendIP}/api/verification?id=${id}`, {
+      headers: getJsonHeadersWithJWT(),
+    });
+  };
+
+
+
+const approveVerifications = (id) => {
+    return axios.post(`${backendIP}/api/verification/approve?id=${id}`, {
+      headers: getJsonHeadersWithJWT(),
+    });
+  };
+
+export { createNewVerification, getPendingVerifications,rejectVerifications,approveVerifications };
