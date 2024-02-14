@@ -12,6 +12,7 @@ import UploadVerification from "pages/uploadVerification";
 import RegisterPage from "pages/registerPage";
 import ChartAnalytics from "pages/components/chartAnalytics";
 import AdminPage from "pages/adminPage";
+import GroupingPage from "pages/groupingPage";
 
 
 
@@ -43,7 +44,8 @@ function App() {
         <Route path="/result" element={<CatResults />} />
         <Route path="/uploadVfcation" element={<UploadVerification/>}/>
         <Route path="/analytics" element={<ChartAnalytics/>}/>
-        <Route path="/admin" element={<AdminPage/>}/>
+        <Route path="/approval" element={<AdminPage/>}/>
+        <Route path="/grouping" element={<GroupingPage/>}/>
       </Routes>
     </div>
   );

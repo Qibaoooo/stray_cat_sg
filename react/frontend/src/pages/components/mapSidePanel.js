@@ -46,13 +46,35 @@ const ButtonGroups = () => {
   const imgStyles = { width: "30px", marginLeft: "20px" };
   const divStyles = { paddingBottom: "0.5rem" };
   const buttonClass = "mx-3 bg-secondary-subtle";
+  const [URLPathList, SetURLPathList] = useState([])
 
-  const URLPathList = ["/list", "/map", "/newSighting", "/lost"];
+  const PublicURLPathList = [
+    "/list",
+    "/map",
+    "/newSighting",
+    "/lost"
+  ];
+
+  const AdminURLPathList = [
+    "/approval",
+    "/grouping",
+  ]
+
+  useEffect(()=>{
+    let _urlList = [...PublicURLPathList]
+    if (getUserRole() === "ROLE_admin") {
+      _urlList = [..._urlList, ...AdminURLPathList]
+    }
+    SetURLPathList(_urlList)
+  },[])
+
   const ButtonTexts = {
     "/list": "list view",
     "/map": "map view",
     "/newSighting": "upload sighting",
     "/lost": "lost cat",
+    "/approval": "pending approvals",
+    "/grouping": "group cat sightings",
   };
 
   return (
@@ -74,16 +96,6 @@ const ButtonGroups = () => {
           </div>
         );
       })}
-      {getUserRole() === "ROLE_admin" && (
-        <Button
-          className="mx-3 bg-secondary-subtle"
-          onClick={() => {
-            window.location.href = "/admin";
-          }}
-        >
-          admin page
-        </Button>
-      )}
     </div>
   );
 };
@@ -120,9 +132,10 @@ const MapSidePanel = () => {
           <ButtonGroups />
         </div>
         <div className="my-auto"></div>
-        <Button className="btn border-0 bg-secondary" href="/analytics"><p>Go to Analytics</p></Button>
+        <Button className="btn border-0 bg-secondary" href="/analytics">
+          <p>Go to Analytics</p>
+        </Button>
       </Stack>
-      
     </div>
   );
 };
