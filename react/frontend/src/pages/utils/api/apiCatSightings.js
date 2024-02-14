@@ -53,10 +53,20 @@ const createNewCatSightings = ({
   });
 };
 
+const reassignCatSighting = (catSightingId, newCatId) => {
+  return axios.post(
+    `${backendIP}/api/reassign_sighting?catSightingId=${catSightingId}&newCatId=${newCatId}`,
+    {
+      headers: getJsonHeadersWithJWT(),
+    }
+  );
+};
+
 export {
   getAllCatSightings,
   createNewCatSightings,
   getPendingCatSightings,
   approveCatSighting,
   rejectCatSighting,
+  reassignCatSighting,
 };

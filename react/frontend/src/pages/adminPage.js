@@ -1,29 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Table } from "react-bootstrap";
-import { approveCatSighting, getPendingCatSightings, rejectCatSighting } from "./utils/api/apiCatSightings";
+import { Button, Col, Modal, Row, Table } from "react-bootstrap";
+import {
+  approveCatSighting,
+  getPendingCatSightings,
+  rejectCatSighting,
+} from "./utils/api/apiCatSightings";
 import { getPendingVerifications } from "./utils/api/apiVerification";
+import MapSidePanel from "./components/mapSidePanel";
 
 const CatSightingsApprovalTable = ({ refreshSighting, sightings }) => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState({});
 
   const handleApprove = () => {
-    approveCatSighting(selected.id).then(resp=>{
-      console.log(resp)
-      refreshSighting()
-      setShow(false)
-    }).catch(e=>{
-      console.log(e)
-    })
+    approveCatSighting(selected.id)
+      .then((resp) => {
+        console.log(resp);
+        refreshSighting();
+        setShow(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
   const handleReject = () => {
-    rejectCatSighting(selected.id).then(resp=>{
-      console.log(resp)
-      refreshSighting()
-      setShow(false)
-    }).catch(e=>{
-      console.log(e)
-    })
+    rejectCatSighting(selected.id)
+      .then((resp) => {
+        console.log(resp);
+        refreshSighting();
+        setShow(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
   const handleClose = () => setShow(false);
 
@@ -46,14 +55,18 @@ const CatSightingsApprovalTable = ({ refreshSighting, sightings }) => {
       <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>
-            Sighting <a href={`/catDetails?id=${selected.cat}`}>{selected.sightingName}</a> is pending your approval
+            Sighting{" "}
+            <a href={`/catDetails?id=${selected.cat}`}>
+              {selected.sightingName}
+            </a>{" "}
+            is pending your approval
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {Object.entries(selected).map((entry, index, array) => {
             return (
-              <p style={{maxWidth:"100%", overflow:"scroll"}}>
-                <span style={{fontWeight:"bold"}}>{entry[0]}: </span>
+              <p style={{ maxWidth: "100%", overflow: "scroll" }}>
+                <span style={{ fontWeight: "bold" }}>{entry[0]}: </span>
                 <span>{entry[1]}</span>
               </p>
             );
@@ -108,43 +121,51 @@ const AdminPage = () => {
   const [sightings, SetSightings] = useState([]);
   const [verifications, SetVerifications] = useState([]);
 
-  const refreshSighting = () =>{
+  const refreshSighting = () => {
     getPendingCatSightings().then((resp) => {
       console.log(resp.data);
       SetSightings(resp.data);
-    })
-  }
+    });
+  };
   useEffect(() => {
-    refreshSighting()
+    refreshSighting();
   }, []);
 
-  const refreshVerification = () =>{
+  const refreshVerification = () => {
     getPendingVerifications().then((resp) => {
       console.log(resp.data);
       SetVerifications(resp.data);
-    })
-  }
+    });
+  };
   useEffect(() => {
-    refreshSighting()
-    refreshVerification()
+    refreshSighting();
+    refreshVerification();
   }, []);
 
-
-
   return (
-    <div className="col-8 mx-auto">
-      <br></br>
-      <h6>
-        {" "}
-        <u>Cat Sightings Pending Approval</u>
-      </h6>
-      <CatSightingsApprovalTable refreshSighting={refreshSighting} sightings={sightings} />
-      <br></br>
-      <h6>
-        {" "}
-        <u>Owner Verifications Pending Approval</u>
-      </h6>
-    </div>
+    <Row className="g-0">
+      <Col className="g-0" xs={8}>
+        <div className="col-8 mx-auto">
+          <br></br>
+          <h6>
+            {" "}
+            <u>Cat Sightings Pending Approval</u>
+          </h6>
+          <CatSightingsApprovalTable
+            refreshSighting={refreshSighting}
+            sightings={sightings}
+          />
+          <br></br>
+          <h6>
+            {" "}
+            <u>Owner Verifications Pending Approval</u>
+          </h6>
+        </div>
+      </Col>
+      <Col className="g-0" xs={4}>
+        <MapSidePanel />
+      </Col>
+    </Row>
   );
 };
 

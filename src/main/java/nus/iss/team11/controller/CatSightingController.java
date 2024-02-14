@@ -154,6 +154,24 @@ public class CatSightingController {
 		return new ResponseEntity<>("Deleted : " + String.valueOf(csToBeDeleted.getId()), HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/api/reassign_sighting")
+	public ResponseEntity<String> reassignCatSighting(@RequestParam Integer catSightingId,
+			@RequestParam Integer newCatId) {
+		CatSighting cs = catSightingService.getCatSightingById(catSightingId);
+		if (cs == null) {
+			return new ResponseEntity<>("unknown cat sighting id.", HttpStatus.BAD_REQUEST);
+		}
+		Cat cat = catService.getCatById(newCatId);
+		if (cat == null) {
+			return new ResponseEntity<>("unknown cat id.", HttpStatus.BAD_REQUEST);
+		}
+		
+		cs.setCat(cat);
+		catSightingService.saveSighting(cs);
+		
+		return new ResponseEntity<>("updated successfully", HttpStatus.OK);
+	}
+
 	private CatSighting saveCatSightingToDB(NewCatSightingRequest newSightingRequest, CatSighting csToBeSaved)
 			throws Exception {
 
