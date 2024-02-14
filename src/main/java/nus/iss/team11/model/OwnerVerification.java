@@ -21,7 +21,7 @@ public class OwnerVerification {
 	private int id;
 	
 	@OneToOne(mappedBy="ownerVerification")
-	private SCSUser applicant;
+	private SCSUser userId;
 	
 	@OneToOne(mappedBy = "ownerVerification")
 	private AzureImage azureImage;
