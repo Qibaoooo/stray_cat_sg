@@ -11,7 +11,6 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const ChartAnalytics = () => {
     const [dataType, setDataType] = useState("Sightings");
     const [timeframe, setTimeframe] = useState("week");
-    const [data, setData] = useState([]);
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: [
@@ -43,8 +42,6 @@ const ChartAnalytics = () => {
         }
 
         fetchData.then((resp) => {
-            console.log(resp.data);
-            setData(resp.data);
             processData(resp.data, timeframe, dataType);
         });
     }, [dataType, timeframe]);
