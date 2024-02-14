@@ -8,7 +8,10 @@ const getUserinfoFromLocal = () => {
 };
 
 const getUserRole = () => {
-  return getUserinfoFromLocal().role;
+  if (!!getUserinfoFromLocal()) {
+    return getUserinfoFromLocal().role;
+  }
+  return ""
 };
 
 const clearUserInfoAndRedirectToLogin = () => {

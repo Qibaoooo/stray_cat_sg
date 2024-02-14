@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import nus.iss.team11.model.CatSighting;
+import nus.iss.team11.repository.AzureImageRepository;
 import nus.iss.team11.repository.CatSightingRepository;
 
 @Service
@@ -12,6 +13,9 @@ public class CatSightingServiceImpl implements CatSightingService {
 
 	@Autowired
 	CatSightingRepository catSightingRepository;
+	
+	@Autowired
+	AzureImageRepository azureImageRepository;
 
 	@Override
 	public List<CatSighting> getAllCatSightings() {
@@ -30,6 +34,7 @@ public class CatSightingServiceImpl implements CatSightingService {
 
 	@Override
 	public void deleteSighting(int id) {
+		azureImageRepository.deleteAllByCatSightingId(id);
 		catSightingRepository.deleteById(id);
 	}
 

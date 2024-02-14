@@ -1,5 +1,6 @@
 import {
   clearUserInfoAndReload,
+  getUserRole,
   getUserinfoFromLocal,
 } from "pages/utils/userinfo";
 import React, { useEffect, useState } from "react";
@@ -17,7 +18,9 @@ const UserSection = ({ user }) => {
           <Button
             className="btn border-0 m-auto bg-secondary"
             style={{ display: "block" }}
-            onClick={()=>{window.location.href = `/account?user=${user.id}`}}
+            onClick={() => {
+              window.location.href = `/account?user=${user.id}`;
+            }}
           >
             <RxAvatar className="my-3" size={50}></RxAvatar>
             <p>hi, {user.username}</p>
@@ -28,7 +31,7 @@ const UserSection = ({ user }) => {
         <div>
           <Button
             className="btn border-0 mx-auto bg-secondary"
-            style={{ display: "block", marginTop:"40px" }}
+            style={{ display: "block", marginTop: "40px" }}
           >
             <p>please log in</p>
           </Button>
@@ -71,6 +74,16 @@ const ButtonGroups = () => {
           </div>
         );
       })}
+      {getUserRole() === "ROLE_admin" && (
+        <Button
+          className="mx-3 bg-secondary-subtle"
+          onClick={() => {
+            window.location.href = "/admin";
+          }}
+        >
+          admin page
+        </Button>
+      )}
     </div>
   );
 };

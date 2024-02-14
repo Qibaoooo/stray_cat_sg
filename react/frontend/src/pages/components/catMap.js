@@ -25,7 +25,8 @@ const CatMap = () => {
         SetCatSightings(resp.data);
       })
       .catch(e=>{
-        clearUserInfoAndRedirectToLogin();
+        console.log(JSON.stringify(e))
+        // clearUserInfoAndRedirectToLogin();
       })
     }, [])
   
