@@ -8,12 +8,8 @@ import UploadSighting from "pages/uploadSightingPage";
 import AccountPage from "pages/accountPage";
 import LostCat from "pages/lostCat";
 import CatResults from "pages/topSimilarCats"
-
 import UploadVerification from "pages/uploadVerification";
-
-
 import RegisterPage from "pages/registerPage";
-
 import ChartAnalytics from "pages/components/chartAnalytics";
 import AdminPage from "pages/adminPage";
 

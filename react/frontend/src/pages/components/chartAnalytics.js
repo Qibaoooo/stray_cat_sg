@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllCatSightings } from "../utils/api/apiCatSightings";
 import { getAllComments } from "../utils/api/apiComment";
+import { getAllUser } from "../utils/api/apiUser";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
@@ -10,7 +11,6 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const ChartAnalytics = () => {
     const [dataType, setDataType] = useState("Sightings");
     const [timeframe, setTimeframe] = useState("week");
-    const [data, setData] = useState([]);
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: [
@@ -32,17 +32,16 @@ const ChartAnalytics = () => {
                 fetchData = getAllCatSightings();
                 break;
             case "Comments":
-                fetchData = getAllComments()
+                fetchData = getAllComments();
                 break;
             case "User sign-up Count":
-                // fetchData = getUserCount(); // Placeholder function, replace with actual API call
+                fetchData = getAllUser();
                 break;
             default:
                 fetchData = Promise.resolve({ data: [] });
         }
 
         fetchData.then((resp) => {
-            setData(resp.data);
             processData(resp.data, timeframe, dataType);
         });
     }, [dataType, timeframe]);
@@ -100,7 +99,7 @@ const ChartAnalytics = () => {
                     <select value={dataType} onChange={(e) => setDataType(e.target.value)} className="me-2">
                         <option value="Sightings">Sightings</option>
                         <option value="Comments">Comments</option>
-                        <option value="User Count">User Count</option>
+                        <option value="User sign-up Count">User Count</option>
                     </select>
                     <select value={timeframe} onChange={(e) => setTimeframe(e.target.value)} className="me-2">
                         <option value="day">Day</option>
