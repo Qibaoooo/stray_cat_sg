@@ -5,6 +5,8 @@
     <string name="host_local">http://10.0.2.2:8080</string>
     <!--AZURE HOST-->
     <string name="host_azure"></string>
+    <!--ML HOST-->
+    <string name="host_ml">https://stray-cats-ml-container.azurewebsites.net</string>
     <string name="title_activity_details">DetailsActivity</string>
     <string name="title_activity_map">MapActivity</string>
 
