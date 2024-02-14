@@ -8,6 +8,7 @@ import UploadSighting from "pages/uploadSightingPage";
 import AccountPage from "pages/accountPage";
 import LostCat from "pages/lostCat";
 import CatResults from "pages/topSimilarCats"
+<<<<<<< HEAD
 
 import UploadVerification from "pages/uploadVerification";
 
@@ -18,6 +19,10 @@ import ChartAnalytics from "pages/components/chartAnalytics";
 import AdminPage from "pages/adminPage";
 
 
+=======
+import RegisterPage from "pages/registerPage";
+import ChartAnalytics from "pages/components/chartAnalytics";
+>>>>>>> d98ce6d (Added user to the charts)
 
 const RedirectToMapPage = () => {
   useEffect(() => {

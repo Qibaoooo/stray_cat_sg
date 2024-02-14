@@ -8,4 +8,10 @@ const getUserById = (id) => {
   });
 };
 
-export { getUserById };
+const getAllUser = () => {
+  return axios.get(`${backendIP}/api/scsusers`, {
+    headers: getJsonHeadersWithJWT(),
+  });
+};
+
+export { getUserById, getAllUser };

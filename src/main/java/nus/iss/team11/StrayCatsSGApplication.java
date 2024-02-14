@@ -68,17 +68,28 @@ public class StrayCatsSGApplication {
 			String[] public_users = { "public_user1", "public_user2", "public_user13" };
 			String[] owners = { "owner1", "owner2", "owner3" };
 			String[] admins = { "admin1", "admin2", "admin3" };
+			
+			// init random sign-up dates
+			Random random = new Random();
+			 // 1 to 100 inclusive
 
+			// Subtract the random number of days from the current date
+			
+			
 			for (String u : public_users) {
 				SCSUser user = new SCSUser();
 				user.setUsername(u);
 				user.setPassword(encoder.encode(u));
+				int randomDays = 1 + random.nextInt(100);
+				user.setTime(LocalDate.now().minusDays(randomDays));
 				scsUserRepository.save(user);
 			}
 			for (String u : owners) {
 				SCSUser user = new SCSUser();
 				user.setUsername(u);
 				user.setPassword(encoder.encode(u));
+				int randomDays = 1 + random.nextInt(100);
+				user.setTime(LocalDate.now().minusDays(randomDays));
 				user.setOwner(true);
 				scsUserRepository.save(user);
 			}
@@ -87,6 +98,8 @@ public class StrayCatsSGApplication {
 				user.setUsername(u);
 				user.setPassword(encoder.encode(u));
 				user.setAdmin(true);
+				int randomDays = 1 + random.nextInt(100);
+				user.setTime(LocalDate.now().minusDays(randomDays));
 				scsUserRepository.save(user);
 			}
 
@@ -106,7 +119,6 @@ public class StrayCatsSGApplication {
 
 					cs.setSightingName(sightingName);
 					// Creating artificial cat sighting dates
-					Random random = new Random();
 					int randomDays = 1 + random.nextInt(100); // 1 to 100 inclusive
 
 					// Subtract the random number of days from the current date
@@ -165,6 +177,8 @@ public class StrayCatsSGApplication {
 			SCSUser cuser = new SCSUser();
 			cuser.setUsername("commentuser");
 			cuser.setPassword(encoder.encode("commentuser"));
+			int randomDays = 1 + random.nextInt(100);
+			cuser.setTime(LocalDate.now().minusDays(randomDays));
 			scsUserRepository.save(cuser);
 			Comment c1 = new Comment();
 			c1.setContent("comment 1");
@@ -175,11 +189,16 @@ public class StrayCatsSGApplication {
 			commentRepository.save(c1);
 			
 			// Creating more dummy comments
-			for (int i = 1; i <= 10; i++) {
+			for (int i = 1; i <= 15; i++) {
 			    // Create a new user for each comment
 			    SCSUser temp = new SCSUser();
-			    temp.setUsername("commentuser" + i); // Unique username for each user
-			    temp.setPassword(encoder.encode("password" + i)); // Assuming you want a unique password for each
+			    temp.setUsername("commentuser" + i); 
+			    temp.setPassword(encoder.encode("password" + i)); 
+			    
+			    // Creating artificial user sign up and cat sighting dates
+				randomDays = 1 + random.nextInt(100);
+				LocalDate randomDateBeforeNow = LocalDate.now().minusDays(randomDays);
+				temp.setTime(randomDateBeforeNow);
 			    scsUserRepository.save(temp); // Save the new user
 
 			    // Create a new comment
@@ -187,12 +206,11 @@ public class StrayCatsSGApplication {
 			    comment.setContent("comment " + i); // Unique content for each comment
 			    comment.setCat(csMap.get("cat_sightings_" + (i%12)).getCat()); 
 			    
-			    // Creating artificial cat sighting dates
-				Random random = new Random();
-				int randomDays = 1 + random.nextInt(100); // 1 to 100 inclusive
+			    
 
 				// Subtract the random number of days from the current date and  to Date object
-				LocalDate randomDateBeforeNow = LocalDate.now().minusDays(randomDays);
+			    // Prevent comment date to be before sign up date
+				randomDateBeforeNow = LocalDate.now().isBefore(randomDateBeforeNow.plusDays(random.nextInt(100))) ? LocalDate.now() : randomDateBeforeNow.plusDays(random.nextInt(100)) ;
 				Date date = Date.from(randomDateBeforeNow.atStartOfDay(ZoneId.systemDefault()).toInstant());
 				
 			    comment.setTime(date); 
