@@ -22,8 +22,7 @@ public class CatServiceImpl implements CatService {
 
 	@Override
 	public List<Cat> getAllCats() {
-		List<Cat> cats = catRepository.findAll();
-		return cats.stream().filter(cat -> cat.isApproved()).collect(Collectors.toList());
+		return catRepository.findAll(); 
 	}
 
 	@Override
