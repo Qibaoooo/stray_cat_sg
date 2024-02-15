@@ -1,5 +1,6 @@
 package nus.iss.team11.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,16 +19,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import nus.iss.team11.Payload.NewCatSightingRequest;
 import nus.iss.team11.Payload.NewVerificationRequest;
 import nus.iss.team11.controller.service.OwnerVerificationService;
+import nus.iss.team11.controller.service.SCSUserService;
+import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.CatSighting;
 import nus.iss.team11.model.OwnerVerification;
+import nus.iss.team11.model.SCSUser;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class OwnerVerificationController {
 	@Autowired
 	OwnerVerificationService ownerVerificationService;
+	
+	@Autowired
+	SCSUserService scsUserService;
 
-	@GetMapping(value = "/api/verifications")
+	@GetMapping(value = "/api/verification")
 	public ResponseEntity<String> getAllOV() {
 		List<OwnerVerification> OVs = ownerVerificationService.findAllOVs();
 		JSONArray json = new JSONArray();
@@ -39,17 +46,43 @@ public class OwnerVerificationController {
 		return new ResponseEntity<String>(json.toString(), HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/api/verifications")
-	public ResponseEntity<String> createOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest) {
+	@PostMapping(value = "/api/verification")
+	public ResponseEntity<String> createOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest, Principal principal) throws Exception {
+		OwnerVerification newOwnerVerification = new OwnerVerification();
+		
+		SCSUser user;
+		try {
+			user = scsUserService.getUserByUsername(principal.getName()).get();
+		} catch (Exception e) {
+			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
+		}
+		newOwnerVerification.setUser(user);
+		
 		OwnerVerification ovToBeSaved = new OwnerVerification();
-		ovToBeSaved = saveVerificationToDB(newVerificationRequest, ovToBeSaved);
+		ovToBeSaved.setStatus(newVerificationRequest.getStatus());
+		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
+		//ovToBeSaved.setUser(scsUserService.getUserByUsername(principal.getName()).get());
+		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
+		
+		//newOwnerVerification = saveVerificationToDB(newVerificationRequest, newOwnerVerification);
+		
+		//AzureImage newAzureImage = new AzureImage(newOwnerVerification);
+		//newAzureImage.setImageURL(null)
+		
 
-		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeSaved.getId()), HttpStatus.OK);
+		return new ResponseEntity<>("Saved: " + String.valueOf(newOwnerVerification.getId()), HttpStatus.OK);
 	}
 	
+	@PutMapping(value = "/api/verification")
+	public ResponseEntity<String> updateOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest,
+			@RequestParam Integer id) throws Exception {
+		OwnerVerification ovToBeUpdated = ownerVerificationService.getOwnerVerificationById(id);
+		ovToBeUpdated = saveVerificationToDB(newVerificationRequest, ovToBeUpdated);
+
+		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeUpdated.getId()), HttpStatus.OK);
+	}
 	
-	
-	@DeleteMapping(value = "/api/verifications")
+	@DeleteMapping(value = "/api/verification")
 	public ResponseEntity<String> deleteOwnerVerification(@RequestParam Integer id) {
 		OwnerVerification ovToBeDeleted = ownerVerificationService.getOwnerVerificationById(id);
 		if (ovToBeDeleted == null) {
