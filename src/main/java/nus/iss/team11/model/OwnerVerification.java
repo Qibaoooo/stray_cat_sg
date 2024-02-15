@@ -28,8 +28,7 @@ public class OwnerVerification {
 	private SCSUser verifiedBy;
 	
 	
-	@OneToOne(mappedBy = "ownerVerification")
-	private AzureImage azureImage;
+	private String ImageURL;
 	
 	private String status;
 	
