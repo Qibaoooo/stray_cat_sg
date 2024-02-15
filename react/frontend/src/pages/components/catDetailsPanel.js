@@ -98,7 +98,10 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
             </tbody>
             <p style={tdStyles}>last seen:</p>
           </table>
-          <div className="mx-1" style={{borderRadius:"2em", overflow:"hidden"}}>
+          <div
+            className="mx-1"
+            style={{ borderRadius: "2em", overflow: "hidden" }}
+          >
             <GoogleMap
               apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
               options={{ clickableIcons: false }}
