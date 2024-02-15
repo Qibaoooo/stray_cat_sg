@@ -16,7 +16,7 @@ const CatListTable = ({ viewType, filterOwnSightings, setFilterOwnSightings }) =
     if (viewType === "cat") {
       getAllCats()
         .then((resp) => {
-          console.log(resp.data);
+          // console.log(resp.data);
           SetCats(resp.data);
           SetTableCols(CatCols);
         })
@@ -27,11 +27,11 @@ const CatListTable = ({ viewType, filterOwnSightings, setFilterOwnSightings }) =
       getAllCatSightings()
         .then((resp) => {
           let data = resp.data;
-          if(filterOwnSightings == true){
+          if(filterOwnSightings == true && getUserinfoFromLocal() !== null){
             data = data.filter(cat => cat.scsUser == getUserinfoFromLocal().username)
           }
-          console.log(resp.data);
-          console.log(getUserinfoFromLocal().username);
+          // console.log(resp.data);
+          
           SetSightings(data);
           SetTableCols(SightingCols);
         })
@@ -43,7 +43,7 @@ const CatListTable = ({ viewType, filterOwnSightings, setFilterOwnSightings }) =
 
   return (
     <>
-    {viewType === "sighting" && (
+    {(viewType === "sighting" && getUserinfoFromLocal() !== null) && (
       <Form.Group controlId="filterOwnSightingsCheckbox" className="mb-3">
         <Form.Check 
           type="checkbox"
