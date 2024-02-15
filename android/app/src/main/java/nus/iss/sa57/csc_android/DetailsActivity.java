@@ -171,6 +171,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                     jsonObject.put("cat_id", catId);
                     String username = userInfoPref.getString("username", null);
                     jsonObject.put("username", username);
+                    jsonObject.put("flag", false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
