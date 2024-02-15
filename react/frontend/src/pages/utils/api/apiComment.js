@@ -12,12 +12,14 @@ let createNewComment = ({
     labels,
     cat_id,
     username,
+    flag,
   }) => {
     let payload = {
       content,
       labels,
       cat_id,
       username,
+      flag,
     };
     return axios.post(`${backendIP}/api/comments`, payload, {
       headers: getJsonHeadersWithJWT(),
