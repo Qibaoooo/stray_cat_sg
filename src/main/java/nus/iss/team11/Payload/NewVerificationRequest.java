@@ -16,6 +16,6 @@ import lombok.Setter;
 
 public class NewVerificationRequest {
 	private String ImageURL;
-	private String userId;
+	private int userId;
 	
 }

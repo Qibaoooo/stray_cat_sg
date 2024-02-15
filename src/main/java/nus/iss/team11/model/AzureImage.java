@@ -40,9 +40,6 @@ public class AzureImage {
 	@JoinColumn(name="catSighting")
 	private CatSighting catSighting;
 	
-	@OneToOne
-	@JoinColumn(name="ownerVerification")
-	private OwnerVerification ownerVerification;
 	
 	public String deriveSighting() {
 		if (fileName == null) {

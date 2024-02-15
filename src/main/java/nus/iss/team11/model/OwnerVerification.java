@@ -28,8 +28,7 @@ public class OwnerVerification {
 	private SCSUser verifiedBy;
 	
 	
-	@OneToOne(mappedBy = "ownerVerification")
-	private AzureImage azureImage;
+	private String ImageURL;
 	
 	private String status;
 	
@@ -44,4 +43,23 @@ public class OwnerVerification {
 		
 		return json;
 	}
+	
+	/*
+	String connectionString = "your_storage_account_connection_string";
+    String containerName = "your_container_name";
+    String blobName = "your_blob_name";
+
+    // Create a BlobServiceClient
+    var blobServiceClient = new BlobServiceClientBuilder().connectionString(connectionString).buildClient();
+
+    // Get the container client
+    var containerClient = blobServiceClient.getBlobContainerClient(containerName);
+
+    // Get the blob client
+    var blobClient = containerClient.getBlobClient(blobName);
+
+    // Get the URL of the blob
+    String blobUrl = blobClient.getBlobUrl();
+    System.out.println("Blob URL: " + blobUrl);
+    */
 }
