@@ -1,5 +1,6 @@
 package nus.iss.team11.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,14 +19,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import nus.iss.team11.Payload.NewCatSightingRequest;
 import nus.iss.team11.Payload.NewVerificationRequest;
 import nus.iss.team11.controller.service.OwnerVerificationService;
+import nus.iss.team11.controller.service.SCSUserService;
 import nus.iss.team11.model.CatSighting;
 import nus.iss.team11.model.OwnerVerification;
+import nus.iss.team11.model.SCSUser;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class OwnerVerificationController {
 	@Autowired
 	OwnerVerificationService ownerVerificationService;
+	
+	@Autowired
+	SCSUserService scsUserService;
 
 	@GetMapping(value = "/api/verification")
 	public ResponseEntity<String> getAllOV() {
@@ -40,11 +46,45 @@ public class OwnerVerificationController {
 	}
 
 	@PostMapping(value = "/api/verification")
-	public ResponseEntity<String> createOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest) {
+	public ResponseEntity<String> createOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest, Principal principal) {
 		OwnerVerification ovToBeSaved = new OwnerVerification();
-		ovToBeSaved = saveVerificationToDB(newVerificationRequest, ovToBeSaved);
+		
 
+		SCSUser user;
+		try {
+			user = scsUserService.getUserByUsername(principal.getName()).get();
+		} catch (Exception e) {
+			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
+		}
+		ovToBeSaved.setUser(user);
+		
+		
+		
+		ovToBeSaved = saveVerificationToDB(newVerificationRequest, ovToBeSaved);
+		ovToBeSaved.setStatus("pending");
+		
+		
 		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeSaved.getId()), HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "/api/verification")
+	public ResponseEntity<String> updateOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest,
+			@RequestParam Integer id) throws Exception {
+		OwnerVerification ovToBeUpdated = ownerVerificationService.getOwnerVerificationById(id);
+		ovToBeUpdated = saveVerificationToDB(newVerificationRequest, ovToBeUpdated);
+
+		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeUpdated.getId()), HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/api/verification/approve")
+	public ResponseEntity<String> updateApprovalStatus(@RequestParam Integer id) {
+		OwnerVerification ov = ownerVerificationService.getOwnerVerificationById(id);
+		if (ov == null) {
+			return new ResponseEntity<>("unknown cat sighting id.", HttpStatus.BAD_REQUEST);
+		}
+		ov.setStatus("Approved");
+		ownerVerificationService.saveOwnerVerification(ov);
+		return new ResponseEntity<>("Approved : " + String.valueOf(ov.getId()), HttpStatus.OK);
 	}
 	
 	
@@ -63,7 +103,7 @@ public class OwnerVerificationController {
 			OwnerVerification ovToBeSaved) {
 		ovToBeSaved.setStatus(newVerificationRequest.getStatus());
 		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
-		ovToBeSaved.setId(newVerificationRequest.getUserId());
+		//ovToBeSaved.setId(newVerificationRequest.getUserId());
 		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
 		return ovToBeSaved;
 	}
