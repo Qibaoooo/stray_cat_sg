@@ -39,6 +39,8 @@ public class Comment {
 	@ManyToOne
 	private SCSUser scsUser;
 	
+	private boolean isFlagged;
+	
 	private List<String> newlabels;
 	
 	public JSONObject toJSON() {
@@ -48,6 +50,7 @@ public class Comment {
 		json.put("content", content);
 		json.put("newlabels", newlabels);
 		json.put("scsUser", scsUser.toJSON());
+		json.put("flag", isFlagged);
 		return json;
 	}
 }

@@ -2,12 +2,12 @@ import { getAllCats } from "pages/utils/api/apiCat";
 import { getAllCatSightings } from "pages/utils/api/apiCatSightings";
 import { clearUserInfoAndRedirectToLogin } from "pages/utils/userinfo";
 import React, { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Form } from "react-bootstrap";
+import { getUserinfoFromLocal } from "pages/utils/userinfo";
 
-const CatListTable = ({ viewType }) => {
+const CatListTable = ({ viewType, filterOwnSightings, setFilterOwnSightings }) => {
   const CatCols = ["", "Cat Name", "Cat breed", "Labels"];
   const SightingCols = ["", "Sighting Name", "Location", "Time"];
-
   const [tableCols, SetTableCols] = useState(CatCols);
   const [cats, SetCats] = useState([]);
   const [sightings, SetSightings] = useState([]);
@@ -26,17 +26,33 @@ const CatListTable = ({ viewType }) => {
     } else {
       getAllCatSightings()
         .then((resp) => {
+          let data = resp.data;
+          if(filterOwnSightings == true && getUserinfoFromLocal() !== null){
+            data = data.filter(cat => cat.scsUser == getUserinfoFromLocal().username)
+          }
           console.log(resp.data);
-          SetSightings(resp.data);
+          
+          SetSightings(data);
           SetTableCols(SightingCols);
         })
         .catch((e) => {
           clearUserInfoAndRedirectToLogin();
         });
     }
-  }, [viewType]);
+  }, [viewType,filterOwnSightings]);
 
   return (
+    <>
+    {(viewType === "sighting" && getUserinfoFromLocal() !== null) && (
+      <Form.Group controlId="filterOwnSightingsCheckbox" className="mb-3">
+        <Form.Check 
+          type="checkbox"
+          label="Filter Own Sightings"
+          checked={filterOwnSightings}
+          onChange={(e) => setFilterOwnSightings(e.target.checked)}
+        />
+      </Form.Group>
+    )}
     <Table className="my-3" striped bordered={false} hover variant="primary">
       <thead>
         <tr>
@@ -90,6 +106,7 @@ const CatListTable = ({ viewType }) => {
             })}
       </tbody>
     </Table>
+    </>
   );
 };
 

@@ -22,5 +22,13 @@ CommentRepository commentrepository;
 	public List<Comment> getAll(){
 		return commentrepository.findAll();
 	}
+	
+	@Override
+	public boolean checkFlagged(int catId) {
+		if (commentrepository.getCountofFlag(catId) >0) {
+			return true;
+		}
+		return false;
+	}
 
 }

@@ -156,7 +156,7 @@ public class StrayCatsSGApplication {
 			;
 
 			// group cat sightings into cats
-			Integer approvedCount = 0;
+			Integer approvedCount = 1;
 			for (Entry<String, CatSighting> entry : csMap.entrySet()) {
 				CatSighting cs = entry.getValue();
 
@@ -166,12 +166,12 @@ public class StrayCatsSGApplication {
 				cs.setCat(cat);
 				cat.addLabel("forTesting");
 				
-				// set public_user1 as the uploader
-				Optional<SCSUser> uploader = scsUserRepository.findByUsername("public_user1");
+				// set random users as the uploader
+				Optional<SCSUser> uploader = scsUserRepository.findByUsername("public_user"+ ((approvedCount % 5) + 1));
 				cs.setScsUser(uploader.get());
 
 				// approve the first 8 sightings
-				if (approvedCount < 8) {
+				if (approvedCount < 9) {
 					cs.setApproved(true);
 					cat.setApproved(true);
 					cat.setCatBreed(getRandomBreed());
@@ -196,6 +196,7 @@ public class StrayCatsSGApplication {
 			c1.setTime(new Date());
 			c1.setScsUser(cuser);
 			c1.setNewlabels(new ArrayList<String>());
+			c1.setFlagged(random.nextInt(100) < 30); //30% chance of flagged
 			commentRepository.save(c1);
 			
 			// Creating more dummy comments
@@ -215,12 +216,13 @@ public class StrayCatsSGApplication {
 			    Comment comment = new Comment();
 			    comment.setContent("comment " + i); // Unique content for each comment
 			    comment.setCat(csMap.get("cat_sightings_" + (i%12)).getCat()); 
-			    
+			    comment.setFlagged(random.nextInt(100) < 30);
 			    
 
 				// Subtract the random number of days from the current date and  to Date object
 			    // Prevent comment date to be before sign up date
-				randomDateBeforeNow = LocalDate.now().isBefore(randomDateBeforeNow.plusDays(random.nextInt(100))) ? LocalDate.now() : randomDateBeforeNow.plusDays(random.nextInt(100)) ;
+			    LocalDate commentDate = randomDateBeforeNow.plusDays(random.nextInt(100));
+				randomDateBeforeNow = LocalDate.now().isBefore(commentDate) ? LocalDate.now() : commentDate ;
 				Date date = Date.from(randomDateBeforeNow.atStartOfDay(ZoneId.systemDefault()).toInstant());
 				
 			    comment.setTime(date); 

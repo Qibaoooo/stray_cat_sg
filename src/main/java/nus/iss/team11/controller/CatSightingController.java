@@ -26,6 +26,7 @@ import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.controller.service.AzureImageService;
 import nus.iss.team11.controller.service.CatService;
 import nus.iss.team11.controller.service.CatSightingService;
+import nus.iss.team11.controller.service.CommentService;
 import nus.iss.team11.controller.service.SCSUserService;
 import nus.iss.team11.dataUtil.CSVUtil;
 import nus.iss.team11.model.AzureImage;
@@ -45,6 +46,9 @@ public class CatSightingController {
 
 	@Autowired
 	SCSUserService scsUserService;
+	
+	@Autowired
+	CommentService commentService;
 
 	@Autowired
 	CSVUtil csvUtil;
@@ -67,7 +71,11 @@ public class CatSightingController {
 			}
 
 			JSONObject sightingJSON = sighting.toJSON();
-
+			
+			// Check if the CatSighting is flagged and add to JSON
+	        boolean isFlagged = commentService.checkFlagged(sighting.getCat().getId());
+	        sightingJSON.put("isFlagged", isFlagged);
+			
 			// We do not need VectorMap for now, but leave this here just in case for later.
 			// sightingJSON = csvUtil.appendVectorMapToSightingJSON(sighting, sightingJSON);
 

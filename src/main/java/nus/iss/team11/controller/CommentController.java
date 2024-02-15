@@ -49,7 +49,9 @@ public class CommentController {
 		String username=new_comment.getUsername();
 		String content=new_comment.getContent();
 		List<String>labels=new_comment.getLabels();
+		boolean flag = new_comment.isFlag();
 		Comment newcomment=new Comment();
+		newcomment.setFlagged(flag);
 		newcomment.setContent(content);
 		newcomment.setTime(new Date());
 		newcomment.setNewlabels(labels);
@@ -57,6 +59,7 @@ public class CommentController {
 		newcomment.setCat(catService.getCatById(new_comment.getCat_id()));
 		newcomment=commentService.saveComment(newcomment);
 		JSONObject json = newcomment.toJSON();
+		System.out.println(json.toString());
 		return new ResponseEntity<>(json.toString(), HttpStatus.OK);
 	}
 	

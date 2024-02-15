@@ -16,4 +16,5 @@ public class NewComment {
 	private List<String>labels;
 	private int cat_id;
 	private String username;
+	private boolean flag;
 }

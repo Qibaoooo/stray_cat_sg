@@ -1,35 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { createNewComment, getComments } from "pages/utils/api/apiComment";
-import { Table } from "react-bootstrap";
 import send_btn from "../../images/send_btn.png";
 import { getUserinfoFromLocal } from "pages/utils/userinfo";
 
 const CatCommentPanel = ({ id }) => {
   const [comments, setComments] = useState([]);
   const [publiccomment, setPublicComment] = useState('');
+  const [flag, setFlag] = useState(false);
   const handleCommentChange = (event) => {
     setPublicComment(event.target.value);
   };
 
+  const handleFlagChange = (event) => {
+    setFlag(event.target.checked);
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     if (publiccomment.length < 1) {
       alert("please enter comment");
       return;
     }
-
     createNewComment(
       {
         content: publiccomment,
         labels: null,
         cat_id: id,
         username: getUserinfoFromLocal().username,
+        flag: flag,
       }).then(() => {
         getComments(id).then((resp) => {
           setComments(resp.data);
         });
 
     setPublicComment('');
+    setFlag(false);
   })};
 
   useEffect(() => {
@@ -43,6 +47,7 @@ const CatCommentPanel = ({ id }) => {
         <h1 style={{ color: "#FD8293" }}><b>Comments</b></h1>
 
         {comments.length > 0 ? (comments.map(comment => {
+          let styleBox = comment.flag? { border: "2px solid black", borderCollapse: "collapse", backgroundColor: "#FFCCCB" } : {border: "2px solid black", borderCollapse: "collapse", backgroundColor: "#FFFFFF" };
           return (
             <div style={{ paddingRight: "30px" }}>
               <table width="100%"
@@ -61,7 +66,7 @@ const CatCommentPanel = ({ id }) => {
                 <tr>
                   <td>&nbsp;</td>
                   <td colSpan={2} align="left" style={{ fontSize: "20px" }}>
-                    <table width="100%" style={{ border: "2px solid black", borderCollapse: "collapse", backgroundColor: "#FFFFFF" }}>
+                    <table width="100%" style={styleBox}>
                       <tr>
                         <td style={{ paddingLeft: "5px", paddingRight: "5px" }}>
                           <div style={{ borderRadius: "10px", backgroundColor: "#ECFFEE", marginTop: "5px", marginBottom: "7px", paddingLeft: "5px", paddingRight: "5px", display: "inline-block", color: "#00B112" }}>
@@ -96,11 +101,23 @@ const CatCommentPanel = ({ id }) => {
                 onChange={handleCommentChange}
               ></input>
             </td>
-            <td width="50px">
+            <td width="50px" >
               <button onClick={handleSubmit} style={{ height: '100%', border: 'none', padding: 0 }}>
                 <img src={send_btn} alt="send_btn" style={{height:"30px", width:'30px'}}/>
               </button>
             </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td width="75%" align="left">
+              <input
+                type="checkbox"
+                checked={flag}
+                onChange={handleFlagChange}
+                /> 
+                Flag Cat to help?
+            </td>
+            <td></td>
           </tr>
           </tbody>
         </table>
