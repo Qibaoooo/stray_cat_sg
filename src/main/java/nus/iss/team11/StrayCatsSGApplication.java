@@ -220,7 +220,8 @@ public class StrayCatsSGApplication {
 
 				// Subtract the random number of days from the current date and  to Date object
 			    // Prevent comment date to be before sign up date
-				randomDateBeforeNow = LocalDate.now().isBefore(randomDateBeforeNow.plusDays(random.nextInt(100))) ? LocalDate.now() : randomDateBeforeNow.plusDays(random.nextInt(100)) ;
+			    LocalDate commentDate = randomDateBeforeNow.plusDays(random.nextInt(100));
+				randomDateBeforeNow = LocalDate.now().isBefore(commentDate) ? LocalDate.now() : commentDate ;
 				Date date = Date.from(randomDateBeforeNow.atStartOfDay(ZoneId.systemDefault()).toInstant());
 				
 			    comment.setTime(date); 
