@@ -13,8 +13,8 @@ const LostCatForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (getUserRole() !== "ROLE_onwer") {
+    console.log(getUserRole())
+    if (getUserRole() !== "ROLE_owner") {
       alert("only approved onwers are allowed to use this function.");
       return
     }
