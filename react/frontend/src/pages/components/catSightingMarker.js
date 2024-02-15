@@ -26,6 +26,7 @@ const CatSightingMarker = ({ sighting, isUserPosted }) => {
         borderRadius: "40%" 
     };
 
+    
     let markerIcon = "🐱";
 
     if (isUserPosted && flagged) {
