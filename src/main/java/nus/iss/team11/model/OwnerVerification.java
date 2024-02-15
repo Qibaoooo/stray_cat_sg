@@ -1,5 +1,7 @@
 package nus.iss.team11.model;
 
+import org.json.JSONObject;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,14 +22,26 @@ public class OwnerVerification {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@OneToOne(mappedBy="ownerVerification")
-	private SCSUser applicant;
+	@OneToOne
+	private SCSUser user;
+	@OneToOne
+	private SCSUser verifiedBy;
+	
 	
 	@OneToOne(mappedBy = "ownerVerification")
 	private AzureImage azureImage;
 	
 	private String status;
 	
-	@OneToOne(mappedBy="ownerVerification")
-	private SCSUser verifiedBy;
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("id", id);
+		json.put("user", user.getId());
+		json.put("status", status);
+		if (verifiedBy != null) {			
+			json.put("verifiedBy", verifiedBy.getId());
+		}
+		
+		return json;
+	}
 }

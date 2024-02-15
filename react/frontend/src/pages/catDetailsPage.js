@@ -16,9 +16,12 @@ const CatDetailsPage = () => {
 
   useEffect(() => {
     getCat(id).then((resp) => {
-      console.log(resp.data)
       SetCat(resp.data);
-      SetImgUrl(resp.data.catSightings[0].imagesURLs);
+      let _urls = []
+      resp.data.catSightings.forEach((sighting) => {
+        _urls = [..._urls, ...sighting.imagesURLs]
+      });
+      SetImgUrl(_urls);
     });
   }, []);
 

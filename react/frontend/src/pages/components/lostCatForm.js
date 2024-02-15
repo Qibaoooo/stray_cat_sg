@@ -1,47 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import ImagePicker from "./imagePicker";
 import { sendCatVector } from "pages/utils/api/apiLostCat";
 import { useNavigate } from "react-router-dom";
+import { getUserRole } from "pages/utils/userinfo";
 
 const LostCatForm = () => {
   const [validated, setValidated] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
   const [vectorMap, setVectorMap] = useState({});
-  const navigate  = useNavigate();
-
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
-    const form = event.currentTarget;
-    
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
+    console.log(getUserRole())
+    if (getUserRole() !== "ROLE_owner") {
+      alert("only approved onwers are allowed to use this function.");
       return
     }
-    
-    const suggestedCatName = (document.getElementById("SuggestedCatName").value)
-    const observedCatbreed = (document.getElementById("ObservedCatbreed").value)
-    
+
+    const form = event.currentTarget;
+
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      return;
+    }
+
+    const suggestedCatName = document.getElementById("SuggestedCatName").value;
+    const observedCatbreed = document.getElementById("ObservedCatbreed").value;
+
     if (imageURLs.length < 1) {
       alert("please at least upload one photo");
       return;
     }
 
-    sendCatVector(
-      {
-        vectorMap: vectorMap,
-        tempImageURLs: imageURLs,
-        suggestedCatName: suggestedCatName,
-        suggestedCatBreed: observedCatbreed,
-      }).then(
-        resp=>{
-          const simplifiedMatches = JSON.stringify(resp);
-          navigate("/result", {state:{ matches: simplifiedMatches}});
-        }
-      )
-
+    sendCatVector({
+      vectorMap: vectorMap,
+      tempImageURLs: imageURLs,
+      suggestedCatName: suggestedCatName,
+      suggestedCatBreed: observedCatbreed,
+    })
+      .then((resp) => {
+        const simplifiedMatches = JSON.stringify(resp);
+        navigate("/result", { state: { matches: simplifiedMatches } });
+      })
+      .catch((e) => console.log(e));
 
     setValidated(true);
   };
@@ -59,6 +62,7 @@ const LostCatForm = () => {
         requireVectors={true}
         vectorMap={vectorMap}
         setVectorMap={setVectorMap}
+        maxImageCount={1}
       ></ImagePicker>
       <hr></hr>
       <Form.Group className="mb-3" controlId="SuggestedCatName">
@@ -70,7 +74,7 @@ const LostCatForm = () => {
       </Form.Group>
       <Form.Group className="mb-3" controlId="ObservedCatbreed">
         <Form.Label>Breed of your cat:</Form.Label>
-        <Form.Control type="text" required={false}/>
+        <Form.Control type="text" required={false} />
       </Form.Group>
       <hr></hr>
       <Button className="bg-secondary-subtle" type="submit">

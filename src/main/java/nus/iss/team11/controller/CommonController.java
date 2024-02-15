@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,10 +25,13 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import nus.iss.team11.controller.payload.JwtResponse;
 import nus.iss.team11.controller.payload.LoginRequest;
+import nus.iss.team11.controller.payload.RegisterRequest;
+import nus.iss.team11.controller.service.SCSUserService;
 import nus.iss.team11.security.JwtUtils;
 import nus.iss.team11.security.UserDetailsImpl;
 import nus.iss.team11.model.AzureImage;
 import nus.iss.team11.model.CatSighting;
+import nus.iss.team11.model.SCSUser;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -40,6 +45,9 @@ public class CommonController {
 	
 	@Value("${SCS.app.jwtExpirationMs}")
 	private int jwtExpirationMs;
+	
+	@Autowired
+	SCSUserService scsUserService;
 
 	@Autowired
 	JwtUtils jwtUtils;
@@ -58,6 +66,22 @@ public class CommonController {
 		String role = userDetails.getAuthorities().iterator().next().toString();
 		
 		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), role, expiration.getTime()));
+	}
+	
+	@PostMapping(value = "/api/auth/register")
+	public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest loginRequest) {
+		Optional<SCSUser> user = scsUserService.getUserByUsername(loginRequest.getUsername());
+		if (!user.isEmpty()) {
+			return new ResponseEntity<>("user already exists", HttpStatus.BAD_REQUEST);
+		}
+		
+		SCSUser newUser = new SCSUser();
+		newUser.setUsername(loginRequest.getUsername());
+		newUser.setPassword(encoder.encode(loginRequest.getPassword()));
+		
+		newUser = scsUserService.saveSCSUser(newUser);
+		
+		return new ResponseEntity<>("new user created: "+newUser.getId(), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/logout")

@@ -34,8 +34,12 @@ public class Comment {
 	
 	private Date time;
 	
+//	private boolean isHighLight
+	
 	@ManyToOne
 	private SCSUser scsUser;
+	
+	private boolean isFlagged;
 	
 	private List<String> newlabels;
 	
@@ -46,6 +50,7 @@ public class Comment {
 		json.put("content", content);
 		json.put("newlabels", newlabels);
 		json.put("scsUser", scsUser.toJSON());
+		json.put("flag", isFlagged);
 		return json;
 	}
 }

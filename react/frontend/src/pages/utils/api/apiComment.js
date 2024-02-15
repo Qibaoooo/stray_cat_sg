@@ -12,16 +12,24 @@ let createNewComment = ({
     labels,
     cat_id,
     username,
+    flag,
   }) => {
     let payload = {
       content,
       labels,
       cat_id,
       username,
+      flag,
     };
     return axios.post(`${backendIP}/api/comments`, payload, {
       headers: getJsonHeadersWithJWT(),
     });
-  };
+};
 
-export { getComments, createNewComment};
+let getAllComments = () => {
+  return axios.get(`${backendIP}/api/getallcomments`,{
+    headers: getJsonHeadersWithJWT(),
+  });
+};
+
+export { getComments, createNewComment, getAllComments};

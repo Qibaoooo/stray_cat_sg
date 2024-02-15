@@ -1,7 +1,7 @@
 package nus.iss.team11.model;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 
@@ -29,12 +29,18 @@ public class SCSUser {
 	private String password;
 	private boolean isAdmin;
 	private boolean isOwner;
+	private LocalDate time;
 	@OneToMany(mappedBy = "scsUser")
 	private List<CatSighting> cat_sightings;
 	@OneToOne
 	private LostCat lostCat;
-	@OneToOne
-	private OwnerVerification ownerVerification;
+	
+	@OneToOne(mappedBy="user")
+	private OwnerVerification submittedOwnerVerification; // this is for public user
+	
+	@OneToOne(mappedBy="verifiedBy")
+	private OwnerVerification reviewedOwnerVerification; // this is for admin
+	
 	@OneToMany(mappedBy = "scsUser")
 	private List<Comment> comments;
 	
@@ -45,6 +51,7 @@ public class SCSUser {
 		json.put("username", username);
 		json.put("isAdmin", isAdmin);
 		json.put("isOwner", isOwner);
+		json.put("time", time);
 		return json;
 	}
 }

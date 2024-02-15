@@ -4,7 +4,10 @@ import banner from "../images/top_banner.png";
 import { RxAvatar } from "react-icons/rx";
 import { useSearchParams } from "react-router-dom";
 import { getUserById } from "./utils/api/apiUser";
-import { clearUserInfoAndRedirectToLogin } from "./utils/userinfo";
+import {
+  clearUserInfoAndRedirectToLogin,
+  getUserinfoFromLocal,
+} from "./utils/userinfo";
 import LoginLogoutButton from "./components/loginLogoutButton";
 
 const accountPageButtonClass = "m-auto my-3 border-1 bg-secondary";
@@ -16,6 +19,8 @@ const OwnerButton = ({ user }) => {
       onClick={() => {
         if (!!user.isOwner) {
           window.location.href = "/newSighting";
+        } else {
+          window.location.href = "/uploadVfcation";
         }
       }}
     >
@@ -45,14 +50,12 @@ const AccountPage = () => {
   });
 
   useEffect(() => {
-    getUserById(userId)
-      .then((resp) => {
-        console.log(resp.data);
-        SetUser({ ...user, ...resp.data });
-      })
-      .catch((e) => {
-        clearUserInfoAndRedirectToLogin();
-      });
+    const _user = getUserinfoFromLocal();
+    if (!_user) {
+      window.location.href = "/"
+    }
+    _user.isOwner = (_user.role === "ROLE_owner")
+    SetUser(_user);
   }, []);
 
   return (
@@ -71,7 +74,13 @@ const AccountPage = () => {
             className="my-3 bg-primary rounded-circle"
             size={80}
           ></RxAvatar>
-          <p>hi, {user.username}</p>
+          <p>
+            <em>{user.username}</em>
+          </p>
+          <p>
+            your role is:
+            <em>{user.role}</em>
+          </p>
         </div>
         <Stack direction="horizontal">
           <OwnerButton user={user}></OwnerButton>

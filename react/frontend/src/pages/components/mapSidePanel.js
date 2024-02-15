@@ -1,5 +1,6 @@
 import {
   clearUserInfoAndReload,
+  getUserRole,
   getUserinfoFromLocal,
 } from "pages/utils/userinfo";
 import React, { useEffect, useState } from "react";
@@ -17,7 +18,9 @@ const UserSection = ({ user }) => {
           <Button
             className="btn border-0 m-auto bg-secondary"
             style={{ display: "block" }}
-            onClick={()=>{window.location.href = `/account?user=${user.id}`}}
+            onClick={() => {
+              window.location.href = `/account?user=${user.id}`;
+            }}
           >
             <RxAvatar className="my-3" size={50}></RxAvatar>
             <p>hi, {user.username}</p>
@@ -28,7 +31,7 @@ const UserSection = ({ user }) => {
         <div>
           <Button
             className="btn border-0 mx-auto bg-secondary"
-            style={{ display: "block", marginTop:"40px" }}
+            style={{ display: "block", marginTop: "40px" }}
           >
             <p>please log in</p>
           </Button>
@@ -43,13 +46,35 @@ const ButtonGroups = () => {
   const imgStyles = { width: "30px", marginLeft: "20px" };
   const divStyles = { paddingBottom: "0.5rem" };
   const buttonClass = "mx-3 bg-secondary-subtle";
+  const [URLPathList, SetURLPathList] = useState([])
 
-  const URLPathList = ["/list", "/map", "/newSighting", "/lost"];
+  const PublicURLPathList = [
+    "/list",
+    "/map",
+    "/newSighting",
+    "/lost"
+  ];
+
+  const AdminURLPathList = [
+    "/approval",
+    "/grouping",
+  ]
+
+  useEffect(()=>{
+    let _urlList = [...PublicURLPathList]
+    if (getUserRole() === "ROLE_admin") {
+      _urlList = [..._urlList, ...AdminURLPathList]
+    }
+    SetURLPathList(_urlList)
+  },[])
+
   const ButtonTexts = {
     "/list": "list view",
     "/map": "map view",
     "/newSighting": "upload sighting",
     "/lost": "lost cat",
+    "/approval": "pending approvals",
+    "/grouping": "group cat sightings",
   };
 
   return (
@@ -73,10 +98,6 @@ const ButtonGroups = () => {
       })}
     </div>
   );
-};
-
-const SocialMediaIcons = () => {
-  return <p>SocialMediaIcons</p>;
 };
 
 const MapSidePanel = () => {
@@ -107,7 +128,12 @@ const MapSidePanel = () => {
           <ButtonGroups />
         </div>
         <div className="my-auto"></div>
-        <SocialMediaIcons />
+        {getUserRole() === "ROLE_admin" && 
+        <Button className="btn border-0 bg-secondary" href="/analytics">
+          <p>Go to Analytics</p>
+        </Button>
+        }
+        
       </Stack>
     </div>
   );

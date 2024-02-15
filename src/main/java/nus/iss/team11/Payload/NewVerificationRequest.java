@@ -3,18 +3,19 @@ package nus.iss.team11.Payload;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+
+
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewComment {
-	private String content;
-	private List<String>labels;
-	private int cat_id;
-	private String username;
-	private boolean flag;
+
+public class NewVerificationRequest {
+	private String ImageURL;
+	private String userId;
+	
 }

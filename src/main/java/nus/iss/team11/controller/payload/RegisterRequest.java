@@ -1,6 +1,4 @@
-package nus.iss.team11.Payload;
-
-import java.util.List;
+package nus.iss.team11.controller.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewComment {
-	private String content;
-	private List<String>labels;
-	private int cat_id;
+public class RegisterRequest {
 	private String username;
-	private boolean flag;
+	private String password;
 }

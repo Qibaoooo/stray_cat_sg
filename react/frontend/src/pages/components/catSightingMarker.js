@@ -2,15 +2,51 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import "./catSightingMarker.css";
 
-const CatSightingMarker = ({ sighting }) => {
+const CatSightingMarker = ({ sighting, isUserPosted }) => {
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const toggleInfoWindow = () => {
     setShowInfoWindow(!showInfoWindow);
   };
-
   const closeInfoWindow = () => {
     setShowInfoWindow(false);
   };
+  
+  const flagged = sighting.isFlagged;
+  console.log(flagged);
+  let emojiStyle = {
+    margin: 0, 
+    lineHeight: "normal", 
+    display: "inline-block", 
+  };
+
+  const renderMarker = () => {
+    let markerStyle = {
+        padding: "2px 2px 4px 2px",
+        display: "inline-block",
+        borderRadius: "40%" 
+    };
+
+    
+    let markerIcon = "🐱";
+
+    if (isUserPosted && flagged) {
+        // Both conditions are true
+        markerStyle = { ...markerStyle, backgroundColor: "purple" }; 
+  
+    } else if (isUserPosted) {
+        // Only isUserPosted is true
+        markerStyle = { ...markerStyle, backgroundColor: "red" };
+    } else if (flagged) {
+      markerStyle = { ...markerStyle, backgroundColor: "yellow" };
+    } 
+    
+
+    return (
+        <div style={markerStyle}>
+            <h3 style={emojiStyle}>{markerIcon}</h3>
+        </div>
+    );
+};
 
   return (
     <div style={{ position: "relative" }}>
@@ -19,7 +55,7 @@ const CatSightingMarker = ({ sighting }) => {
         style={{ backgroundColor: "transparent", border: "0px" }}
         onClick={toggleInfoWindow}
       >
-        <h3>🐱</h3>
+        {renderMarker()}
       </Button>
 
       {showInfoWindow && (

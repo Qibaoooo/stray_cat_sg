@@ -35,7 +35,7 @@ public class CommentController {
 
 	@GetMapping(value = "/api/comments/{id}")
 	public ResponseEntity<String> getComments(@PathVariable Integer id) {
-		Cat cat = catService.findCatById(id);
+		Cat cat = catService.getCatById(id);
 		List<Comment> comments = cat.getComments();
 		JSONArray ncomments = new JSONArray();
 		comments.stream().forEach(comment -> {
@@ -49,15 +49,31 @@ public class CommentController {
 		String username=new_comment.getUsername();
 		String content=new_comment.getContent();
 		List<String>labels=new_comment.getLabels();
+		boolean flag = new_comment.isFlag();
 		Comment newcomment=new Comment();
+		newcomment.setFlagged(flag);
 		newcomment.setContent(content);
 		newcomment.setTime(new Date());
 		newcomment.setNewlabels(labels);
 		newcomment.setScsUser(userService.findUserByUsername(username));
-		newcomment.setCat(catService.findCatById(new_comment.getCat_id()));
+		newcomment.setCat(catService.getCatById(new_comment.getCat_id()));
 		newcomment=commentService.saveComment(newcomment);
 		JSONObject json = newcomment.toJSON();
+		System.out.println(json.toString());
 		return new ResponseEntity<>(json.toString(), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/api/getallcomments")
+	public ResponseEntity<String> getAllComments(){
+		JSONArray comments = new JSONArray();
+
+		commentService.getAll().stream().forEach(sighting -> {
+			JSONObject sightingJSON = sighting.toJSON();
+			comments.put(sightingJSON);
+		});
+		
+		
+		return new ResponseEntity<>(comments.toString(), HttpStatus.OK);
 	}
 	
 }
