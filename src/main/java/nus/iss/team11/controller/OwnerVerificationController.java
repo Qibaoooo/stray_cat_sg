@@ -27,7 +27,7 @@ public class OwnerVerificationController {
 	@Autowired
 	OwnerVerificationService ownerVerificationService;
 
-	@GetMapping(value = "/api/verifications")
+	@GetMapping(value = "/api/verification")
 	public ResponseEntity<String> getAllOV() {
 		List<OwnerVerification> OVs = ownerVerificationService.findAllOVs();
 		JSONArray json = new JSONArray();
@@ -39,7 +39,7 @@ public class OwnerVerificationController {
 		return new ResponseEntity<String>(json.toString(), HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/api/verifications")
+	@PostMapping(value = "/api/verification")
 	public ResponseEntity<String> createOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest) {
 		OwnerVerification ovToBeSaved = new OwnerVerification();
 		ovToBeSaved = saveVerificationToDB(newVerificationRequest, ovToBeSaved);
@@ -49,7 +49,7 @@ public class OwnerVerificationController {
 	
 	
 	
-	@DeleteMapping(value = "/api/verifications")
+	@DeleteMapping(value = "/api/verification")
 	public ResponseEntity<String> deleteOwnerVerification(@RequestParam Integer id) {
 		OwnerVerification ovToBeDeleted = ownerVerificationService.getOwnerVerificationById(id);
 		if (ovToBeDeleted == null) {
