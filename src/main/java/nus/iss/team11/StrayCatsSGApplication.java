@@ -196,6 +196,7 @@ public class StrayCatsSGApplication {
 			c1.setTime(new Date());
 			c1.setScsUser(cuser);
 			c1.setNewlabels(new ArrayList<String>());
+			c1.setFlagged(random.nextInt(100) < 30); //30% chance of flagged
 			commentRepository.save(c1);
 			
 			// Creating more dummy comments
@@ -215,7 +216,7 @@ public class StrayCatsSGApplication {
 			    Comment comment = new Comment();
 			    comment.setContent("comment " + i); // Unique content for each comment
 			    comment.setCat(csMap.get("cat_sightings_" + (i%12)).getCat()); 
-			    
+			    comment.setFlagged(random.nextInt(100) < 30);
 			    
 
 				// Subtract the random number of days from the current date and  to Date object

@@ -30,7 +30,7 @@ const CatListTable = ({ viewType, filterOwnSightings, setFilterOwnSightings }) =
           if(filterOwnSightings == true && getUserinfoFromLocal() !== null){
             data = data.filter(cat => cat.scsUser == getUserinfoFromLocal().username)
           }
-          // console.log(resp.data);
+          console.log(resp.data);
           
           SetSightings(data);
           SetTableCols(SightingCols);

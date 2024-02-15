@@ -8,4 +8,5 @@ public interface CommentService {
 
 	Comment saveComment(Comment comment);
 	List<Comment> getAll();
+	boolean checkFlagged(int catId);
 }

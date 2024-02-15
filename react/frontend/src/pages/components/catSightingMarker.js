@@ -10,33 +10,36 @@ const CatSightingMarker = ({ sighting, isUserPosted }) => {
   const closeInfoWindow = () => {
     setShowInfoWindow(false);
   };
+  
+  const flagged = sighting.isFlagged;
+  console.log(flagged);
   let emojiStyle = {
-    margin: 0, // Removes default margin
-    lineHeight: "normal", // Adjusts line height to reduce space
-    display: "inline-block", // Ensures the emoji is treated as inline-block
+    margin: 0, 
+    lineHeight: "normal", 
+    display: "inline-block", 
   };
 
   const renderMarker = () => {
-    // Define base style
     let markerStyle = {
         padding: "2px 2px 4px 2px",
         display: "inline-block",
-        borderRadius: "40%" // Keeping a consistent shape for all markers
+        borderRadius: "40%" 
     };
 
-    // Define base icon
     let markerIcon = "🐱";
 
-    if (isUserPosted ) {
+    if (isUserPosted && flagged) {
         // Both conditions are true
         markerStyle = { ...markerStyle, backgroundColor: "purple" }; 
   
     } else if (isUserPosted) {
         // Only isUserPosted is true
         markerStyle = { ...markerStyle, backgroundColor: "red" };
+    } else if (flagged) {
+      markerStyle = { ...markerStyle, backgroundColor: "yellow" };
     } 
+    
 
-    // Return the marker with dynamic styles and icon
     return (
         <div style={markerStyle}>
             <h3 style={emojiStyle}>{markerIcon}</h3>
