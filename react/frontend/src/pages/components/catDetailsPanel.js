@@ -1,4 +1,6 @@
+import GoogleMap from "google-maps-react-markers";
 import { getCat } from "pages/utils/api/apiCat";
+import { SingaporeGeoCoord } from "pages/utils/properties";
 import React, { useEffect, useState } from "react";
 import { Carousel, Stack } from "react-bootstrap";
 
@@ -45,34 +47,34 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
           );
         })}
       </Carousel>
-      <div
-        className="mx-3"
-        style={{
-          border: "4px solid black",
-          borderRadius: "2rem",
-          textAlign: "center",
-          backgroundColor: "white",
-          overflow: "hidden",
-          width: "550px",
-          height: "250px",
-        }}
-      >
-        <h5
+      {Object.keys(cat).length !== 0 && (
+        <div
+          className="mx-3"
           style={{
-            fontSize: "1.5rem",
-            fontFamily: "Comic Sans MS, cursive",
-            padding: "15px",
-            fontWeight: "bold",
+            border: "4px solid black",
+            borderRadius: "2rem",
+            textAlign: "center",
+            backgroundColor: "white",
+            overflow: "hidden",
+            width: "550px",
+            height: "50vh",
           }}
         >
-          Cat Details
-        </h5>
-        <table
-          cellPadding={3}
-          cellSpacing={0}
-          style={{ borderCollapse: "collapse", margin: "auto" }}
-        >
-          {Object.keys(cat).length !== 0 && (
+          <h5
+            style={{
+              fontSize: "1.5rem",
+              fontFamily: "Comic Sans MS, cursive",
+              padding: "15px",
+              fontWeight: "bold",
+            }}
+          >
+            Cat Details
+          </h5>
+          <table
+            cellPadding={3}
+            cellSpacing={0}
+            style={{ borderCollapse: "collapse", margin: "auto" }}
+          >
             <tbody>
               <tr>
                 <td style={tdStyles}>Name:</td>
@@ -92,18 +94,33 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
                   <span style={contentStyle}>{cat.labels}</span>
                 </td>
               </tr>
-              <tr>
-                <td style={tdStyles}>Last seen:</td>
-                <td>
-                  <span style={contentStyle}>
-                    {`lat: ${cat.catSightings[0].locationLat} lng: ${cat.catSightings[0].locationLong}`}
-                  </span>
-                </td>
-              </tr>
+              <tr></tr>
             </tbody>
-          )}
-        </table>
-      </div>
+            <p style={tdStyles}>last seen:</p>
+          </table>
+          <div className="mx-1" style={{borderRadius:"2em", overflow:"hidden"}}>
+            <GoogleMap
+              apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+              options={{ clickableIcons: false }}
+              defaultCenter={SingaporeGeoCoord}
+              defaultZoom={11}
+              onGoogleApiLoaded={() => {}}
+              onChange={() => {}}
+              mapMinHeight="30vh"
+            >
+              <h3
+                data-toggle="tooltip"
+                data-placement="top"
+                title={`lat: ${cat.catSightings[0].locationLat} | lng: ${cat.catSightings[0].locationLong}`}
+                lat={cat.catSightings[0].locationLat}
+                lng={cat.catSightings[0].locationLong}
+              >
+                📍
+              </h3>
+            </GoogleMap>
+          </div>
+        </div>
+      )}
     </Stack>
   );
 };
