@@ -59,6 +59,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_details);
         HOST = getResources().getString(R.string.host_local);
         userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        checkLoginStatus();
 
         View nav_bar = findViewById(R.id.nav_bar);
         NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
@@ -220,6 +221,16 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         }).start();
+    }
+
+    private void checkLoginStatus(){
+        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        if(userInfoPref.getString("username", null) == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("notLoggedin", true);
+            finish();
+            startActivity(intent);
+        }
     }
 
 }

@@ -18,6 +18,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+        checkLoginStatus();
 
         View nav_bar = findViewById(R.id.nav_bar);
         NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
@@ -57,6 +58,15 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             editor.commit();
             finish();
             Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+    private void checkLoginStatus(){
+        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        if(userInfoPref.getString("username", null) == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("notLoggedin", true);
+            finish();
             startActivity(intent);
         }
     }

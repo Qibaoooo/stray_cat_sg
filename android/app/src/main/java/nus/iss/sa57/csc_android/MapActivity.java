@@ -45,7 +45,7 @@ public class MapActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        checkLoginStatus();
         binding = ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -53,8 +53,7 @@ public class MapActivity extends FragmentActivity
         if (listPref.getBoolean("isFetched", false)) {
             String responseData = listPref.getString("listData", null);
             try {
-                Type listType = new TypeToken<List<CatSighting>>() {
-                }.getType();
+                Type listType = new TypeToken<List<CatSighting>>() {}.getType();
                 Gson gson = new Gson();
                 csList = gson.fromJson(responseData, listType);
             } catch (JsonSyntaxException e) {
@@ -124,9 +123,20 @@ public class MapActivity extends FragmentActivity
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.upload_btn) {
-            //goto upload activity
+            Intent intent = new Intent(this, UploadActivity.class);
+            startActivity(intent);
         } else if (v.getId() == R.id.list_btn) {
             Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void checkLoginStatus(){
+        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        if(userInfoPref.getString("username", null) == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("notLoggedin", true);
+            finish();
             startActivity(intent);
         }
     }

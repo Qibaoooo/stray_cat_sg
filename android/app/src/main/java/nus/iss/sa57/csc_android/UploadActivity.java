@@ -43,15 +43,14 @@ import java.util.List;
 import java.util.Map;
 
 import nus.iss.sa57.csc_android.databinding.ActivityMapBinding;
-import nus.iss.sa57.csc_android.model.CatSighting;
+import nus.iss.sa57.csc_android.databinding.ActivityUploadBinding;
 import nus.iss.sa57.csc_android.payload.CatSightingResponse;
-import nus.iss.sa57.csc_android.payload.LoginResponse;
 import nus.iss.sa57.csc_android.utils.HttpHelper;
 
 public class UploadActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private GoogleMap mMap;
-    private ActivityMapBinding binding;
+    private ActivityUploadBinding binding;
     private LocationManager locationManager;
     private LatLng center;
     private static String HOST;
@@ -66,12 +65,14 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload);
+        //setContentView(R.layout.activity_upload);
         HOST = getResources().getString(R.string.host_local);
         ML_HOST = getResources().getString(R.string.host_ml);
         userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        checkLoginStatus();
+        Log.d("UploadActivity", "111");
 
-        binding = ActivityMapBinding.inflate(getLayoutInflater());
+        binding = ActivityUploadBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -79,9 +80,8 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
         nameView = findViewById(R.id.upload_name);
         breedView = findViewById(R.id.upload_breed);
         Button submit_btn = findViewById(R.id.upload_submit);
-        submit_btn.setOnClickListener(this);
-
         ImageView upload_img = findViewById(R.id.upload_img);
+        submit_btn.setOnClickListener(this);
         upload_img.setOnClickListener(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -91,6 +91,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("UploadActivity", "OnMapReady");
         mMap = googleMap;
 
         center = new LatLng(1.3, 103.85);
@@ -99,8 +100,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
 
         mMap.moveCamera(cameraUpdate);
 
-        Marker centerMarker = mMap.addMarker(new MarkerOptions());
-        centerMarker.setPosition(center);
+        Marker centerMarker = mMap.addMarker(new MarkerOptions().position(center));
 
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
@@ -321,5 +321,15 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
             }
         });
+    }
+
+    private void checkLoginStatus(){
+        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        if(userInfoPref.getString("username", null) == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("notLoggedin", true);
+            finish();
+            startActivity(intent);
+        }
     }
 }

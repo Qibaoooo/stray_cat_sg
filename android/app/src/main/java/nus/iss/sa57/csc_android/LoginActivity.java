@@ -46,6 +46,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         HOST = getResources().getString(R.string.host_local);
+        Intent intent = getIntent();
+        if(intent.getBooleanExtra("notLoggedin", false)){
+            Toast.makeText(this, "Please Login!", Toast.LENGTH_SHORT).show();
+        }
 
         userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
         loginPref = getSharedPreferences("login_info", MODE_PRIVATE);
@@ -139,6 +143,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         runOnUiThread(() -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            finish();
                             startActivity(intent);
                         });
                     } else {

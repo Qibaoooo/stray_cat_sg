@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static String HOST;
     private List<CatSighting> csList = new ArrayList<>();
     private SharedPreferences listPref;
+    private ProgressBar progressBar;
+    private TextView progressText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         HOST = getResources().getString(R.string.host_local);
 
+        checkLoginStatus();
         setupButtons();
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setProgress(0);
+        progressText = findViewById(R.id.progressText);
 
         listPref = getSharedPreferences("list_info", MODE_PRIVATE);
         if (listPref.getBoolean("isFetched", false)) {
@@ -77,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.upload_btn) {
-            //goto upload activity
+            Intent intent = new Intent(this, UploadActivity.class);
+            startActivity(intent);
         } else if (v.getId() == R.id.map_btn) {
             Intent intent = new Intent(this, MapActivity.class);
             startActivity(intent);
@@ -92,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void fetchCatSightingList() {
-
+        progressText.setText("Fetching Cat Sighting List...");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -124,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        progressBar.setProgress(100);
                         downloadImgFiles();
                     }
                 });
@@ -145,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             sum += cs.getImagesURLs().size();
         }
         final CountDownLatch latch = new CountDownLatch(sum);
+        progressText.setText("Downloading Images...");
+        progressBar.setProgress(0);
         //for (int i = 0; i < csList.size(); i++) {
         //    CatSighting cs = csList.get(i);
         for (CatSighting cs : csList) {
@@ -164,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            progressBar.setProgress(100);
+
                             setupList();
                         }
                     });
@@ -179,6 +193,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+    }
+
+    private void checkLoginStatus(){
+        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        if(userInfoPref.getString("username", null) == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("notLoggedin", true);
+            finish();
+            startActivity(intent);
+        }
     }
 
 }
