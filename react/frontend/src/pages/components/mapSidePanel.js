@@ -132,9 +132,12 @@ const MapSidePanel = () => {
           <ButtonGroups />
         </div>
         <div className="my-auto"></div>
+        {getUserRole() == "ROLE_admin" && 
         <Button className="btn border-0 bg-secondary" href="/analytics">
           <p>Go to Analytics</p>
         </Button>
+        }
+        
       </Stack>
     </div>
   );

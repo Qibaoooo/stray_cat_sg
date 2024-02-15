@@ -5,6 +5,7 @@ import { getAllUser } from "../utils/api/apiUser";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
+import { getUserRole } from "pages/utils/userinfo";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -26,6 +27,11 @@ const ChartAnalytics = () => {
 
     useEffect(() => {
         // Fetch data based on selected type
+        if (getUserRole() !== "ROLE_admin") {
+            alert("Only admins are allowed to use this function.");
+            window.location.href = `/map`;
+        }
+        
         let fetchData;
         switch (dataType) {
             case "Sightings":
