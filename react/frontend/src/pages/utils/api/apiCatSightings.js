@@ -62,6 +62,15 @@ const reassignCatSighting = (catSightingId, newCatId) => {
   );
 };
 
+const deleteCatSighting = (catSightingId) => {
+  return axios.delete(
+    `${backendIP}/api/cat_sightings?id=${catSightingId}`,
+    {
+      headers: getJsonHeadersWithJWT(),
+    }
+  );
+};
+
 export {
   getAllCatSightings,
   createNewCatSightings,
@@ -69,4 +78,5 @@ export {
   approveCatSighting,
   rejectCatSighting,
   reassignCatSighting,
+  deleteCatSighting,
 };

@@ -3,12 +3,13 @@ import MapSidePanel from "./components/mapSidePanel";
 import { Button, Col, Form, Modal, Row, Stack, Table } from "react-bootstrap";
 import CatListTable from "./components/catListTable";
 import {
+  deleteCatSighting,
   getAllCatSightings,
   reassignCatSighting,
 } from "./utils/api/apiCatSightings";
 import { getAllCats } from "./utils/api/apiCat";
 
-const DetailsModal = ({ sighting, show, setShow }) => {
+const DetailsModal = ({ sighting, show, setShow, action }) => {
   const [cats, SetCats] = useState([]);
   const [newCatId, setNewCatId] = useState(0);
 
@@ -27,13 +28,18 @@ const DetailsModal = ({ sighting, show, setShow }) => {
     });
   };
 
+  const handleDelete = () => {
+    deleteCatSighting(sighting.id).then((resp) => {
+      window.location.reload();
+    });
+  };
+
   return (
     <Modal show={show} onHide={handleClose} animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>
-          Re-assign{" "}
+          Details for{" "}
           <a href={`/catDetails?id=${sighting.cat}`}>{sighting.sightingName}</a>{" "}
-          to another cat
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -46,26 +52,35 @@ const DetailsModal = ({ sighting, show, setShow }) => {
           );
         })}
       </Modal.Body>
-      <Modal.Footer>
-        <Form.Label>Select new cat id</Form.Label>
-        <Form.Select
-          size="sm"
-          style={{ maxWidth: "100px" }}
-          onChange={(e) => {
-            // console.log("e.target.value", e.target.value);
-            setNewCatId(e.target.value);
-          }}
-          defaultValue={""}
-        >
-          <option>{""}</option>
-          {cats.map((cat, index, array) => {
-            return <option key={index}>{cat.id}</option>;
-          })}
-        </Form.Select>
-        <Button variant="primary" onClick={handleUpdate}>
-          Update
-        </Button>
-      </Modal.Footer>
+      {action === "update" && (
+        <Modal.Footer>
+          <Form.Label>Select new cat id</Form.Label>
+          <Form.Select
+            size="sm"
+            style={{ maxWidth: "100px" }}
+            onChange={(e) => {
+              // console.log("e.target.value", e.target.value);
+              setNewCatId(e.target.value);
+            }}
+            defaultValue={""}
+          >
+            <option>{""}</option>
+            {cats.map((cat, index, array) => {
+              return <option key={index}>{cat.id}</option>;
+            })}
+          </Form.Select>
+          <Button variant="primary" onClick={handleUpdate}>
+            Update
+          </Button>
+        </Modal.Footer>
+      )}
+      {action === "delete" && (
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleDelete}>
+            delete
+          </Button>
+        </Modal.Footer>
+      )}
     </Modal>
   );
 };
@@ -74,6 +89,7 @@ const GroupCatSightingsTable = () => {
   const [sightings, SetSightings] = useState([]);
   const [selected, setSelected] = useState({});
   const [show, setShow] = useState(false);
+  const [action, setAction] = useState("");
 
   useEffect(() => {
     getAllCatSightings().then((resp) => {
@@ -134,10 +150,23 @@ const GroupCatSightingsTable = () => {
                           size="sm"
                           onClick={() => {
                             setSelected(sighting);
+                            setAction("update");
                             setShow(true);
                           }}
                         >
                           update
+                        </Button>
+                        <span> </span>
+                        <Button
+                          className="bg-primary-subtle"
+                          size="sm"
+                          onClick={() => {
+                            setSelected(sighting);
+                            setAction("delete");
+                            setShow(true);
+                          }}
+                        >
+                          delete
                         </Button>
                       </td>
                     </tr>
@@ -148,7 +177,12 @@ const GroupCatSightingsTable = () => {
           </div>
         </div>
       </Row>
-      <DetailsModal sighting={selected} show={show} setShow={setShow} />
+      <DetailsModal
+        sighting={selected}
+        show={show}
+        setShow={setShow}
+        action={action}
+      />
     </Stack>
   );
 };

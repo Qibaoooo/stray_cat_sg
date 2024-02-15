@@ -2,9 +2,7 @@ package nus.iss.team11.controller;
 
 import java.security.Principal;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,17 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ctc.wstx.util.DataUtil;
-import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.CharArraySerializer;
-
-import netscape.javascript.JSObject;
 import nus.iss.team11.Payload.NewCatSightingRequest;
 import nus.iss.team11.azureUtil.AzureContainerUtil;
 import nus.iss.team11.controller.service.AzureImageService;
@@ -165,10 +158,10 @@ public class CatSightingController {
 		if (cat == null) {
 			return new ResponseEntity<>("unknown cat id.", HttpStatus.BAD_REQUEST);
 		}
-		
+
 		cs.setCat(cat);
 		catSightingService.saveSighting(cs);
-		
+
 		return new ResponseEntity<>("updated successfully", HttpStatus.OK);
 	}
 
