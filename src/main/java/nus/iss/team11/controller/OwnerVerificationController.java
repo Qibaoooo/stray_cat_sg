@@ -60,8 +60,10 @@ public class OwnerVerificationController {
 		
 		
 		
-		ovToBeSaved = saveVerificationToDB(newVerificationRequest, ovToBeSaved);
+		
+		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
 		ovToBeSaved.setStatus("pending");
+		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
 		
 		
 		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeSaved.getId()), HttpStatus.OK);
