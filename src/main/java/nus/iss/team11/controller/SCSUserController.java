@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.azure.core.annotation.PathParam;
 
+import io.jsonwebtoken.io.Encoder;
 import nus.iss.team11.Payload.NewCatSightingRequest;
 import nus.iss.team11.Payload.NewSCSUserRequest;
 import nus.iss.team11.controller.service.SCSUserService;
@@ -28,6 +30,9 @@ public class SCSUserController {
 	
 	@Autowired
 	SCSUserService scsUserService;
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@GetMapping(value = "/api/scsusers")
 	public ResponseEntity<String> getAllUser(){
@@ -71,7 +76,7 @@ public class SCSUserController {
 	
 	public ResponseEntity<String> SaveSCSUserToDB(NewSCSUserRequest newUserRequest, SCSUser userToBeSaved) {
 		userToBeSaved.setUsername(newUserRequest.getUsername());
-		userToBeSaved.setPassword(newUserRequest.getPassword());
+		userToBeSaved.setPassword(encoder.encode(newUserRequest.getPassword()));
 		userToBeSaved = scsUserService.saveSCSUser(userToBeSaved);
 		return new ResponseEntity<>("Saved: " + String.valueOf(userToBeSaved.getId()), HttpStatus.OK);
 	}

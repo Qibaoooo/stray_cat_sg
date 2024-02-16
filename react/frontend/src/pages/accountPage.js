@@ -20,7 +20,7 @@ const OwnerButton = ({ user }) => {
         if (!!user.isOwner) {
           window.location.href = "/newSighting";
         } else {
-          window.location.href = "/uploadVfcation";
+          window.location.href = "/uploadVerification";
         }
       }}
     >
@@ -34,7 +34,9 @@ const OwnerButton = ({ user }) => {
 };
 const EditButton = ({ user }) => {
   return (
-    <Button className={accountPageButtonClass}>
+    <Button className={accountPageButtonClass} onClick={()=>{
+      window.location.href = "/editProfile";
+    }}>
       <u>Edit Personal Profile</u>
     </Button>
   );

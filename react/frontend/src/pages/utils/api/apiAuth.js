@@ -22,4 +22,14 @@ const register = (u, p) => {
   );
 }
 
-export { login, register };
+const editProfile = (u, p, id) => {
+  return axios.put(
+    `${backendIP}/api/scsusers?id=${id}`,
+    { username: u, password: p },
+    {
+      headers: getJsonHeadersWithJWT(),
+    }
+  );
+}
+
+export { login, register, editProfile };

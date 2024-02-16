@@ -13,6 +13,7 @@ import RegisterPage from "pages/registerPage";
 import ChartAnalytics from "pages/components/chartAnalytics";
 import AdminPage from "pages/adminPage";
 import GroupingPage from "pages/groupingPage";
+import EditProfilePage from "pages/editProfilePage";
 
 
 
@@ -38,11 +39,12 @@ function App() {
         <Route path="/catDetails" element={<CatDetailsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/editProfile" element={<EditProfilePage />} />
         <Route path="/newSighting" element={<UploadSighting />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/lost" element={<LostCat />} />
         <Route path="/result" element={<CatResults />} />
-        <Route path="/uploadVfcation" element={<UploadVerification/>}/>
+        <Route path="/uploadVerification" element={<UploadVerification/>}/>
         <Route path="/analytics" element={<ChartAnalytics/>}/>
         <Route path="/approval" element={<AdminPage/>}/>
         <Route path="/grouping" element={<GroupingPage/>}/>
