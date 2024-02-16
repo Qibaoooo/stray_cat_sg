@@ -57,10 +57,6 @@ public class OwnerVerificationController {
 			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
 		}
 		ovToBeSaved.setUser(user);
-		
-		
-		
-		
 		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
 		ovToBeSaved.setStatus("pending");
 		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
@@ -70,10 +66,19 @@ public class OwnerVerificationController {
 	}
 	
 	@PutMapping(value = "/api/verification")
-	public ResponseEntity<String> updateOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest,
-			@RequestParam Integer id) throws Exception {
+	public ResponseEntity<String> updateOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest, 
+			Principal principal, @RequestParam Integer id) throws Exception {
 		OwnerVerification ovToBeUpdated = ownerVerificationService.getOwnerVerificationById(id);
-		ovToBeUpdated = saveVerificationToDB(newVerificationRequest, ovToBeUpdated);
+		SCSUser user;
+		try {
+			user = scsUserService.getUserByUsername(principal.getName()).get();
+		} catch (Exception e) {
+			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
+		}
+		ovToBeUpdated.setUser(user);
+		ovToBeUpdated.setImageURL((newVerificationRequest.getImageURL()));
+		ovToBeUpdated.setStatus(newVerificationRequest.getStatus());
+		ovToBeUpdated = ownerVerificationService.saveOwnerVerification(ovToBeUpdated);
 
 		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeUpdated.getId()), HttpStatus.OK);
 	}
@@ -105,7 +110,7 @@ public class OwnerVerificationController {
 			OwnerVerification ovToBeSaved) {
 		ovToBeSaved.setStatus(newVerificationRequest.getStatus());
 		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
-		//ovToBeSaved.setId(newVerificationRequest.getUserId());
+		ovToBeSaved.setId(newVerificationRequest.getUserId());
 		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
 		return ovToBeSaved;
 	}
