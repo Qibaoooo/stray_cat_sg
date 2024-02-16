@@ -1,8 +1,10 @@
 package nus.iss.sa57.csc_android;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -17,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -53,6 +56,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     private List<Comment> comments = new ArrayList<>();
     private static String HOST;
     private SharedPreferences userInfoPref;
+    private List<String> labels;
+    boolean[] checkedItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,11 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
         ImageButton send_btn = findViewById(R.id.send_btn);
         send_btn.setOnClickListener(this);
+
+        ImageView addLabelsButton = findViewById(R.id.add_labels);
+        addLabelsButton.setOnClickListener(this);
+
+        checkedItems = new boolean[getResources().getStringArray(R.array.labels_array).length];
 
         Intent intent = getIntent();
         catId = intent.getIntExtra("catId", 0);
@@ -166,7 +176,14 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("content", content);
-                    jsonObject.put("labels", new JSONArray());
+                    JSONArray labelsArray = new JSONArray();
+                    if (!(labels == null)) {
+                        for (String l : labels) {
+                            labelsArray.put(l);
+                        }
+                    }
+                    jsonObject.put("labels", labelsArray);
+                    Log.d("labels", labelsArray.toString());
                     jsonObject.put("cat_id", catId);
                     String username = userInfoPref.getString("username", null);
                     jsonObject.put("username", username);
@@ -176,6 +193,39 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 sendComment(jsonObject.toString());
             }
+        } else if (v.getId() == R.id.add_labels) {
+            labels = new ArrayList<>();
+            String[] options = getResources().getStringArray(R.array.labels_array);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose labels");
+            builder.setMultiChoiceItems(options, checkedItems, (dialog, which, isChecked) -> {
+                int selectedCount = 0;
+                for (boolean checked : checkedItems) {
+                    if (checked) {
+                        selectedCount++;
+                    }
+                }
+
+                if (selectedCount > 5) {
+                    ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                    checkedItems[which] = !isChecked;
+                    Toast.makeText(this, "You can only select up to 4 options", Toast.LENGTH_SHORT).show();
+                } else {
+                    checkedItems[which] = isChecked;
+                }
+            });
+
+            builder.setPositiveButton("Confirm", (dialog, which) -> {
+                for (int i = 0; i < options.length; i++) {
+                    if (checkedItems[i]) {
+                        labels.add(options[i]);
+                    }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 
@@ -207,7 +257,12 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                     Gson gson = new Gson();
                     Comment ncomment = gson.fromJson(in, Comment.class);
                     comments.add(ncomment);
-                    runOnUiThread(() -> setupCommentList());
+                    runOnUiThread(() -> {
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            checkedItems[i] = false;
+                        }
+                        setupCommentList();
+                    });
                 } else {
                     Log.e("LoginActivity", String.valueOf(responseCode));
                     runOnUiThread(() -> MessageHelper.showErrMessage(getApplicationContext()));

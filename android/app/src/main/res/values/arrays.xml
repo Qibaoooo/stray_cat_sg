@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="labels_array">
+        <item>Lean</item>
+        <item>Chubby</item>
+        <item>Trim</item>
+        <item>Friendly</item>
+        <item>Cool</item>
+        <item>Bold</item>
+        <item>Mischievous</item>
+        <item>Glutinous</item>
+        <item>Vocal</item>
+    </string-array>
+</resources>
