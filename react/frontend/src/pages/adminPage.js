@@ -85,6 +85,7 @@ const CatSightingsApprovalTable = ({ refreshSighting, sightings }) => {
   };
 
   return (
+    <div style={{ maxHeight: '500px', overflow: 'auto' }}>
     <Table className="" striped bordered hover>
       <thead>
         <tr>
@@ -114,6 +115,7 @@ const CatSightingsApprovalTable = ({ refreshSighting, sightings }) => {
       </tbody>
       <DetailsModal />
     </Table>
+    </div>
   );
 };
 
@@ -138,7 +140,7 @@ const AdminPage = () => {
     });
   };
   useEffect(() => {
-    refreshSighting();
+    
     refreshVerification();
   }, []);
 
@@ -159,8 +161,9 @@ const AdminPage = () => {
           <h6>
             {" "}
             <u>Owner Verifications Pending Approval</u>
-            <VerificationApprovalTable refreshVerification={refreshVerification} verification={verifications}/>
           </h6>
+            <VerificationApprovalTable refreshVerification={refreshVerification} verification={verifications}/>
+          
         </div>
       </Col>
       <Col className="g-0" xs={4}>
@@ -173,23 +176,26 @@ const AdminPage = () => {
 const VerificationApprovalTable = ({ refreshVerification, verification }) => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState({});
+  const[selecedImage,setSelectedImage]=useState(null);
+
+  const handleLinkClick=(imageURL)=>{setSelectedImage(imageURL);};
 
   const handleApprove = () => {
     approveVerifications(selected.id).then(resp=>{
-      console.log(resp)
-      refreshVerification()
-      setShow(false)
+      console.log(resp);
+      refreshVerification();
+      setShow(false);
     }).catch(e=>{
-      console.log(e)
+      console.log(e);
     })
   };
   const handleReject = () => {
     rejectVerifications(selected.id).then(resp=>{
-      console.log(resp)
-      refreshVerification()
-      setShow(false)
+      console.log(resp);
+      refreshVerification();
+      setShow(false);
     }).catch(e=>{
-      console.log(e)
+      console.log(e);
     })
   };
   const handleClose = () => setShow(false);
@@ -234,6 +240,7 @@ const VerificationApprovalTable = ({ refreshVerification, verification }) => {
   };
 
   return (
+    <div style={{ maxHeight: '500px', overflow: 'auto' }}>
     <Table className="" striped bordered hover>
       <thead>
         <tr>
@@ -243,11 +250,19 @@ const VerificationApprovalTable = ({ refreshVerification, verification }) => {
         </tr>
       </thead>
       <tbody>
-        {verification.map((verification, index, array) => {
+        {verification.map((verification, index) => {
           return (
             <tr>
               <td>{verification.id}</td>
-              <td>{verification.imageURL}</td>
+              <td>
+              <a
+                    href="#"
+                    onClick={() => handleLinkClick(verification.imageURL)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {verification.imageURL}
+                  </a>
+              </td>
               
               <td>
                 <DetailsButton verification={verification} />
@@ -258,6 +273,15 @@ const VerificationApprovalTable = ({ refreshVerification, verification }) => {
       </tbody>
       <DetailsModal />
     </Table>
+    <Modal show={selecedImage !== null} onHide={() => setSelectedImage(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Material Image</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selecedImage && <img src={selecedImage} alt="Material" style={{ width: '100%' }} />}
+        </Modal.Body>
+      </Modal>
+    </div>
   );
 };
 

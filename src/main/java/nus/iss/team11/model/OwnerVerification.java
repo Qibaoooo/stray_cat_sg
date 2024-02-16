@@ -40,6 +40,9 @@ public class OwnerVerification {
 		if (verifiedBy != null) {			
 			json.put("verifiedBy", verifiedBy.getId());
 		}
+		if (ImageURL != null) {            
+	        json.put("imageURL", ImageURL);
+	    }
 		
 		return json;
 	}
