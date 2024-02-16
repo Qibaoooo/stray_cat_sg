@@ -49,7 +49,7 @@ public class OwnerVerificationController {
 	public ResponseEntity<String> createOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest, Principal principal) {
 		OwnerVerification ovToBeSaved = new OwnerVerification();
 		
-
+		//check if the user is valid
 		SCSUser user;
 		try {
 			user = scsUserService.getUserByUsername(principal.getName()).get();
@@ -65,9 +65,17 @@ public class OwnerVerificationController {
 		}
 		
 		ovToBeSaved.setUser(user);
+		
+		//check if the user have submitted an ov
+		//if submit, will get a conflict
+		if (user.getSubmittedOwnerVerification() != null) {
+			return new ResponseEntity<>("please don't submit again", HttpStatus.BAD_REQUEST);
+		}
+		else {
 		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
 		ovToBeSaved.setStatus("pending");
 		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
+		}
 		
 		
 		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeSaved.getId()), HttpStatus.OK);
