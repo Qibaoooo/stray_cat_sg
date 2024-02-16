@@ -2,12 +2,14 @@ package nus.iss.sa57.csc_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -26,16 +28,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import nus.iss.sa57.csc_android.payload.LoginResponse;
+import nus.iss.sa57.csc_android.utils.HttpHelper;
+import nus.iss.sa57.csc_android.utils.MessageHelper;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText usernameView;
-    private EditText passwordView;
-    private CheckBox rememberBox;
-    private Button login_btn;
-    String username;
-    String password;
+    private String username;
+    private String password;
     private boolean isRemember;
-    private boolean isLoginSuccess = false;
     private static String HOST;
     private SharedPreferences userInfoPref;
     private SharedPreferences loginPref;
@@ -45,29 +44,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        HOST = getResources().getString(R.string.host_local);
-        Intent intent = getIntent();
-        if(intent.getBooleanExtra("notLoggedin", false)){
-            Toast.makeText(this, "Please Login!", Toast.LENGTH_SHORT).show();
-        }
 
+        HOST = HttpHelper.getLocalHost(this);
         userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
         loginPref = getSharedPreferences("login_info", MODE_PRIVATE);
         listPref = getSharedPreferences("list_info", MODE_PRIVATE);
 
+        //If redirected by other activities, show toast
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("notLoggedin", false)) {
+            Toast.makeText(this, "Please Login!", Toast.LENGTH_SHORT).show();
+        }
+
         loggedinUser();
-        login_btn = findViewById(R.id.login);
+
+        Button login_btn = findViewById(R.id.login);
         login_btn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Log.d("LoginActivity", "Button Clicked");
-        usernameView = findViewById(R.id.username);
+        EditText usernameView = findViewById(R.id.username);
         username = usernameView.getText().toString();
-        passwordView = findViewById(R.id.password);
+        EditText passwordView = findViewById(R.id.password);
         password = passwordView.getText().toString();
-        rememberBox = findViewById(R.id.remember);
+        InputMethodManager immName = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        immName.hideSoftInputFromWindow(usernameView.getWindowToken(), 0);
+        usernameView.clearFocus();
+        InputMethodManager immPwd = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        immPwd.hideSoftInputFromWindow(passwordView.getWindowToken(), 0);
+        passwordView.clearFocus();
+        CheckBox rememberBox = findViewById(R.id.remember);
         isRemember = rememberBox.isChecked();
         if (v.getId() == R.id.login) {
             if (!username.isEmpty()) {
@@ -90,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private boolean login(final String data) {
+    private void login(final String data) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -109,11 +116,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     outputStream.flush();
                     outputStream.close();
                     int responseCode = urlConnection.getResponseCode();
-
+                    Log.d("login", String.valueOf(responseCode));
 
                     if (responseCode == HttpURLConnection.HTTP_OK) {
-                        isLoginSuccess = true;
-
                         // parse login response and save to SharedPreferences
                         BufferedReader in = new BufferedReader(
                                 new InputStreamReader(urlConnection.getInputStream()));
@@ -147,15 +152,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             startActivity(intent);
                         });
                     } else {
-                        // show error?
-                        isLoginSuccess = false;
+                        Log.e("LoginActivity", String.valueOf(responseCode));
+                        runOnUiThread(() -> MessageHelper.showErrMessage(getApplicationContext()));
                     }
                 } catch (IOException e) {
                     Log.e("LoginActivity", "Error fetching data from server: " + e.getMessage());
+                    runOnUiThread(() -> MessageHelper.showErrMessage(getApplicationContext()));
                 }
             }
         }).start();
-        return isLoginSuccess;
     }
 
     private void loggedinUser() {

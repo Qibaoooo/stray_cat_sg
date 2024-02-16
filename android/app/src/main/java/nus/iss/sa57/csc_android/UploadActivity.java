@@ -1,10 +1,14 @@
 package nus.iss.sa57.csc_android;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.Manifest;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,9 +28,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +59,8 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     private static final int PICK_IMAGE_REQUEST = 1;
     private GoogleMap mMap;
     private ActivityUploadBinding binding;
-    private LocationManager locationManager;
+    //private LocationManager locationManager;
+    //private LocationListener locationListener;
     private LatLng center;
     private static String HOST;
     private static String ML_HOST;
@@ -60,33 +69,47 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     private Map<String, List<Float>> tempVectors;
     private EditText nameView;
     private EditText breedView;
+    private ImageView upload_img;
     private int catId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_upload);
-        HOST = getResources().getString(R.string.host_local);
-        ML_HOST = getResources().getString(R.string.host_ml);
+        HOST = HttpHelper.getLocalHost(this);
+        ML_HOST = HttpHelper.getMLHost(this);
+
         userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
         checkLoginStatus();
-        Log.d("UploadActivity", "111");
 
         binding = ActivityUploadBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         nameView = findViewById(R.id.upload_name);
         breedView = findViewById(R.id.upload_breed);
+
         Button submit_btn = findViewById(R.id.upload_submit);
-        ImageView upload_img = findViewById(R.id.upload_img);
         submit_btn.setOnClickListener(this);
+
+        upload_img = findViewById(R.id.upload_img);
         upload_img.setOnClickListener(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+//        locationListener = location -> {
+//            double latitude = location.getLatitude();
+//            double longitude = location.getLongitude();
+//            center = new LatLng(latitude, longitude);
+//        };
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//        }
+//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
     }
 
     @Override
@@ -111,6 +134,14 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//        }
+//    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.upload_submit) {
@@ -127,6 +158,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Pictures"), PICK_IMAGE_REQUEST);
             //add latch to remove submit onclick when uploading
+            Log.d("Img Select", "selecting");
         }
     }
 
@@ -147,9 +179,30 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                     newCatSightingRequest.put("time", System.currentTimeMillis());
                     newCatSightingRequest.put("suggestedCatName", name);
                     newCatSightingRequest.put("suggestedCatBreed", breed);
-                    newCatSightingRequest.put("tempImageURLs", tempUrls);
-                    newCatSightingRequest.put("vectorMap", tempVectors);
+                    JsonArray urlArray = new JsonArray();
+                    for (String u : tempUrls) {
+                        urlArray.add(u);
+                    }
+                    newCatSightingRequest.put("tempImageURLs", urlArray.toString());
+
+                    JsonArray vectorArray = new JsonArray();
+                    if (!(tempVectors == null)) {
+                        for (Map.Entry<String, List<Float>> entry : tempVectors.entrySet()) {
+                            String key = entry.getKey();
+                            List<Float> value = entry.getValue();
+                            JsonArray valArray = new JsonArray();
+                            for (Float u : value) {
+                                valArray.add(u);
+                            }
+                            JsonObject vectorPair = new JsonObject();
+                            vectorPair.addProperty(key, String.valueOf(valArray));
+
+                            vectorArray.add(vectorPair);
+                        }
+                    }
+                    newCatSightingRequest.put("vectorMap", vectorArray.toString());
                     String data = newCatSightingRequest.toString();
+                    String username = userInfoPref.getString("username", null);
                     String urlString = HOST + "/api/cat_sightings";
                     HttpURLConnection urlConnection = null;
                     URL url = new URL(urlString);
@@ -193,7 +246,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
-    private void viewDetail(){
+    private void viewDetail() {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("catId", catId);
         finish();
@@ -203,6 +256,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("OnActivityResult", "start");
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             if (data.getClipData() != null) {
@@ -212,6 +266,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
                     imgUris.add(imageUri);
                 }
+                upload_img.setImageURI(imgUris.get(0));
                 for (Uri uri : imgUris) {
                     try {
                         uploadToAzure(uri);
@@ -221,6 +276,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
             } else if (data.getData() != null) {
                 Uri imageUri = data.getData();
+                upload_img.setImageURI(imageUri);
                 try {
                     uploadToAzure(imageUri);
                 } catch (IOException e) {
@@ -231,56 +287,49 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void uploadToAzure(Uri uri) throws IOException {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    byte[] imgData = getBytesFromUri(uri);
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("imageFile", imgData);
-                    String filename = String.valueOf(System.currentTimeMillis());
-                    String urlString = HOST + "/api/images?filename=" + filename;
-                    HttpURLConnection urlConnection = null;
-                    URL url = new URL(urlString);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("POST");
-                    urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-                    urlConnection.setRequestProperty("Accept", "application/json");
-                    String jwtToken = userInfoPref.getString("jwt", null);
-                    urlConnection.setRequestProperty("Authorization", "Bearer " + jwtToken);
-                    urlConnection.setDoOutput(true);
-                    urlConnection.setDoInput(true);
-                    DataOutputStream outputStream = new DataOutputStream(urlConnection.getOutputStream());
-                    outputStream.writeBytes(jsonObject.toString());
-                    outputStream.flush();
-                    outputStream.close();
-                    int responseCode = urlConnection.getResponseCode();
-                    Log.d("post comment", String.valueOf(responseCode));
+        new Thread(() -> {
+            try {
+                byte[] imgData = getBytesFromUri(uri);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("imageFile", imgData);
+                String filename = System.currentTimeMillis() + ".jpg";
+                String urlString = HOST + "/api/images?fileName=" + filename;
+                HttpURLConnection urlConnection = null;
+                URL url = new URL(urlString);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                urlConnection.setRequestProperty("Accept", "application/json");
+                String jwtToken = userInfoPref.getString("jwt", null);
+                urlConnection.setRequestProperty("Authorization", "Bearer " + jwtToken);
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                DataOutputStream outputStream = new DataOutputStream(urlConnection.getOutputStream());
+                outputStream.writeBytes(jsonObject.toString());
+                outputStream.flush();
+                outputStream.close();
+                int responseCode = urlConnection.getResponseCode();
+                Log.d("upload to Azure", String.valueOf(responseCode));
 
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        InputStream inputStream = urlConnection.getInputStream();
-                        StringBuilder stringBuilder = new StringBuilder();
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-                        while ((bytesRead = inputStream.read(buffer)) != -1) {
-                            stringBuilder.append(new String(buffer, 0, bytesRead));
-                        }
-                        String blobUrl = stringBuilder.toString();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                tempUrls.add(blobUrl);
-                                setVectors(filename, blobUrl);
-                            }
-                        });
-                    } else {
-                        // show error?
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    InputStream inputStream = urlConnection.getInputStream();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        stringBuilder.append(new String(buffer, 0, bytesRead));
                     }
-                } catch (IOException e) {
-                    Log.e("LoginActivity", "Error fetching data from server: " + e.getMessage());
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    String blobUrl = stringBuilder.toString();
+                    tempUrls.add(blobUrl);
+                    Log.d("upload to Azure", "Calling ML");
+                    setVectors(blobUrl);
+                } else {
+                    // show error?
                 }
+            } catch (IOException e) {
+                Log.e("LoginActivity", "Error fetching data from server: " + e.getMessage());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
         }).start();
 
@@ -298,34 +347,33 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
         return byteBuffer.toByteArray();
     }
 
-    private void setVectors(String filename, String blobUrl) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String url = ML_HOST + "/getembedding/?filename=" + filename;
-                String responseData = HttpHelper.getResponse(url);
+    private void setVectors(String blobUrl) {
+        new Thread(() -> {
+            Log.d("setVector", blobUrl);
+            String url = ML_HOST + "/getembedding/?filename=" + blobUrl;
+            String responseData = HttpHelper.getResponse(url);
 
-                List<Float> vector = new ArrayList<>();
-                if (responseData != null) {
-                    try {
-                        Type listType = new TypeToken<List<Float>>() {
-                        }.getType();
-                        Gson gson = new Gson();
-                        vector = gson.fromJson(responseData, listType);
-                        tempVectors.put(blobUrl, vector);
-                    } catch (JsonSyntaxException e) {
-                        Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
-                    }
-                } else {
-                    Log.e("MainActivity", "Failed to fetch data from server");
+            List<Float> vector = new ArrayList<>();
+            if (responseData != null) {
+                try {
+                    Type listType = new TypeToken<List<Float>>() {
+                    }.getType();
+                    Gson gson = new Gson();
+                    vector = gson.fromJson(responseData, listType);
+                    tempVectors.put(blobUrl, vector);
+                    Log.d("setVector", blobUrl);
+                } catch (JsonSyntaxException e) {
+                    Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
                 }
+            } else {
+                Log.e("MainActivity", "Failed to fetch data from server");
             }
-        });
+        }).start();
     }
 
-    private void checkLoginStatus(){
+    private void checkLoginStatus() {
         SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
-        if(userInfoPref.getString("username", null) == null){
+        if (userInfoPref.getString("username", null) == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra("notLoggedin", true);
             finish();

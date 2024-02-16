@@ -32,6 +32,7 @@ import java.util.List;
 import nus.iss.sa57.csc_android.databinding.ActivityMapBinding;
 import nus.iss.sa57.csc_android.model.CatSighting;
 import nus.iss.sa57.csc_android.utils.MarkerInfoWindowAdapter;
+import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
 public class MapActivity extends FragmentActivity
         implements OnMapReadyCallback, View.OnClickListener,
@@ -53,14 +54,18 @@ public class MapActivity extends FragmentActivity
         if (listPref.getBoolean("isFetched", false)) {
             String responseData = listPref.getString("listData", null);
             try {
-                Type listType = new TypeToken<List<CatSighting>>() {}.getType();
+                Type listType = new TypeToken<List<CatSighting>>() {
+                }.getType();
                 Gson gson = new Gson();
                 csList = gson.fromJson(responseData, listType);
             } catch (JsonSyntaxException e) {
                 Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
             }
         } else {
+            listPref.edit().putBoolean("isFetched", false).commit();
+            Intent intent = new Intent(this, MainActivity.class);
             finish();
+            startActivity(intent);
         }
 
         setupButtons();
@@ -118,6 +123,8 @@ public class MapActivity extends FragmentActivity
         upload_btn.setOnClickListener(this);
         ImageButton list_btn = findViewById(R.id.list_btn);
         list_btn.setOnClickListener(this);
+        new NavigationBarHandler(this) {
+        }.setupAccount();
     }
 
     @Override
@@ -131,9 +138,9 @@ public class MapActivity extends FragmentActivity
         }
     }
 
-    private void checkLoginStatus(){
+    private void checkLoginStatus() {
         SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
-        if(userInfoPref.getString("username", null) == null){
+        if (userInfoPref.getString("username", null) == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra("notLoggedin", true);
             finish();
