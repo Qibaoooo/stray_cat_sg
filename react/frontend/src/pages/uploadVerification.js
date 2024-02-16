@@ -23,7 +23,7 @@ const UploadVerification=()=>{
 
         createNewVerification(
             {
-            imageURL: imageURL,    
+            imageURL: imageURL[0],
             userId: getUserinfoFromLocal().id,
                 
             }

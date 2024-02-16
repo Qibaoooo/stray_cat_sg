@@ -15,7 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class NewVerificationRequest {
+	private String status;
 	private String ImageURL;
-	private String userId;
+	private int userId;
 	
 }
