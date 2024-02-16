@@ -71,14 +71,13 @@ public class StrayCatsSGApplication {
 			String[] public_users = { "public_user1", "public_user2", "public_user3", "public_user4", "public_user5" };
 			String[] owners = { "owner1", "owner2", "owner3" };
 			String[] admins = { "admin1", "admin2", "admin3" };
-			
+
 			// init random sign-up dates
 			Random random = new Random();
-			 // 1 to 100 inclusive
+			// 1 to 100 inclusive
 
 			// Subtract the random number of days from the current date
-			
-			
+
 			for (String u : public_users) {
 				SCSUser user = new SCSUser();
 				user.setUsername(u);
@@ -87,12 +86,6 @@ public class StrayCatsSGApplication {
 				user.setTime(LocalDate.now().minusDays(randomDays));
 
 				user = scsUserRepository.save(user);
-				
-				// set owner application for public users
-				OwnerVerification ov = new OwnerVerification();
-				ov.setUser(user);
-				ov.setStatus("pending");
-				ownerVerificationRepository.save(ov);
 			}
 			for (String u : owners) {
 				SCSUser user = new SCSUser();
@@ -133,7 +126,7 @@ public class StrayCatsSGApplication {
 
 					// Subtract the random number of days from the current date
 					LocalDate randomDateBeforeNow = LocalDate.now().minusDays(randomDays);
-					
+
 					cs.setTime(randomDateBeforeNow);
 					cs.setSuggestedCatName("test cat");
 					cs.setSuggestedCatBreed(getRandomBreed());
@@ -165,9 +158,10 @@ public class StrayCatsSGApplication {
 				// update relationship
 				cs.setCat(cat);
 				cat.addLabel("forTesting");
-				
+
 				// set random users as the uploader
-				Optional<SCSUser> uploader = scsUserRepository.findByUsername("public_user"+ ((approvedCount % 5) + 1));
+				Optional<SCSUser> uploader = scsUserRepository
+						.findByUsername("public_user" + ((approvedCount % 5) + 1));
 				cs.setScsUser(uploader.get());
 
 				// approve the first 8 sightings
@@ -196,39 +190,38 @@ public class StrayCatsSGApplication {
 			c1.setTime(new Date());
 			c1.setScsUser(cuser);
 			c1.setNewlabels(new ArrayList<String>());
-			c1.setFlagged(random.nextInt(100) < 30); //30% chance of flagged
+			c1.setFlagged(random.nextInt(100) < 30); // 30% chance of flagged
 			commentRepository.save(c1);
-			
+
 			// Creating more dummy comments
 			for (int i = 1; i <= 15; i++) {
-			    // Create a new user for each comment
-			    SCSUser temp = new SCSUser();
-			    temp.setUsername("commentuser" + i); 
-			    temp.setPassword(encoder.encode("password" + i)); 
-			    
-			    // Creating artificial user sign up and cat sighting dates
+				// Create a new user for each comment
+				SCSUser temp = new SCSUser();
+				temp.setUsername("commentuser" + i);
+				temp.setPassword(encoder.encode("password" + i));
+
+				// Creating artificial user sign up and cat sighting dates
 				randomDays = 1 + random.nextInt(100);
 				LocalDate randomDateBeforeNow = LocalDate.now().minusDays(randomDays);
 				temp.setTime(randomDateBeforeNow);
-			    scsUserRepository.save(temp); // Save the new user
+				scsUserRepository.save(temp); // Save the new user
 
-			    // Create a new comment
-			    Comment comment = new Comment();
-			    comment.setContent("comment " + i); // Unique content for each comment
-			    comment.setCat(csMap.get("cat_sightings_" + (i%12)).getCat()); 
-			    comment.setFlagged(random.nextInt(100) < 30);
-			    
+				// Create a new comment
+				Comment comment = new Comment();
+				comment.setContent("comment " + i); // Unique content for each comment
+				comment.setCat(csMap.get("cat_sightings_" + (i % 12)).getCat());
+				comment.setFlagged(random.nextInt(100) < 30);
 
-				// Subtract the random number of days from the current date and  to Date object
-			    // Prevent comment date to be before sign up date
-			    LocalDate commentDate = randomDateBeforeNow.plusDays(random.nextInt(100));
-				randomDateBeforeNow = LocalDate.now().isBefore(commentDate) ? LocalDate.now() : commentDate ;
+				// Subtract the random number of days from the current date and to Date object
+				// Prevent comment date to be before sign up date
+				LocalDate commentDate = randomDateBeforeNow.plusDays(random.nextInt(100));
+				randomDateBeforeNow = LocalDate.now().isBefore(commentDate) ? LocalDate.now() : commentDate;
 				Date date = Date.from(randomDateBeforeNow.atStartOfDay(ZoneId.systemDefault()).toInstant());
-				
-			    comment.setTime(date); 
-			    comment.setScsUser(temp); 
-			    comment.setNewlabels(new ArrayList<>()); 
-			    commentRepository.save(comment); 
+
+				comment.setTime(date);
+				comment.setScsUser(temp);
+				comment.setNewlabels(new ArrayList<>());
+				commentRepository.save(comment);
 			}
 
 			// load vector for test images
@@ -237,22 +230,10 @@ public class StrayCatsSGApplication {
 	}
 
 	private String getRandomBreed() {
-		List<String> breeds = List.of("Abyssinian",
-				"British Shorthair",
-				"Burmese",
-				"Cornish Rex",
-				"Devon Rex",
-				"Himalayan",
-				"Maine Coon",
-				"Manx",
-				"Persian",
-				"Russian Blue",
-				"Scottish Fold",
-				"Siamese",
-				"Sphynx",
-				"Turkish Angora",
-				"Turkish Van");
-	    return breeds.get(new Random().nextInt(breeds.size()));
+		List<String> breeds = List.of("Abyssinian", "British Shorthair", "Burmese", "Cornish Rex", "Devon Rex",
+				"Himalayan", "Maine Coon", "Manx", "Persian", "Russian Blue", "Scottish Fold", "Siamese", "Sphynx",
+				"Turkish Angora", "Turkish Van");
+		return breeds.get(new Random().nextInt(breeds.size()));
 	}
 
 	private void loadVectors(AzureImageRepository azureImageRepository) throws IOException, CsvException {
