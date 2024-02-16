@@ -56,6 +56,14 @@ public class OwnerVerificationController {
 		} catch (Exception e) {
 			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
 		}
+		
+		OwnerVerification oldOV = user.getSubmittedOwnerVerification();
+		if (oldOV != null) {
+			// user already has an existing OV
+			// since this is one-to-one relationship, we have to delete the old OV
+			ownerVerificationService.deleteVerification(oldOV.getId());
+		}
+		
 		ovToBeSaved.setUser(user);
 		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
 		ovToBeSaved.setStatus("pending");
