@@ -149,7 +149,7 @@ public class StrayCatsSGApplication {
 			;
 
 			// group cat sightings into cats
-			Integer approvedCount = 1;
+			Integer processedCount = 1;
 			for (Entry<String, CatSighting> entry : csMap.entrySet()) {
 				CatSighting cs = entry.getValue();
 
@@ -161,16 +161,14 @@ public class StrayCatsSGApplication {
 
 				// set random users as the uploader
 				Optional<SCSUser> uploader = scsUserRepository
-						.findByUsername("public_user" + ((approvedCount % 5) + 1));
+						.findByUsername("public_user" + ((processedCount % 5) + 1));
 				cs.setScsUser(uploader.get());
+				processedCount++;
 
-				// approve the first 8 sightings
-				if (approvedCount < 9) {
-					cs.setApproved(true);
-					cat.setApproved(true);
-					cat.setCatBreed(getRandomBreed());
-					approvedCount++;
-				}
+				// approve the all sightings
+				cs.setApproved(true);
+				cat.setApproved(true);
+				cat.setCatBreed(getRandomBreed());
 
 				// set cat and cs
 				catRepository.save(cat);
