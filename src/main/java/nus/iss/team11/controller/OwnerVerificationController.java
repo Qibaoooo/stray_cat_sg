@@ -50,15 +50,34 @@ public class OwnerVerificationController {
 		OwnerVerification ovToBeSaved = new OwnerVerification();
 		
 
+		//check if the user is valid
+    
 		SCSUser user;
 		try {
 			user = scsUserService.getUserByUsername(principal.getName()).get();
 		} catch (Exception e) {
 			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
 		}
+
+		OwnerVerification oldOV = user.getSubmittedOwnerVerification();
+		if (oldOV != null) {
+			// user already has an existing OV
+			// since this is one-to-one relationship, we have to delete the old OV
+			ownerVerificationService.deleteVerification(oldOV.getId());
+		}
+		
 		ovToBeSaved.setUser(user);
 		
-		ovToBeSaved = saveVerificationToDB(newVerificationRequest, ovToBeSaved);
+		//check if the user have submitted an ov
+		//if submit, will get a conflict
+		if (user.getSubmittedOwnerVerification() != null) {
+			return new ResponseEntity<>("please don't submit again", HttpStatus.BAD_REQUEST);
+		}
+		else {
+		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
+		ovToBeSaved.setStatus("pending");
+		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
+		}
 		
 		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeSaved.getId()), HttpStatus.OK);
 	}
@@ -72,12 +91,34 @@ public class OwnerVerificationController {
 		}
 		Ov.setStatus("Approved");
 		
+    //change the role of applicant after approval
+    
 		SCSUser user = Ov.getUser();
 	    user.setOwner(true);
 	    
 	    scsUserService.saveSCSUser(user);
 		ownerVerificationService.saveOwnerVerification(Ov);
 		return new ResponseEntity<>("Approved : " + String.valueOf(Ov.getId()), HttpStatus.OK);
+	}
+		
+		
+	
+	@PutMapping(value = "/api/verification")
+	public ResponseEntity<String> updateOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest, 
+			Principal principal, @RequestParam Integer id) throws Exception {
+		OwnerVerification ovToBeUpdated = ownerVerificationService.getOwnerVerificationById(id);
+		SCSUser user;
+		try {
+			user = scsUserService.getUserByUsername(principal.getName()).get();
+		} catch (Exception e) {
+			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
+		}
+		ovToBeUpdated.setUser(user);
+		ovToBeUpdated.setImageURL((newVerificationRequest.getImageURL()));
+		ovToBeUpdated.setStatus(newVerificationRequest.getStatus());
+		ovToBeUpdated = ownerVerificationService.saveOwnerVerification(ovToBeUpdated);
+
+		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeUpdated.getId()), HttpStatus.OK);
 	}
 	
 	
@@ -90,15 +131,13 @@ public class OwnerVerificationController {
 		ownerVerificationService.deleteVerification(id);
 		return new ResponseEntity<>("Deleted : " + String.valueOf(ovToBeDeleted.getId()), HttpStatus.OK);
 	}
-	
-	
-	
+
 
 	public OwnerVerification saveVerificationToDB(NewVerificationRequest newVerificationRequest,
 			OwnerVerification ovToBeSaved) {
-		ovToBeSaved.setStatus("Pending");
+		ovToBeSaved.setStatus(newVerificationRequest.getStatus());
 		ovToBeSaved.setImageURL((newVerificationRequest.getImageURL()));
-//		ovToBeSaved.setId(newVerificationRequest.getUserId());
+		ovToBeSaved.setId(newVerificationRequest.getUserId());
 		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
 		return ovToBeSaved;
 	}
