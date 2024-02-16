@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         listPref = getSharedPreferences("list_info", MODE_PRIVATE);
         if (listPref.getBoolean("isFetched", false)) {
+            progressView = findViewById(R.id.progressView);
+            progressView.setVisibility(View.GONE);
             String responseData = listPref.getString("listData", null);
             try {
                 Type listType = new TypeToken<List<CatSighting>>() {

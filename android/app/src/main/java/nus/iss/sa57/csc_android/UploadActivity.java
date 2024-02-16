@@ -54,6 +54,7 @@ import nus.iss.sa57.csc_android.databinding.ActivityMapBinding;
 import nus.iss.sa57.csc_android.databinding.ActivityUploadBinding;
 import nus.iss.sa57.csc_android.payload.CatSightingResponse;
 import nus.iss.sa57.csc_android.utils.HttpHelper;
+import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
 public class UploadActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -75,14 +76,17 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityUploadBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         HOST = HttpHelper.getLocalHost(this);
         ML_HOST = HttpHelper.getMLHost(this);
 
         userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
         checkLoginStatus();
 
-        binding = ActivityUploadBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        NavigationBarHandler nav_bar = new NavigationBarHandler(this);
+        nav_bar.setupBar();
 
         //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
