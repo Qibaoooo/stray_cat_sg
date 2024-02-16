@@ -49,14 +49,16 @@ public class OwnerVerificationController {
 	public ResponseEntity<String> createOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest, Principal principal) {
 		OwnerVerification ovToBeSaved = new OwnerVerification();
 		
+
 		//check if the user is valid
+    
 		SCSUser user;
 		try {
 			user = scsUserService.getUserByUsername(principal.getName()).get();
 		} catch (Exception e) {
 			return new ResponseEntity<>("invalid user", HttpStatus.BAD_REQUEST);
 		}
-		
+
 		OwnerVerification oldOV = user.getSubmittedOwnerVerification();
 		if (oldOV != null) {
 			// user already has an existing OV
@@ -77,9 +79,29 @@ public class OwnerVerificationController {
 		ovToBeSaved = ownerVerificationService.saveOwnerVerification(ovToBeSaved);
 		}
 		
-		
 		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeSaved.getId()), HttpStatus.OK);
 	}
+	
+	
+	@PostMapping(value = "/api/verification/approve")
+	public ResponseEntity<String> updateApprovalStatus(@RequestParam Integer id) {
+		OwnerVerification Ov = ownerVerificationService.getOwnerVerificationById(id);
+		if (Ov == null) {
+			return new ResponseEntity<>("unknown verification id.", HttpStatus.BAD_REQUEST);
+		}
+		Ov.setStatus("Approved");
+		
+    //change the role of applicant after approval
+    
+		SCSUser user = Ov.getUser();
+	    user.setOwner(true);
+	    
+	    scsUserService.saveSCSUser(user);
+		ownerVerificationService.saveOwnerVerification(Ov);
+		return new ResponseEntity<>("Approved : " + String.valueOf(Ov.getId()), HttpStatus.OK);
+	}
+		
+		
 	
 	@PutMapping(value = "/api/verification")
 	public ResponseEntity<String> updateOwnerVerification(@RequestBody NewVerificationRequest newVerificationRequest, 
@@ -99,18 +121,6 @@ public class OwnerVerificationController {
 		return new ResponseEntity<>("Saved: " + String.valueOf(ovToBeUpdated.getId()), HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/api/verification/approve")
-	public ResponseEntity<String> updateApprovalStatus(@RequestParam Integer id) {
-		OwnerVerification ov = ownerVerificationService.getOwnerVerificationById(id);
-		if (ov == null) {
-			return new ResponseEntity<>("unknown cat sighting id.", HttpStatus.BAD_REQUEST);
-		}
-		ov.setStatus("Approved");
-		ownerVerificationService.saveOwnerVerification(ov);
-		return new ResponseEntity<>("Approved : " + String.valueOf(ov.getId()), HttpStatus.OK);
-	}
-	
-	
 	
 	@DeleteMapping(value = "/api/verification")
 	public ResponseEntity<String> deleteOwnerVerification(@RequestParam Integer id) {
@@ -121,6 +131,7 @@ public class OwnerVerificationController {
 		ownerVerificationService.deleteVerification(id);
 		return new ResponseEntity<>("Deleted : " + String.valueOf(ovToBeDeleted.getId()), HttpStatus.OK);
 	}
+
 
 	public OwnerVerification saveVerificationToDB(NewVerificationRequest newVerificationRequest,
 			OwnerVerification ovToBeSaved) {

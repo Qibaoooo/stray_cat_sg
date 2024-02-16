@@ -11,6 +11,7 @@ const UploadVerification=()=>{
     const [validated, setValidated] = useState(false);
     const [imageURL, setImageURL] = useState([]);
     const [vectorMap, setVectorMap] = useState({});
+   
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -26,15 +27,21 @@ const UploadVerification=()=>{
             imageURL: imageURL[0],
             userId: getUserinfoFromLocal().id,
                 
-            }
-        )
-        
-        setValidated(true);
+            }).then(() => {
+                setValidated(true);
+                alert("Submitted successfully");
+                window.history.back(); 
+            }).catch(error => {
+                console.error('Verification creation failed:', error);
+            });    
     };
 
     useEffect(()=>{
         requireLoginUser()
       })
+
+
+    
 
     return(
         <Row className="g-0">
