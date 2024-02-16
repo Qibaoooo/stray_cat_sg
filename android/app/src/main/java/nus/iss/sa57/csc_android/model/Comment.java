@@ -7,6 +7,7 @@ public class Comment {
     private String time;
     private String content;
     private List<String> newlabels;
+    private boolean isFlagged;
     private SCSUser scsUser;
     public Comment(){}
 
@@ -48,5 +49,13 @@ public class Comment {
 
     public void setScsUser(SCSUser scsUser) {
         this.scsUser = scsUser;
+    }
+
+    public boolean isIsFlagged() {
+        return isFlagged;
+    }
+
+    public void setIsFlagged(boolean issFlagged) {
+        this.isFlagged = issFlagged;
     }
 }

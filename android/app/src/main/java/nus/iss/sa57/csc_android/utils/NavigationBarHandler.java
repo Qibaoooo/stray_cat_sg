@@ -1,5 +1,6 @@
 package nus.iss.sa57.csc_android.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,9 +13,9 @@ import nus.iss.sa57.csc_android.R;
 public class NavigationBarHandler {
     View bar;
     Context context;
-    public NavigationBarHandler(View bar, final Context context) {
-        this.bar = bar;
+    public NavigationBarHandler(final Context context) {
         this.context = context;
+        bar = ((Activity)context).findViewById(R.id.nav_bar);
     }
     public void setupBar(){
         setupCat();

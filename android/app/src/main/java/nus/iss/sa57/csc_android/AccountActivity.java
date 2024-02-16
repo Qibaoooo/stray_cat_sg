@@ -12,16 +12,16 @@ import org.w3c.dom.Text;
 
 import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
-public class AccountActivity extends AppCompatActivity implements View.OnClickListener{
+public class AccountActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+        checkLoginStatus();
 
-        View nav_bar = findViewById(R.id.nav_bar);
-        NavigationBarHandler nav_handler = new NavigationBarHandler(nav_bar,this);
-        nav_handler.setupCat();
+        new NavigationBarHandler(this) {
+        }.setupCat();
 
         SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
         String username = userInfoPref.getString("username", null);
@@ -37,11 +37,14 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
         TextView editView = findViewById(R.id.account_edit);
         editView.setOnClickListener(this);
+        editView.setVisibility(View.GONE);
+
         TextView ownerView = findViewById(R.id.account_owner);
-        if(role == "owner"){
+        if (role == "owner") {
             ownerView.setText("Post Lost Cat Notification   >>");
-        } else{
+        } else {
             ownerView.setText("Apply to be an Owner    >>");
+            ownerView.setVisibility(View.GONE);
         }
         ownerView.setOnClickListener(this);
         TextView logoutView = findViewById(R.id.account_logout);
@@ -49,14 +52,24 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v){
-        if(v.getId() == R.id.account_logout){
+    public void onClick(View v) {
+        if (v.getId() == R.id.account_logout) {
             SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
             SharedPreferences.Editor editor = userInfoPref.edit();
             editor.clear();
             editor.commit();
             finish();
             Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void checkLoginStatus() {
+        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        if (userInfoPref.getString("username", null) == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("notLoggedin", true);
+            finish();
             startActivity(intent);
         }
     }

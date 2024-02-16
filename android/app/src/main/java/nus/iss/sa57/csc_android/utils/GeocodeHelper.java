@@ -21,7 +21,6 @@ public class GeocodeHelper {
             if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
 
-                // 拼接地址信息
                 StringBuilder addressStringBuilder = new StringBuilder();
                 for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
                     addressStringBuilder.append(address.getAddressLine(i));

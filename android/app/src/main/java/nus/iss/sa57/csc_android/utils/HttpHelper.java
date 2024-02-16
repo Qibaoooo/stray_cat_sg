@@ -1,5 +1,6 @@
 package nus.iss.sa57.csc_android.utils;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -7,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import nus.iss.sa57.csc_android.R;
 
 public class HttpHelper {
     public static String getResponse(String urlString){
@@ -47,5 +50,17 @@ public class HttpHelper {
             }
         }
         return responseData;
+    }
+
+    public static String getLocalHost(Context context){
+        return context.getResources().getString(R.string.host_local);
+    }
+
+    public static String getAzureHost(Context context){
+        return context.getResources().getString(R.string.host_azure);
+    }
+
+    public static String getMLHost(Context context){
+        return context.getResources().getString(R.string.host_ml);
     }
 }

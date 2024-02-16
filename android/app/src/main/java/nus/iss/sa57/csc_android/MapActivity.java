@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -15,6 +16,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -29,9 +32,11 @@ import java.util.List;
 import nus.iss.sa57.csc_android.databinding.ActivityMapBinding;
 import nus.iss.sa57.csc_android.model.CatSighting;
 import nus.iss.sa57.csc_android.utils.MarkerInfoWindowAdapter;
+import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
 public class MapActivity extends FragmentActivity
-        implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+        implements OnMapReadyCallback, View.OnClickListener,
+        GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private ActivityMapBinding binding;
@@ -41,7 +46,7 @@ public class MapActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        checkLoginStatus();
         binding = ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -57,8 +62,13 @@ public class MapActivity extends FragmentActivity
                 Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
             }
         } else {
+            listPref.edit().putBoolean("isFetched", false).commit();
+            Intent intent = new Intent(this, MainActivity.class);
             finish();
+            startActivity(intent);
         }
+
+        setupButtons();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -66,15 +76,6 @@ public class MapActivity extends FragmentActivity
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -95,6 +96,8 @@ public class MapActivity extends FragmentActivity
                     new MarkerOptions()
                             .position(csLatLng)
                             .title(cs.getSightingName()));
+            BitmapDescriptor newIcon = BitmapDescriptorFactory.fromResource(R.drawable.cat_icon);
+            marker.setIcon(newIcon);
             marker.setTag(cs.getId());
         }
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -107,13 +110,41 @@ public class MapActivity extends FragmentActivity
         mMap.setOnInfoWindowClickListener(this);
     }
 
-
-
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
         Intent intent = new Intent(this, DetailsActivity.class);
         Integer catId = (Integer) marker.getTag();
         intent.putExtra("catId", catId.intValue());
         startActivity(intent);
+    }
+
+    private void setupButtons() {
+        ImageButton upload_btn = findViewById(R.id.upload_btn);
+        upload_btn.setOnClickListener(this);
+        ImageButton list_btn = findViewById(R.id.list_btn);
+        list_btn.setOnClickListener(this);
+        new NavigationBarHandler(this) {
+        }.setupAccount();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.upload_btn) {
+            Intent intent = new Intent(this, UploadActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.list_btn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void checkLoginStatus() {
+        SharedPreferences userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        if (userInfoPref.getString("username", null) == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("notLoggedin", true);
+            finish();
+            startActivity(intent);
+        }
     }
 }
