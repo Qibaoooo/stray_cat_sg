@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
 
+import javax.swing.text.html.HTMLDocument.Iterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -183,8 +185,8 @@ public class StrayCatsSGApplication {
 			cuser.setTime(LocalDate.now().minusDays(randomDays));
 			scsUserRepository.save(cuser);
 			Comment c1 = new Comment();
-			c1.setContent("comment 1");
-			c1.setCat(csMap.get("cat_sightings_12").getCat());
+			c1.setContent("he is a cute cat");
+			c1.setCat(csMap.get("Ameer").getCat());
 			c1.setTime(new Date());
 			c1.setScsUser(cuser);
 			c1.setNewlabels(new ArrayList<String>());
@@ -192,6 +194,7 @@ public class StrayCatsSGApplication {
 			commentRepository.save(c1);
 
 			// Creating more dummy comments
+			List<String> csMapKeys = new ArrayList<>(csMap.keySet());
 			for (int i = 1; i <= 15; i++) {
 				// Create a new user for each comment
 				SCSUser temp = new SCSUser();
@@ -207,7 +210,8 @@ public class StrayCatsSGApplication {
 				// Create a new comment
 				Comment comment = new Comment();
 				comment.setContent("comment " + i); // Unique content for each comment
-				comment.setCat(csMap.get("cat_sightings_" + (i % 12)).getCat());
+				int randomCS = random.nextInt(csMapKeys.size());
+				comment.setCat(csMap.get(csMapKeys.get(randomCS)).getCat());
 				comment.setFlagged(random.nextInt(100) < 30);
 
 				// Subtract the random number of days from the current date and to Date object

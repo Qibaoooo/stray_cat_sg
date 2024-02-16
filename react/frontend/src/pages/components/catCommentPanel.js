@@ -4,12 +4,17 @@ import send_btn from "../../images/send_btn.png";
 import label_btn from "../../images/label_btn.png";
 import avatar from "../../images/avatar.png";
 import { getUserinfoFromLocal } from "pages/utils/userinfo";
+import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+
 
 const CatCommentPanel = ({ id }) => {
   const [comments, setComments] = useState([]);
   const [publiccomment, setPublicComment] = useState('');
   const [flag, setFlag] = useState(false);
   const [isShow, setIsShow] = useState(false);
+  let navigate = useNavigate();
+
   const handleCommentChange = (event) => {
     setPublicComment(event.target.value);
   };
@@ -313,6 +318,9 @@ const CatCommentPanel = ({ id }) => {
           </table>
         </div>
       </div>
+      <Button style={{ position:"fixed", right:"10vh", bottom:"10vh"}} onClick={()=>{
+        navigate(-1)
+      }}>Go Back</Button>
     </div>
   );
 };
