@@ -15,9 +15,15 @@ const createNewVerification = ({
 };
 
 const getPendingVerifications = () => {
-    return axios.get(`${backendIP}/api/verification`, {
-        headers: getJsonHeadersWithJWT(),
-    })
+  return axios.get(`${backendIP}/api/verification?pending=true`, {
+      headers: getJsonHeadersWithJWT(),
+  })
+};
+
+const getAllVerifications = () => {
+  return axios.get(`${backendIP}/api/verification?pending=false`, {
+      headers: getJsonHeadersWithJWT(),
+  })
 };
 
 const rejectVerifications = (id) => {
