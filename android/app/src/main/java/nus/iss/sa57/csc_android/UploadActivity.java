@@ -44,6 +44,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -287,22 +288,21 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
             try {
                 JSONObject jsonObject = new JSONObject();
                 byte[] imgData = getBytesFromUri(uri);
-                jsonObject.put("imageFile", Base64.encodeToString(imgData, Base64.DEFAULT));
-                Log.d("upload to Azure", Base64.encodeToString(imgData, Base64.DEFAULT));
+                Log.d("uploading to Azure", Base64.encodeToString(imgData, Base64.DEFAULT));
                 String filename = System.currentTimeMillis() + ".jpg";
                 String urlString = HOST + "/api/images?fileName=" + filename;
                 HttpURLConnection urlConnection = null;
                 URL url = new URL(urlString);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                urlConnection.setRequestProperty("Content-Type", "image/jpeg");
                 urlConnection.setRequestProperty("Accept", "application/json");
                 String jwtToken = userInfoPref.getString("jwt", null);
                 urlConnection.setRequestProperty("Authorization", "Bearer " + jwtToken);
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
-                DataOutputStream outputStream = new DataOutputStream(urlConnection.getOutputStream());
-                outputStream.writeBytes(jsonObject.toString());
+                OutputStream outputStream = urlConnection.getOutputStream();
+                outputStream.write(imgData);
                 outputStream.flush();
                 outputStream.close();
                 int responseCode = urlConnection.getResponseCode();
@@ -325,8 +325,6 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
             } catch (IOException e) {
                 Log.e("LoginActivity", "Error fetching data from server: " + e.getMessage());
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
             }
         }).start();
 
