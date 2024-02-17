@@ -26,26 +26,40 @@ const CatSightingMarker = ({ sighting, isUserPosted }) => {
         borderRadius: "40%" 
     };
 
+    let outerCircleStyle = {
+      display: "inline-block",
+      borderRadius: "50%",
+      padding: "2px", // This creates the "outer circle" effect
+    };
+
     
     let markerIcon = "🐱";
 
     if (isUserPosted && flagged) {
-        // Both conditions are true
-        markerStyle = { ...markerStyle, backgroundColor: "purple" }; 
-  
+      // Apply red background for isUserPosted and add an outer circle for flagged
+      markerStyle.backgroundColor = "red";
+      outerCircleStyle.borderColor = "yellow";
+      outerCircleStyle.borderWidth = "4px"; // Thickness of the outer circle
+      outerCircleStyle.borderStyle = "solid";
     } else if (isUserPosted) {
-        // Only isUserPosted is true
-        markerStyle = { ...markerStyle, backgroundColor: "red" };
+      // Only isUserPosted is true, so just red background
+      markerStyle.backgroundColor = "red";
     } else if (flagged) {
-      markerStyle = { ...markerStyle, backgroundColor: "yellow" };
-    } 
+      // Only flagged is true, so just yellow background
+      markerStyle.backgroundColor = "yellow";
+    } else {
+      // Default case, no specific styles
+      markerStyle.backgroundColor = "transparent";
+    }
     
 
     return (
-        <div style={markerStyle}>
-            <h3 style={emojiStyle}>{markerIcon}</h3>
-        </div>
-    );
+      <div style={outerCircleStyle}>
+          <div style={markerStyle}>
+              <h3 style={emojiStyle}>🐱</h3>
+          </div>
+      </div>
+  );
 };
 
   return (
