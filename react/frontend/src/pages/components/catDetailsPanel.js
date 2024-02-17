@@ -91,7 +91,14 @@ const CatDetailsPanel = ({ cat, displayImgUrl }) => {
               <tr>
                 <td style={tdStyles}>Labels:</td>
                 <td>
-                  <span style={contentStyle}>{cat.labels}</span>
+                  <span>
+                  {(cat.labels.map(label => {
+                            return(
+                            <div style={{ borderRadius: "10px", backgroundColor: "#ECFFEE", marginTop: "5px", marginRight:"10px", marginBottom: "7px", paddingLeft: "5px", paddingRight: "5px", display: "inline-block", color: "#00B112" }}>
+                            {label}
+                            </div>)
+                          }))
+                            }</span>
                 </td>
               </tr>
               <tr></tr>

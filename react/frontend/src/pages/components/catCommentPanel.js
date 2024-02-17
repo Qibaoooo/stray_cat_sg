@@ -8,7 +8,7 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 
-const CatCommentPanel = ({ id }) => {
+const CatCommentPanel = ({ id ,onRefresh}) => {
   const [comments, setComments] = useState([]);
   const [publiccomment, setPublicComment] = useState('');
   const [flag, setFlag] = useState(false);
@@ -45,6 +45,7 @@ const CatCommentPanel = ({ id }) => {
         setFlag(false);
         setLabels([]);
         setIsShow(false);
+        onRefresh();
       })
   };
   const chooseLabels = (event) => {

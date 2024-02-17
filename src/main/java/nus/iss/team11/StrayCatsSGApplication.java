@@ -159,7 +159,7 @@ public class StrayCatsSGApplication {
 
 				// update relationship
 				cs.setCat(cat);
-				cat.addLabel("forTesting");
+        
 				Optional<SCSUser> uploader;
 				// set random users as the uploader
 				if (processedCount < 4) {
