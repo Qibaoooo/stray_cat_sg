@@ -9,6 +9,7 @@ import {
   getUserinfoFromLocal,
 } from "./utils/userinfo";
 import LoginLogoutButton from "./components/loginLogoutButton";
+import avatar from "../images/avatar.png";
 
 const accountPageButtonClass = "m-auto my-3 border-1 bg-secondary";
 
@@ -72,10 +73,7 @@ const AccountPage = () => {
         className="m-auto"
       >
         <div style={{ marginTop: "50px" }}>
-          <RxAvatar
-            className="my-3 bg-primary rounded-circle"
-            size={80}
-          ></RxAvatar>
+        <img src={avatar} alt="avatar" style={{ height: "80px", width: "80px" ,borderRadius:"40px"}} />
           <p>
             <em>{user.username}</em>
           </p>
