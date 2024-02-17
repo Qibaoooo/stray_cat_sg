@@ -29,15 +29,14 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         String role = userInfoPref.getString("role", null);
 
         TextView usernameView = findViewById(R.id.account_username);
-        usernameView.setText(username);
+        usernameView.setText("Username: " + username);
         TextView idView = findViewById(R.id.account_id);
-        idView.setText(String.valueOf(id));
+        idView.setText("ID: " + id);
         TextView roleView = findViewById(R.id.account_role);
         roleView.setText(role);
 
         TextView editView = findViewById(R.id.account_edit);
         editView.setOnClickListener(this);
-        editView.setVisibility(View.GONE);
 
         TextView ownerView = findViewById(R.id.account_owner);
         if (role == "owner") {
@@ -60,6 +59,9 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             editor.commit();
             finish();
             Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.account_edit) {
+            Intent intent = new Intent(this, EditProfileAvtivity.class);
             startActivity(intent);
         }
     }
