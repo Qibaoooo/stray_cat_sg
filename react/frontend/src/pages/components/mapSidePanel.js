@@ -18,7 +18,7 @@ const UserSection = ({ user }) => {
         <div className="m-3">
           <Button
             className="btn border-0 m-auto bg-secondary"
-            style={{ display: "block" }}
+            style={{ display: "block", borderRadius:"100px"}}
             onClick={() => {
               window.location.href = `/account?user=${user.id}`;
             }}
