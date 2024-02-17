@@ -13,6 +13,7 @@ const CatDetailsPage = () => {
 
   const [cat, SetCat] = useState({});
   const [imgUrl, SetImgUrl] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     getCat(id).then((resp) => {
@@ -23,7 +24,7 @@ const CatDetailsPage = () => {
       });
       SetImgUrl(_urls);
     });
-  }, []);
+  }, [refresh]); 
 
   return (
     <div style={{ backgroundColor: "#FFFAD9" }}>
@@ -35,7 +36,7 @@ const CatDetailsPage = () => {
 
         <Col className="g-0" xs={6}>
           {!!cat.isApproved ? (
-            <CatCommentPanel id={id}></CatCommentPanel>
+            <CatCommentPanel id={id} onRefresh={() => setRefresh(!refresh)}></CatCommentPanel>
           ) : (
             <div>
               <h5 style={{ marginTop: "40vh" }}>
