@@ -160,10 +160,15 @@ public class StrayCatsSGApplication {
 				// update relationship
 				cs.setCat(cat);
 				cat.addLabel("forTesting");
-
+				Optional<SCSUser> uploader;
 				// set random users as the uploader
-				Optional<SCSUser> uploader = scsUserRepository
-						.findByUsername("public_user" + ((processedCount % 5) + 1));
+				if (processedCount < 4) {
+					uploader = scsUserRepository
+							.findByUsername("owner" + ((processedCount % 3) + 1));
+				}
+				else {
+				uploader = scsUserRepository
+						.findByUsername("public_user" + ((processedCount % 5) + 1));}
 				cs.setScsUser(uploader.get());
 				processedCount++;
 

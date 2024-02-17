@@ -124,13 +124,21 @@ public class LostCatController {
 				JSONObject sightingJSON = potentialCatSighting.toJSON();
 
 				// Get the probability value for the current CatSighting using its key
-				Double probability = groups.get(key);
+				Object probValue = groups.get(key);
+	            Double probability;
+	            if (probValue instanceof Integer) {
+	                probability = ((Integer) probValue).doubleValue(); // Convert Integer to Double
+	            } else if (probValue instanceof Double) {
+	                probability = (Double) probValue; // It's already a Double
+	            } else {
+	                throw new IllegalArgumentException("Probability value is not a recognized number type.");
+	            }
 
 				// Add the probability to the sightingJSON
 				sightingJSON.put("probability", probability);
 				topCats.put(sightingJSON);
 			}
-
+			System.out.println(topCats.toString());
 			return new ResponseEntity<>(topCats.toString(), HttpStatus.OK);
 
 		}
