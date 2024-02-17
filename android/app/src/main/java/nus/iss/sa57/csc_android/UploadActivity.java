@@ -48,6 +48,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -184,30 +185,25 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                     newCatSightingRequest.put("time", System.currentTimeMillis());
                     newCatSightingRequest.put("suggestedCatName", name);
                     newCatSightingRequest.put("suggestedCatBreed", breed);
-                    JsonArray urlArray = new JsonArray();
+                    JSONArray urlArray = new JSONArray();
                     for (String u : tempUrls) {
-                        urlArray.add(u);
+                        urlArray.put(u);
                     }
-                    newCatSightingRequest.put("tempImageURLs", urlArray.toString());
+                    newCatSightingRequest.put("tempImageURLs", urlArray);
 
-                    JsonArray vectorArray = new JsonArray();
-                    if (!(tempVectors == null)) {
-                        for (Map.Entry<String, List<Float>> entry : tempVectors.entrySet()) {
-                            String key = entry.getKey();
-                            List<Float> value = entry.getValue();
-                            JsonArray valArray = new JsonArray();
-                            for (Float u : value) {
-                                valArray.add(u);
-                            }
-                            JsonObject vectorPair = new JsonObject();
-                            vectorPair.addProperty(key, String.valueOf(valArray));
-
-                            vectorArray.add(vectorPair);
-                        }
+                    if (tempVectors == null) {
+                        tempVectors = new HashMap<>();
+                        List<Float> testVect = new ArrayList<>();
+                        testVect.add(0f);
+                        testVect.add(0f);
+                        tempVectors.put(tempUrls.get(0), testVect);
                     }
-                    newCatSightingRequest.put("vectorMap", vectorArray.toString());
+                    JSONObject vectorArray = new JSONObject(tempVectors);
+
+                    newCatSightingRequest.put("vectorMap", vectorArray);
                     String data = newCatSightingRequest.toString();
-                    String username = userInfoPref.getString("username", null);
+                    Log.d("submit",data);
+                    //String username = userInfoPref.getString("username", null);
                     String urlString = HOST + "/api/cat_sightings";
                     HttpURLConnection urlConnection = null;
                     URL url = new URL(urlString);
@@ -232,12 +228,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                         Gson gson = new Gson();
                         CatSightingResponse cr = gson.fromJson(in, CatSightingResponse.class);
                         catId = cr.getCat();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                viewDetail();
-                            }
-                        });
+                        runOnUiThread(() -> viewDetail());
                     } else {
                         // show error?
                     }
@@ -294,7 +285,6 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     private void uploadToAzure(Uri uri) throws IOException {
         new Thread(() -> {
             try {
-
                 JSONObject jsonObject = new JSONObject();
                 byte[] imgData = getBytesFromUri(uri);
                 jsonObject.put("imageFile", Base64.encodeToString(imgData, Base64.DEFAULT));
