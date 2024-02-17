@@ -16,7 +16,6 @@ import GroupingPage from "pages/groupingPage";
 import EditProfilePage from "pages/editProfilePage";
 
 
-
 const RedirectToMapPage = () => {
   useEffect(() => {
     window.location.href = "/map"
