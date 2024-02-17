@@ -9,6 +9,7 @@ import paw from "../../images/paw.png";
 import banner from "../../images/top_banner.png";
 import { RxAvatar } from "react-icons/rx";
 import LoginLogoutButton from "./loginLogoutButton";
+import avatar from "../../images/avatar.png";
 
 const UserSection = ({ user }) => {
   return (
@@ -22,7 +23,7 @@ const UserSection = ({ user }) => {
               window.location.href = `/account?user=${user.id}`;
             }}
           >
-            <RxAvatar className="my-3" size={50}></RxAvatar>
+            <img src={avatar} alt="avatar" style={{ height: "80px", width: "80px" ,borderRadius:"40px"}} />
             <p>hi, {user.username}</p>
           </Button>
           <LoginLogoutButton type="logout"></LoginLogoutButton>
