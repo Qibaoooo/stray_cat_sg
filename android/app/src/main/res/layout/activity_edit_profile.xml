@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_yellow"
+    android:fitsSystemWindows="true"
+    tools:context=".LoginActivity">
+
+    <include layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_marginTop="100dp"
+        android:layout_marginHorizontal="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update User Profile"
+            android:gravity="center"
+            android:fontFamily="@font/kavoon"
+            android:textColor="@color/pink"
+            android:textSize="26dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Username:"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
+            <EditText
+                android:id="@+id/edit_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="new username"
+                android:padding="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/edittext_background" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Password:"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:textSize="20dp"/>
+            <EditText
+                android:id="@+id/edit_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="new password"
+                android:padding="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/edittext_background"
+                android:inputType="textPassword"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm Password:"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:textSize="20dp"/>
+            <EditText
+                android:id="@+id/confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="confirm password"
+                android:padding="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/edittext_background"
+                android:inputType="textPassword"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="30dp">
+            <Button
+                android:id="@+id/edit_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:textSize="24dp"
+                android:fontFamily="@font/kavoon"
+                android:textColor="@color/pink"
+                android:background="@drawable/login_btn_background"
+                android:paddingHorizontal="40dp"
+                android:paddingVertical="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

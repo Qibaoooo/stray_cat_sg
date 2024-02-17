@@ -137,8 +137,9 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         TextView breed = findViewById(R.id.detail_breed);
         breed.setText(cat.getCatBreed());
         TextView labels = findViewById(R.id.detail_labels);
-        if (cat.getLabels() != null) {
-            labels.setText(String.join(" ", cat.getLabels()));
+        if (!cat.getLabels().isEmpty()) {
+            Log.d("labels",cat.getLabels().toString());
+            labels.setText(String.join(", ", cat.getLabels()));
         } else {
             labels.setText("No Labels Yet!");
         }
@@ -261,7 +262,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                         for (int i = 0; i < checkedItems.length; i++) {
                             checkedItems[i] = false;
                         }
-                        setupCommentList();
+                        fetchCat(catId);
                     });
                 } else {
                     Log.e("LoginActivity", String.valueOf(responseCode));
