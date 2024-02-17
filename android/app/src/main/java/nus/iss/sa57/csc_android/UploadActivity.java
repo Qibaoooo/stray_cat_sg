@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -293,9 +294,11 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     private void uploadToAzure(Uri uri) throws IOException {
         new Thread(() -> {
             try {
-                byte[] imgData = getBytesFromUri(uri);
+
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("imageFile", imgData);
+                byte[] imgData = getBytesFromUri(uri);
+                jsonObject.put("imageFile", Base64.encodeToString(imgData, Base64.DEFAULT));
+                Log.d("upload to Azure", Base64.encodeToString(imgData, Base64.DEFAULT));
                 String filename = System.currentTimeMillis() + ".jpg";
                 String urlString = HOST + "/api/images?fileName=" + filename;
                 HttpURLConnection urlConnection = null;
@@ -348,6 +351,8 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
         while ((len = inputStream.read(buffer)) != -1) {
             byteBuffer.write(buffer, 0, len);
         }
+        byteBuffer.close();
+        inputStream.close();
         return byteBuffer.toByteArray();
     }
 
