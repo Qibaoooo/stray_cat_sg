@@ -29,7 +29,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         String role = userInfoPref.getString("role", null);
 
         TextView usernameView = findViewById(R.id.account_username);
-        usernameView.setText("Username: " + username);
+        usernameView.setText(username);
         TextView idView = findViewById(R.id.account_id);
         idView.setText("ID: " + id);
         TextView roleView = findViewById(R.id.account_role);

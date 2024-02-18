@@ -133,7 +133,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         TextView name = findViewById(R.id.detail_name);
         name.setText(cat.getCatName());
         TextView idView = findViewById(R.id.detail_id);
-        idView.setText(String.valueOf(cat.getId()));
+        idView.setText("ID: " + cat.getId());
         TextView breed = findViewById(R.id.detail_breed);
         if(cat.getCatBreed() != null) {
             breed.setText(cat.getCatBreed());
@@ -215,7 +215,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                 if (selectedCount > 5) {
                     ((AlertDialog) dialog).getListView().setItemChecked(which, false);
                     checkedItems[which] = !isChecked;
-                    Toast.makeText(this, "You can only select up to 4 options", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You can only select up to 5 options", Toast.LENGTH_SHORT).show();
                 } else {
                     checkedItems[which] = isChecked;
                 }
