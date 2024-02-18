@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">csc_android</string>
+    <string name="app_name">Stray Cat SG</string>
     <string name="action_settings">Settings</string>
     <!--LOCAL HOST-->
     <string name="host_local">http://10.0.2.2:8080</string>

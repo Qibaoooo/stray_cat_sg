@@ -135,13 +135,17 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         TextView idView = findViewById(R.id.detail_id);
         idView.setText(String.valueOf(cat.getId()));
         TextView breed = findViewById(R.id.detail_breed);
-        breed.setText(cat.getCatBreed());
+        if(cat.getCatBreed() != null) {
+            breed.setText(cat.getCatBreed());
+        } else {
+            breed.setText("Not Sure Yet");
+        }
         TextView labels = findViewById(R.id.detail_labels);
         if (!cat.getLabels().isEmpty()) {
             Log.d("labels",cat.getLabels().toString());
             labels.setText(String.join(", ", cat.getLabels()));
         } else {
-            labels.setText("No Labels Yet!");
+            labels.setText("No Labels Yet");
         }
         ImageView catphoto = findViewById(R.id.detail_photo);
         File externalFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);

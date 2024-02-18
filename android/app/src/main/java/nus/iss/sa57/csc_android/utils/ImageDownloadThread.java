@@ -53,7 +53,7 @@ public class ImageDownloadThread implements Runnable {
             latch.countDown();
             int progress = (int)(((float)(sum - latch.getCount()) / sum) * 100);
             progressBar.post(() -> progressBar.setProgress(progress));
-            String text = "Downloading " + (sum - latch.getCount()) + " of " + sum + "images";
+            String text = "Downloading " + (sum - latch.getCount()) + " of " + sum + " Images";
             progressText.post(() -> progressText.setText(text));
         } catch (Exception e) {
             Log.e("MainActivity", "Failed to download image");

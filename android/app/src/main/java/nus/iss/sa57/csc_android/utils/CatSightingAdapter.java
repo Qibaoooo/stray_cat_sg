@@ -47,7 +47,12 @@ public class CatSightingAdapter extends ArrayAdapter<Object> {
         Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
         catphoto.setImageBitmap(bitmap);
         TextView uploadby = view.findViewById(R.id.uploadedby);
-        uploadby.setText(catSightingList.get(pos).getSuggestedCatName());
+        if(!catSightingList.get(pos).getSightingName().isEmpty() &&
+                catSightingList.get(pos).getSightingName() != null) {
+            uploadby.setText(catSightingList.get(pos).getSightingName());
+        } else {
+            uploadby.setText("Cat Sighting "+ catSightingList.get(pos).getId());
+        }
         TextView location = view.findViewById(R.id.location);
         location.setText(GeocodeHelper.getAddressFromLocation(context,catSightingList.get(pos).
                         getLocationLat(),catSightingList.get(pos).getLocationLong()));
