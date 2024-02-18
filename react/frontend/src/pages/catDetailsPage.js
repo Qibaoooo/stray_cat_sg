@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import { Button, Col, Row } from "react-bootstrap";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import CatDetailsPanel from "./components/catDetailsPanel";
 import CatCommentPanel from "./components/catCommentPanel";
@@ -10,10 +10,12 @@ import { getCat } from "./utils/api/apiCat";
 const CatDetailsPage = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
-
+  
   const [cat, SetCat] = useState({});
   const [imgUrl, SetImgUrl] = useState([]);
   const [refresh, setRefresh] = useState(false);
+
+  let navigate = useNavigate();
 
   useEffect(() => {
     getCat(id).then((resp) => {
@@ -46,6 +48,9 @@ const CatDetailsPage = () => {
             </div>
           )}
         </Col>
+        <Button style={{ position:"fixed", right:"10vh", bottom:"10vh", width:"100px"}} onClick={()=>{
+        navigate(-1)
+      }}>Go Back</Button>
       </Row>
     </div>
   );

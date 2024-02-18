@@ -1,7 +1,6 @@
 import GoogleMap from "google-maps-react-markers";
-import { getCat } from "pages/utils/api/apiCat";
 import { SingaporeGeoCoord } from "pages/utils/properties";
-import React, { useEffect, useState } from "react";
+import React, {  } from "react";
 import { Carousel, Stack } from "react-bootstrap";
 
 const CatDetailsPanel = ({ cat, displayImgUrl }) => {
