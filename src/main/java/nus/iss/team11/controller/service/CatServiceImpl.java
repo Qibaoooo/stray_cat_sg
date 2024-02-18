@@ -17,7 +17,7 @@ public class CatServiceImpl implements CatService {
 
 	@Override
 	public Cat getCatById(int id) {
-		return catRepository.getReferenceById(id);
+		return catRepository.findById(id).get();
 	}
 
 	@Override

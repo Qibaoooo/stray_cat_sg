@@ -19,7 +19,7 @@ const OwnerButton = ({ user }) => {
       className={accountPageButtonClass}
       onClick={() => {
         if (!!user.isOwner) {
-          window.location.href = "/newSighting";
+          window.location.href = "/lost";
         } else {
           window.location.href = "/uploadVerification";
         }
