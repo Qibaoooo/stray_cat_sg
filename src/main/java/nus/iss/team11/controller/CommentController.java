@@ -99,8 +99,14 @@ public class CommentController {
 			}
 		}
 		List<String>results=new ArrayList<>();
+		if(keys.size()>3) {
 		for(int i=0;i<3;i++) {
 			results.add(keys.get(i));
+		}
+		} else {
+			for (int i=0;i<keys.size();i++) {
+				results.add(keys.get(i));
+			}
 		}
 		cat1.setLabels(results);
 		catService.saveCat(cat1);
