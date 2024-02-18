@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +42,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,6 +51,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +59,10 @@ import java.util.Map;
 
 import nus.iss.sa57.csc_android.databinding.ActivityMapBinding;
 import nus.iss.sa57.csc_android.databinding.ActivityUploadBinding;
+import nus.iss.sa57.csc_android.model.CatSighting;
 import nus.iss.sa57.csc_android.payload.CatSightingResponse;
 import nus.iss.sa57.csc_android.utils.HttpHelper;
+import nus.iss.sa57.csc_android.utils.MessageHelper;
 import nus.iss.sa57.csc_android.utils.NavigationBarHandler;
 
 public class UploadActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
@@ -69,6 +75,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
     private static String HOST;
     private static String ML_HOST;
     private SharedPreferences userInfoPref;
+    private SharedPreferences listPref;
     private List<String> tempUrls;
     private Map<String, List<Float>> tempVectors;
     private EditText nameView;
@@ -86,6 +93,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
         ML_HOST = HttpHelper.getMLHost(this);
 
         userInfoPref = getSharedPreferences("user_info", MODE_PRIVATE);
+        listPref = getSharedPreferences("list_info", MODE_PRIVATE);
         checkLoginStatus();
 
         NavigationBarHandler nav_bar = new NavigationBarHandler(this);
@@ -229,7 +237,9 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                         Gson gson = new Gson();
                         CatSightingResponse cr = gson.fromJson(in, CatSightingResponse.class);
                         catId = cr.getCat();
-                        runOnUiThread(() -> viewDetail());
+                        int csId = cr.getCatSighting();
+                        downloadCatImage(csId);
+                        //runOnUiThread(() -> viewDetail());
                     } else {
                         // show error?
                     }
@@ -241,6 +251,60 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         }).start();
 
+    }
+
+    private void downloadCatImage(int csId){
+        File externalFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File destFile = new File(externalFilesDir, ("img-" + csId + "-0"));
+        String urlString = tempUrls.get(0);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                URLConnection urlConnection = null;
+                try {
+                    URL url = new URL(urlString);
+                    urlConnection = url.openConnection();
+
+                    InputStream in = urlConnection.getInputStream();
+                    FileOutputStream out = new FileOutputStream(destFile);
+
+                    byte[] buf = new byte[4096];
+                    int bytesRead = -1;
+                    while ((bytesRead = in.read(buf)) != -1) {
+                        out.write(buf, 0, bytesRead);
+                    }
+                    out.close();
+                    in.close();
+                }catch (Exception e) {
+                    Log.e("MainActivity", "Failed to download image");
+                }
+                runOnUiThread(() -> refreshList());
+            }
+        }).start();
+    }
+
+    private void refreshList(){
+        new Thread(() -> {
+            //pending=false?
+            String urlString = HOST + "/api/cat_sightings?pending=false";
+            String responseData = HttpHelper.getResponse(urlString);
+
+            if (responseData != null) {
+                try {
+                    listPref.edit().putString("listData", responseData)
+                            .putBoolean("isFetched", true).commit();
+                    runOnUiThread(() -> {
+                        viewDetail();
+                    });
+                } catch (JsonSyntaxException e) {
+                    Log.e("MainActivity", "Error parsing JSON: " + e.getMessage());
+                    runOnUiThread(() -> MessageHelper.showErrMessage(getApplicationContext()));
+                }
+            } else {
+                Log.e("MainActivity", "Failed to fetch data from server");
+                runOnUiThread(() -> MessageHelper.showErrMessage(getApplicationContext()));
+            }
+        }).start();
     }
 
     private void viewDetail() {
@@ -357,6 +421,7 @@ public class UploadActivity extends AppCompatActivity implements OnMapReadyCallb
                     }.getType();
                     Gson gson = new Gson();
                     vector = gson.fromJson(responseData, listType);
+                    tempVectors = new HashMap<>();
                     tempVectors.put(blobUrl, vector);
                     Log.d("setVector", blobUrl);
                 } catch (JsonSyntaxException e) {

@@ -113,8 +113,12 @@ public class MapActivity extends FragmentActivity
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
         Intent intent = new Intent(this, DetailsActivity.class);
-        Integer catId = (Integer) marker.getTag();
-        intent.putExtra("catId", catId.intValue());
+        Integer csId = (Integer) marker.getTag();
+        CatSighting markerSighting = csList.stream()
+                .filter(cs -> cs.getId() == csId.intValue())
+                .findFirst()
+                .get();
+        intent.putExtra("catId", markerSighting.getCat());
         startActivity(intent);
     }
 
