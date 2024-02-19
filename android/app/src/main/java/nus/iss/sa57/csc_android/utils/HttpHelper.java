@@ -53,7 +53,8 @@ public class HttpHelper {
     }
 
     public static String getLocalHost(Context context){
-        return context.getResources().getString(R.string.host_local);
+//        return context.getResources().getString(R.string.host_local);
+        return "https://stray-cats-sg.azurewebsites.net";
     }
 
     public static String getAzureHost(Context context){
